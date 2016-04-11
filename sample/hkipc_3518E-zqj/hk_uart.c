@@ -479,10 +479,10 @@ int test_uart( )
         int i = 0;
         for(i =0;i<2*printLen;i+=2 )
         {
-           printArray[i] = (RevBuf[i/2] & 0xf0)>>4 + 0x30;
-           printArray[i+1] = RevBuf[i/2] & 0x0f + 0x30;
+           printArray[i] = (RevBuf[i/2] & 0xf0)>>4;
+           printArray[i+1] = RevBuf[i/2] & 0x0f;
 
-           printf("%c%c",printArray[i],printArray[i+1]);
+           printf("%d%d",printArray[i],printArray[i+1]);
         }
         printf("\n");
         sleep(1);
