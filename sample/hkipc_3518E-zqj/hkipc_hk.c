@@ -5020,8 +5020,8 @@ int main(int argc, char* argv[])
 
 #if (DEV_ROBOT | DEV_ANDSON | DEV_CODWIP)
     /**uart communication**/
-    HK_UART_Thread();
-    //test_uart(); //test.
+    //HK_UART_Thread();
+    test_uart(); //test.
 #endif
 
     be_present( 1 );
