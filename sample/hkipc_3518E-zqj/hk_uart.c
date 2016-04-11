@@ -468,9 +468,9 @@ int test_uart( )
         printf("uart read data--------RevBuf=%s, strlen:%d\n", RevBuf, strlen(RevBuf));
 
         sleep(1);
-        len = write(g_UartFd, "*ANDSON.", 8);
+        /*len = write(g_UartFd, "*ANDSON.", 8);
         printf("uart write data, len:%d\n", len);
-        sleep(1);
+        sleep(1);*/
     }
     //printf("....len=%d...\n", len);
     close(g_UartFd);
