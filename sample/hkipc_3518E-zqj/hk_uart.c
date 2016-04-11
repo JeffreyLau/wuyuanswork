@@ -462,12 +462,22 @@ int test_uart( )
 
     int len = 0;
     char RevBuf[20] = {0};
+    char printArray[40] = {0};
     while (1)
     {
         memset(RevBuf,0,20);
+        memset(printArray,0,40);
         len = read(g_UartFd, RevBuf, 20);
+
+        printLen = strlen(RevBuf)-2;
+
+        for(int i =0;i<2*printLen;i+=2 )
+        {
+           printArray[i] = (RevBuf[i/2] & 0xf0)>>4 + 0x30;
+           printArray[i+1] = RevBuf[i/2] & 0x0f + 0x30;
+        }
         
-        printf("uart read data--------RevBuf=%s, strlen:%d\n", RevBuf, strlen(RevBuf));
+        printf("uart read data--------RevBuf=%s, strlen:%d\n", printArray, strlen(printArray));
 
         
 
