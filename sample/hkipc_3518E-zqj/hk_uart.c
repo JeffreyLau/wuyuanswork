@@ -157,7 +157,7 @@ int UART_Init()
 {
     unsigned int UartBitRate = 0;
 #if (DEV_ANDSON)
-    UartBitRate = 115200;
+    UartBitRate = 9600;//115200;
 #else
     UartBitRate = 9600;
 #endif
