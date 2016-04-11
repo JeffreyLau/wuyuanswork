@@ -460,6 +460,7 @@ int test_uart( )
     UART_Init(); //init uart options.
 #endif
 
+    int printLen = 0;
     int len = 0;
     char RevBuf[20] = {0};
     char printArray[40] = {0};
@@ -469,18 +470,21 @@ int test_uart( )
         memset(printArray,0,40);
         len = read(g_UartFd, RevBuf, 20);
 
+        printf("uart read data--------RevBuf=%s, strlen:%d\n", RevBuf, strlen(RevBuf));
+
         printLen = strlen(RevBuf)-2;
 
-        for(int i =0;i<2*printLen;i+=2 )
+        printf("printLen %d \n",printLen);
+
+        int i = 0;
+        for(i =0;i<2*printLen;i+=2 )
         {
            printArray[i] = (RevBuf[i/2] & 0xf0)>>4 + 0x30;
            printArray[i+1] = RevBuf[i/2] & 0x0f + 0x30;
+
+           printf("%c%c",printArray[i],printArray[i+1]);
         }
         
-        printf("uart read data--------RevBuf=%s, strlen:%d\n", printArray, strlen(printArray));
-
-        
-
         sleep(1);
         /*len = write(g_UartFd, "*ANDSON.", 8);
         printf("uart write data, len:%d\n", len);
