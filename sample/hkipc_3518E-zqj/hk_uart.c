@@ -484,7 +484,7 @@ int test_uart( )
 
            printf("%c%c",printArray[i],printArray[i+1]);
         }
-        
+        printf("\n");
         sleep(1);
         /*len = write(g_UartFd, "*ANDSON.", 8);
         printf("uart write data, len:%d\n", len);
