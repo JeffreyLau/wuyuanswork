@@ -464,8 +464,12 @@ int test_uart( )
     char RevBuf[20] = {0};
     while (1)
     {
+        memset(RevBuf,0,20);
         len = read(g_UartFd, RevBuf, 20);
+        
         printf("uart read data--------RevBuf=%s, strlen:%d\n", RevBuf, strlen(RevBuf));
+
+        
 
         sleep(1);
         /*len = write(g_UartFd, "*ANDSON.", 8);
