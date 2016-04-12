@@ -1,5 +1,7 @@
 #include "hk_uart.h"
 #include "hkipc_hk.h"
+#include "hk_sysaudio.h"
+
 
 //#define DEBUG_ZIGBEE
 
@@ -385,21 +387,21 @@ void *UART_Handler(void)
     switch(revBuf[5])
     {
         case 0x01:
-            HK_Audio_Notify( 4 );
+            HK_Audio_Notify( NOTIFY_POWERON );
             raise_alarm_server(6,0, revBuf); 
             break;
         case 0x02:
-            HK_Audio_Notify( 4 );
+            HK_Audio_Notify( NOTIFY_POWERON );
             video_properties_.vv[HKV_MotionSensitivity] = 0;
             
             break;
         case 0x04:
-            HK_Audio_Notify( 4 );
+            HK_Audio_Notify( NOTIFY_POWERON );
             video_properties_.vv[HKV_MotionSensitivity] = 3;
             
             break;
         case 0x08:
-            HK_Audio_Notify( 4 );
+            HK_Audio_Notify( NOTIFY_POWERON );
             video_properties_.vv[HKV_MotionSensitivity] = 1;
             break;
         default:break;   

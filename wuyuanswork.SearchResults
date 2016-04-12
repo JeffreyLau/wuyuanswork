@@ -193,3 +193,22 @@ vbVideo_hk.c (sample\hkipc_3518e-zqj):    HK_DEBUG_PRT("motionsensitivity: %d, g
 vbVideo_hk.c (sample\hkipc_3518e-zqj):    g_MotionDetectSensitivity = video_properties_.vv[HKV_MotionSensitivity];
 ---- =====> voice set wifi ok, system restart now <=... Matches (1 in 1 files) ----
 voiceRecognizer.c (sample\hkipc_3518e-zqj):        printf("=====> voice set wifi ok, system restart now <=====\n");
+---- HK_Audio_Notify Matches (1 in 0 files) ----
+Hk_sysaudio.c (sample\hkipc_3518e-zqj):int HK_Audio_Notify(int nNotifyType)
+---- HK_Audio_Notify Matches (1 in 0 files) ----
+Hk_sysaudio.c (sample\hkipc_3518e-zqj):int HK_Audio_Notify(int nNotifyType)
+---- HK_AudioOut_Enable Matches (2 in 0 files) ----
+Hk_sysaudio.c (sample\hkipc_3518e-zqj):int HK_AudioOut_Enable(void)
+Hk_sysaudio.c (sample\hkipc_3518e-zqj):    //HK_AudioOut_Enable();
+---- HK_Audio_Notify Matches (11 in 6 files) ----
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    HK_Audio_Notify( NOTIFY_WIFISET );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    HK_Audio_Notify( NOTIFY_WIFISET );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        HK_Audio_Notify( NOTIFY_POWEROFF ); //restart.
+Hk_sysaudio.c (sample\hkipc_3518e-zqj):int HK_Audio_Notify(int nNotifyType)
+Hk_sysaudio.h (sample\hkipc_3518e-zqj):int HK_Audio_Notify(int nNotifyType);
+Hk_uart.c (sample\hkipc_3518e-zqj):            HK_Audio_Notify( 4 );
+Hk_uart.c (sample\hkipc_3518e-zqj):            HK_Audio_Notify( 4 );
+Hk_uart.c (sample\hkipc_3518e-zqj):            HK_Audio_Notify( 4 );
+Hk_uart.c (sample\hkipc_3518e-zqj):            HK_Audio_Notify( 4 );
+Monc_hk.c (sample\hkipc_3518e-zqj):    HK_Audio_Notify( NOTIFY_SYSREST ); //system restart.
+voiceRecognizer.c (sample\hkipc_3518e-zqj):        HK_Audio_Notify( NOTIFY_WIFISET ); //voice notify.
