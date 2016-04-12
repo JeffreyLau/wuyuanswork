@@ -370,7 +370,7 @@ int HK_Check_Battery(void)
         */
 }
 
-void *UART_Handler(void *arg)
+void *UART_Handler(void)
 {
     extern struct HKVProperty video_properties_;
     extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
