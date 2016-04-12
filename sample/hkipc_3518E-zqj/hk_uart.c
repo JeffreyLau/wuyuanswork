@@ -499,6 +499,7 @@ int test_uart( )
 int UART_Handler(void)
 {
     extern struct HKVProperty video_properties_;
+    extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
 
     char revBuf[20];
     int len = 0;
@@ -510,7 +511,6 @@ int UART_Handler(void)
     switch(revBuf[5])
     {
         case 0x01:
-            extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
             raise_alarm_server(6,0, revBuf); 
             break;
         case 0x02:
