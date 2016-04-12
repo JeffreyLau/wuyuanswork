@@ -370,6 +370,40 @@ int HK_Check_Battery(void)
         */
 }
 
+int *UART_Handler(void)
+{
+    extern struct HKVProperty video_properties_;
+    extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
+
+    char revBuf[20];
+    int len = 0;
+    memset(revBuf,0,20);
+
+    len = read(g_UartFd, revBuf, 20);
+    printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
+    HK_Audio_Notify( 4 );
+    switch(revBuf[5])
+    {
+        case 0x01:
+            raise_alarm_server(6,0, revBuf); 
+            break;
+        case 0x02:
+            video_properties_.vv[HKV_MotionSensitivity] = 0;
+            
+            break;
+        case 0x04:
+            video_properties_.vv[HKV_MotionSensitivity] = 3;
+            
+            break;
+        case 0x08:
+            video_properties_.vv[HKV_MotionSensitivity] = 1;
+            break;
+        default:break;   
+    }
+    sleep(1);
+
+}
+
 
 /*****************************************************
  * func: init and create uart recv data.
@@ -497,36 +531,4 @@ int test_uart( )
     return 0;
 }
 
-int *UART_Handler(void)
-{
-    extern struct HKVProperty video_properties_;
-    extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
 
-    char revBuf[20];
-    int len = 0;
-    memset(revBuf,0,20);
-
-    len = read(g_UartFd, revBuf, 20);
-    printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
-    HK_Audio_Notify( NOTIFY_WIFISET );
-    switch(revBuf[5])
-    {
-        case 0x01:
-            raise_alarm_server(6,0, revBuf); 
-            break;
-        case 0x02:
-            video_properties_.vv[HKV_MotionSensitivity] = 0;
-            
-            break;
-        case 0x04:
-            video_properties_.vv[HKV_MotionSensitivity] = 3;
-            
-            break;
-        case 0x08:
-            video_properties_.vv[HKV_MotionSensitivity] = 1;
-            break;
-        default:break;   
-    }
-    sleep(1);
-
-}
