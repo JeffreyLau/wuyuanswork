@@ -212,3 +212,4 @@ Hk_uart.c (sample\hkipc_3518e-zqj):            HK_Audio_Notify( 4 );
 Hk_uart.c (sample\hkipc_3518e-zqj):            HK_Audio_Notify( 4 );
 Monc_hk.c (sample\hkipc_3518e-zqj):    HK_Audio_Notify( NOTIFY_SYSREST ); //system restart.
 voiceRecognizer.c (sample\hkipc_3518e-zqj):        HK_Audio_Notify( NOTIFY_WIFISET ); //voice notify.
+---- have not bind Matches (0 in 0 files) ----
