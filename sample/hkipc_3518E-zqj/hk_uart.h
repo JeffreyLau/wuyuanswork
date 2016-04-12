@@ -81,6 +81,10 @@ typedef enum uart_response_code {
 /** uart operate interfaces **/
 int UART_CtrlCmd_Send(ENUM_UART_CMD enCmd, int iParam);
 int UART_CtrlCmd_Recv(unsigned int *nRecv);
+int UART_Init(void);
+int UART_Handler(void);
+
+
 
 #endif  /* hk_uart.h (zqj) */
 

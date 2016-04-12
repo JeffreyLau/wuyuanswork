@@ -496,3 +496,35 @@ int test_uart( )
     return 0;
 }
 
+int UART_Handler(void)
+{
+    char revBuf[20];
+    int len = 0;
+    memset(revBuf,0,20);
+
+    len = read(g_UartFd, revBuf, 20);
+    printf("uart read data--------RevBuf=%s, strlen:%d\n", RevBuf, strlen(RevBuf));
+
+    switch(revBuf[5])
+    {
+        case 0x01:
+            extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
+            raise_alarm_server(6,0, revBuf); 
+            break;
+        case 0x02:
+            video_properties_.vv[HKV_MotionSensitivity] = 0;
+            
+            break;
+        case 0x04:
+            video_properties_.vv[HKV_MotionSensitivity] = 3;
+            
+            break;
+        case 0x08:
+            video_properties_.vv[HKV_MotionSensitivity] = 1;
+            break;
+        default:break;   
+    }
+    sleep(1);
+
+
+}

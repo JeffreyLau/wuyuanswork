@@ -5024,6 +5024,11 @@ int main(int argc, char* argv[])
     test_uart(); //test.
 #endif
 
+
+#if WUYUAN_DEBUG
+    UART_Init();
+#endif
+
     be_present( 1 );
     IPCAM_StartWebServer();
 #if ENABLE_ONVIF
@@ -5183,7 +5188,7 @@ int main(int argc, char* argv[])
             CheckIOAlarm();//check AlarmIn & AlarmOut. 
 
     #if WUYUAN_DEBUG
-
+            UART_Handler();
             extern int Getms();
             extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
             if(video_properties_.vv[HKV_MotionSensitivity] > 0)

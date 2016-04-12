@@ -36,7 +36,7 @@
 #define DEV_KELIV           0 //klv 3518e (steven).
 #define DEV_ROBOT           0 //ji si wei robot.
 #define DEV_INFRARED        1 //xhd infrared remoter.
-#define DEV_ANDSON          1 //andson Zigbee.
+#define DEV_ANDSON          0 //andson Zigbee.
 #define DEV_CODWIP          0 //codwip. ddt
 #define DEV_ZIGBEE          0
 
