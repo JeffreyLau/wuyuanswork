@@ -5025,8 +5025,9 @@ int main(int argc, char* argv[])
 #endif
 
 
-#if WUYUAN_DEBUG
-    UART_Init();
+#if WUYUAN_DEBUG
+    HK_UART_Thread();
+    //UART_Init();
 #endif
 
     be_present( 1 );

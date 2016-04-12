@@ -389,7 +389,8 @@ int HK_UART_Thread(unsigned int *nRecv)
     }
    
     /** receive response info from slave machine **/
-    ret = pthread_create(&Uart_Event, NULL, (void *)Handle_Uart_Recv, NULL);
+    //ret = pthread_create(&Uart_Event, NULL, (void *)Handle_Uart_Recv, NULL);
+    ret = pthread_create(&Uart_Event, NULL, (void *)UART_Handler, NULL);
     if (0 != ret)
     {
         printf("pthread_create failed with:%d, %s\n", errno, strerror(errno));
@@ -496,7 +497,7 @@ int test_uart( )
     return 0;
 }
 
-int UART_Handler(void)
+int *UART_Handler(void)
 {
     extern struct HKVProperty video_properties_;
     extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
