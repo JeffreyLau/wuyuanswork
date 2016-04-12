@@ -381,21 +381,25 @@ void *UART_Handler(void *arg)
 
     len = read(g_UartFd, revBuf, 20);
     printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
-    HK_Audio_Notify( 4 );
+    
     switch(revBuf[5])
     {
         case 0x01:
+            HK_Audio_Notify( 4 );
             raise_alarm_server(6,0, revBuf); 
             break;
         case 0x02:
+            HK_Audio_Notify( 4 );
             video_properties_.vv[HKV_MotionSensitivity] = 0;
             
             break;
         case 0x04:
+            HK_Audio_Notify( 4 );
             video_properties_.vv[HKV_MotionSensitivity] = 3;
             
             break;
         case 0x08:
+            HK_Audio_Notify( 4 );
             video_properties_.vv[HKV_MotionSensitivity] = 1;
             break;
         default:break;   
