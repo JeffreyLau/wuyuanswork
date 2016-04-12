@@ -82,7 +82,8 @@ typedef enum uart_response_code {
 int UART_CtrlCmd_Send(ENUM_UART_CMD enCmd, int iParam);
 int UART_CtrlCmd_Recv(unsigned int *nRecv);
 int UART_Init(void);
-int UART_Handler(void);
+void *UART_Handler(void *arg);
+
 
 
 
