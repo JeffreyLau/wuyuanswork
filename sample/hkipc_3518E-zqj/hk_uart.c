@@ -498,12 +498,14 @@ int test_uart( )
 
 int UART_Handler(void)
 {
+    extern struct HKVProperty video_properties_;
+
     char revBuf[20];
     int len = 0;
     memset(revBuf,0,20);
 
     len = read(g_UartFd, revBuf, 20);
-    printf("uart read data--------RevBuf=%s, strlen:%d\n", RevBuf, strlen(RevBuf));
+    printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
 
     switch(revBuf[5])
     {
@@ -525,6 +527,5 @@ int UART_Handler(void)
         default:break;   
     }
     sleep(1);
-
 
 }
