@@ -191,3 +191,5 @@ vbVideo_hk.c (sample\hkipc_3518e-zqj):        video_properties_.vv[HKV_Brightnes
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        video_properties_.vv[HKV_CamContrastLevel] = iContrast;
 vbVideo_hk.c (sample\hkipc_3518e-zqj):    HK_DEBUG_PRT("motionsensitivity: %d, g_bAlarmThread: %d\n", video_properties_.vv[HKV_MotionSensitivity], g_bAlarmThread);
 vbVideo_hk.c (sample\hkipc_3518e-zqj):    g_MotionDetectSensitivity = video_properties_.vv[HKV_MotionSensitivity];
+---- =====> voice set wifi ok, system restart now <=... Matches (1 in 1 files) ----
+voiceRecognizer.c (sample\hkipc_3518e-zqj):        printf("=====> voice set wifi ok, system restart now <=====\n");

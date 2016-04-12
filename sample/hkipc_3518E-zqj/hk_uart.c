@@ -508,7 +508,7 @@ int *UART_Handler(void)
 
     len = read(g_UartFd, revBuf, 20);
     printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
-
+    HK_Audio_Notify( NOTIFY_WIFISET );
     switch(revBuf[5])
     {
         case 0x01:
