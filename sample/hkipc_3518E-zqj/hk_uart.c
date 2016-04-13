@@ -483,7 +483,7 @@ void *UART_Handler(void)
                 {
                     if(*(readStr + i*10))
                     {
-                        if(!memcmp1(tempBuf,readStr+i*10,10))
+                        if(!memcmp(tempBuf,readStr+i*10,10))
                         {
                             printf("check out a exist remote:%d ID:%s\r\n",i,tempBuf);
                             break;
