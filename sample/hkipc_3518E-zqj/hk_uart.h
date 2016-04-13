@@ -9,6 +9,8 @@
 #include <errno.h> 
 #include <sys/types.h>  
 #include <sys/stat.h>  
+#include "ptz.h"
+
 
 #define PRINT_ENABLE    1
 #if PRINT_ENABLE
