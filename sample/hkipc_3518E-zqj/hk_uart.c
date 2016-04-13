@@ -379,34 +379,41 @@ void *UART_Handler(void)
 
     char revBuf[20];
     int len = 0;
-    memset(revBuf,0,20);
 
-    len = read(g_UartFd, revBuf, 20);
-    printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
-    
-    switch(revBuf[5])
+    while(1)
     {
-        case 0x01:
-            HK_Audio_Notify( NOTIFY_WIFISET );
-            raise_alarm_server(6,0, revBuf); 
-            break;
-        case 0x02:
-            HK_Audio_Notify( NOTIFY_WIFISET );
-            video_properties_.vv[HKV_MotionSensitivity] = 0;
+        memset(revBuf,0,20);
+
+        len = read(g_UartFd, revBuf, 20);
+        if(len)
+        {
+            printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
             
-            break;
-        case 0x04:
-            HK_Audio_Notify( NOTIFY_WIFISET );
-            video_properties_.vv[HKV_MotionSensitivity] = 3;
-            
-            break;
-        case 0x08:
-            HK_Audio_Notify( NOTIFY_WIFISET );
-            video_properties_.vv[HKV_MotionSensitivity] = 1;
-            break;
-        default:break;   
+            switch(revBuf[5])
+            {
+                case 0x01:
+                    HK_Audio_Notify( NOTIFY_WIFISET );
+                    raise_alarm_server(6,0, revBuf); 
+                    break;
+                case 0x02:
+                    HK_Audio_Notify( NOTIFY_WIFISET );
+                    video_properties_.vv[HKV_MotionSensitivity] = 0;
+                    
+                    break;
+                case 0x04:
+                    HK_Audio_Notify( NOTIFY_WIFISET );
+                    video_properties_.vv[HKV_MotionSensitivity] = 3;
+                    
+                    break;
+                case 0x08:
+                    HK_Audio_Notify( NOTIFY_WIFISET );
+                    video_properties_.vv[HKV_MotionSensitivity] = 1;
+                    break;
+                default:break;   
+            }
+        }
+        sleep(1);
     }
-    sleep(1);
 
 }
 

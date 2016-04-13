@@ -5026,8 +5026,8 @@ int main(int argc, char* argv[])
 
 
 #if WUYUAN_DEBUG
-    //HK_UART_Thread();
-    UART_Init();
+    HK_UART_Thread();
+    //UART_Init();
 #endif
 
     be_present( 1 );
@@ -5189,7 +5189,7 @@ int main(int argc, char* argv[])
             CheckIOAlarm();//check AlarmIn & AlarmOut. 
 
     #if WUYUAN_DEBUG
-            UART_Handler();
+            //UART_Handler();
             extern int Getms();
             extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
             if(video_properties_.vv[HKV_MotionSensitivity] > 0)
