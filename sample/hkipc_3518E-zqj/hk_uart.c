@@ -452,6 +452,7 @@ void *UART_Handler(void)
     char revBuf[20];
     char tempBuf[20];
     char readStr[100] = {0};
+    char storeStr[10] = {0};
 
     int len = 0;
     int val_write = 0;
@@ -528,9 +529,11 @@ void *UART_Handler(void)
                 {
                     if(setDevFlag)
                     {
+                        memset(storeStr,0,10);
+                        memcpy(storeStr,tempBuf,10);
                         if(strlen(readStr) < 80)
                         {
-                            insertString(REMOTEFILEPATH,WRITETOTAIL,tempBuf);
+                            insertString(REMOTEFILEPATH,WRITETOTAIL,storeStr);
                             HK_Audio_Notify( NOTIFY_WIFISET );
                         }
                         else
