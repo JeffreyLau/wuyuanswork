@@ -390,11 +390,8 @@ void hexToChar(char *targetStr , char *covertStr)
     len -= 2; 
     for(i =0 ;i < len ;i++)
     {
-        tenSet = targetStr[i]&0xf0>>4;
-        printf("%d , %x",tenSet,targetStr[i]);
-        
+        tenSet = ((targetStr[i])&0xf0)>>4;        
         oneSet = targetStr[i]&0x0f;     
-        printf("%d , %x",tenSet,targetStr[i]);
         
         if(tenSet < 0x0a)
         {
