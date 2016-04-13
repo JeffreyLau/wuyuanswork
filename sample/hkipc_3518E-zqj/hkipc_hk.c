@@ -4904,7 +4904,8 @@ void checkSetDevTimeout(void)
     {       
         wuyuanCurrentTime = Getms();
         if(wuyuanCurrentTime - wuyuanFrontTime > 20000)
-        {
+        {
+           printf("quit set dev mode \r\n");
            setDevFlag = 0;
            HK_Audio_Notify( NOTIFY_POWEROFF ); 
         }                           
