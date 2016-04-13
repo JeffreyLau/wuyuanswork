@@ -61,6 +61,13 @@ char g_UartSendCmd[CMD_NUM][CMD_BITNUM] = {
 
 int g_UartFd = -1;
 
+#if WUYUAN_DEBUG
+
+unsigned int g_BeepOut_grp  = 7; //BEEP OUT :7_5
+unsigned int g_BeepOut_bit  = 5;
+
+#endif
+
 int set_opt(int fd, int nSpeed, int nBits, char nEvent, int nStop)
 {
     struct termios newtio,oldtio;
