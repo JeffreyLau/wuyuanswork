@@ -53,6 +53,15 @@ int g_HK_SensorType = 0; //sensor type: 1(ar0130); 2(ov9712d).
  */
 int g_HK_VideoResoType = 0;
 
+/************ remote device set flag Wuyuan******/
+
+unsigned char setDevFlag = 0;
+
+unsigned int wuyuanCurrentTime = 0; 
+unsigned int wuyuanFrontTime   = 0;
+extern int Getms();
+
+
 /***************** GPIO params ******************/
 
 //#define DEBUG
@@ -4156,12 +4165,23 @@ int HK_Check_KeyReset(void)
         return 0;
     }
     else if ((1 == val_read) && (0 < g_KeyResetCount) && (g_KeyResetCount < 3))
-    { //less than 4s, system restart immediately.
+    { 
+#if 0 //form hekai reset camera code
+    //less than 4s, system restart immediately.
         g_KeyResetCount = 0; 
         g_AudioSetWifi = g_AUDIO_SET_WIFI_TIME; //exit voice recognize.
         sleep(1);
         HK_Audio_Notify( NOTIFY_POWEROFF ); //restart.
         wrap_sys_restart(); 
+        return 0;
+#endif
+
+#if WUYUAN_DEBUG  //Wuyuan press key to set
+        setDevFlag = 1;
+        wuyuanFrontTime = Getms();
+        printf("get into set dev mode\r\n");
+        HK_Audio_Notify( NOTIFY_POWEROFF );       
+#endif
         return 0;
     }
     g_KeyResetCount = 0; 
@@ -4876,6 +4896,20 @@ static void setLedOrSleep()
 
 }
 
+void checkSetDevTimeout(void)
+{
+   
+    if(setDevFlag)
+    {       
+        wuyuanCurrentTime = Getms();
+        if(wuyuanCurrentTime - wuyuanFrontTime > 20000)
+        {
+           setDevFlag = 0;
+           HK_Audio_Notify( NOTIFY_POWEROFF ); 
+        }                           
+    }
+}
+
 void OnLanConChange( int nConCnt )
 {
     printf("...%s...nConCnt: %d...\n", __func__, nConCnt);
@@ -5112,11 +5146,11 @@ int main(int argc, char* argv[])
 
     HK_WtdInit(60*2); //watchdog.
     g_KeyResetCount = 0;
-    #if WUYUAN_DEBUG
- 
-    // 测试写文件
-    // 创建一个文件
+    #if WUYUAN_DEBUG  //create the dev list
+    
     setupAFile(REMOTEFILEPATH);
+    setupAFile(IRDEVFILEPATH);
+    #if 0
     // 写入数据
     int len = strlen("test string 1234 wuyuan you are great!!!");
         
@@ -5136,6 +5170,7 @@ int main(int argc, char* argv[])
         insertString(REMOTEFILEPATH,WRITETOTAIL,"test string 1234 wuyuan you are great!!!");
         
     } 
+    #endif
     #endif  
     
 /*<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
@@ -5192,20 +5227,7 @@ int main(int argc, char* argv[])
             CheckIOAlarm();//check AlarmIn & AlarmOut. 
 
     #if WUYUAN_DEBUG
-            //UART_Handler();
-            extern int Getms();
-            extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
-            if(video_properties_.vv[HKV_MotionSensitivity] > 0)
-            {
-                unsigned int currentTime = Getms();
-                
-                if(currentTime - frontTime > 5000)
-                {
-                   sendCount++;
-                   raise_alarm_server(sendCount % 7,0, "123456789abc");     
-                   frontTime = Getms();
-                }
-            }
+            checkSetDevTimeout();
     #endif
             
         }

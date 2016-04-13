@@ -1,8 +1,12 @@
 #include "hk_uart.h"
 #include "hkipc_hk.h"
 #include "hk_sysaudio.h"
+#include "filesystem.h"
 
-
+#define  ONE_FRAME_LENGTH 12
+#define  STORE_FRAME_LENGTH 10
+#define  REMOTECOUNT      8
+#define  IRCOUNT          88
 
 //#define DEBUG_ZIGBEE
 
@@ -66,6 +70,7 @@ int g_UartFd = -1;
 
 unsigned int g_BeepOut_grp  = 7; //BEEP OUT :7_5
 unsigned int g_BeepOut_bit  = 5;
+extern unsigned char setDevFlag;
 
 #endif
 
@@ -386,9 +391,7 @@ void hexToChar(char *targetStr , char *covertStr)
     char tenSet = 0;
     int i = 0;
 
-    int len = strlen(targetStr);
-    len -= 2; 
-    for(i =0 ;i < len ;i++)
+    for(i =0 ;i < ONE_FRAME_LENGTH; i++)
     {
         tenSet = ((targetStr[i])&0xf0)>>4;        
         oneSet = targetStr[i]&0x0f;     
@@ -410,7 +413,35 @@ void hexToChar(char *targetStr , char *covertStr)
         {
             covertStr[2*i+1] = oneSet + 0x37;
         }  
-     }    
+    }
+    printf("uart read data--------RevBuf=%s, strlen:%d\n", covertStr, strlen(covertStr));
+}
+
+int traversalTheDevList(char *targetStr)
+{
+    #if 0
+    // 写入数据
+    int len = strlen("test string 1234 wuyuan you are great!!!");
+        
+    char readStr[100] = {0};
+
+    // 读出数据到一个数组
+    readString(REMOTEFILEPATH,READFROMHEAD,len,readStr);
+
+    if(readStr[0])
+    {
+       //
+       printf("<<<<<<<<<<<<<<%s\n>>>>>>>>>>>>",readStr);
+
+    }
+    else
+    {
+        insertString(REMOTEFILEPATH,WRITETOTAIL,"test string 1234 wuyuan you are great!!!");
+        
+    } 
+    #endif    
+
+
 }
 
 void *UART_Handler(void)
@@ -420,6 +451,7 @@ void *UART_Handler(void)
 
     char revBuf[20];
     char tempBuf[20];
+    char readStr[100] = {0};
 
     int len = 0;
     int val_write = 0;
@@ -440,38 +472,84 @@ void *UART_Handler(void)
         {
             
             hexToChar(revBuf, tempBuf);
-            
-            val_write = 1;
-            Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
-            Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-            
-            printf("uart read data--------RevBuf=%s, strlen:%d\n", tempBuf, strlen(tempBuf));
-            
-            switch(revBuf[5])
+
+            if(tempBuf[1] == '1')
             {
-                case 0x01:
-                    HK_Audio_Notify( NOTIFY_WIFISET );
-                    raise_alarm_server(6,0, tempBuf); 
-                    break;
-                case 0x02:
-                    HK_Audio_Notify( NOTIFY_WIFISET );
-                    video_properties_.vv[HKV_MotionSensitivity] = 0;
+                memset(readStr,0,100);
+                readString(REMOTEFILEPATH,READFROMHEAD,
+                    ONE_FRAME_LENGTH*REMOTECOUNT,readStr);
+                printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n
+                    ||||||||||||||||||||||||||||",readStr);
+                for(i = 0;i< 8 ;i++)
+                {
+                    if(*(readStr + i*10))
+                    {
+                        if(!memcmp1(tempBuf,readStr+i*10,10))
+                        {
+                            printf("check out a exist remote:%d ID:%s\r\n",i,tempBuf);
+                            break;
+                        }
+                    }
+                }
+                
+                if(i<8)
+                {
+                    val_write = 1;
+                    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
+                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
                     
-                    break;
-                case 0x04:
-                    HK_Audio_Notify( NOTIFY_WIFISET );
-                    video_properties_.vv[HKV_MotionSensitivity] = 3;
-                    
-                    break;
-                case 0x08:
-                    HK_Audio_Notify( NOTIFY_WIFISET );
-                    video_properties_.vv[HKV_MotionSensitivity] = 1;
-                    break;
-                default:break;   
+                    switch(tempBuf[11])
+                    {
+                        case 0x31:
+                            HK_Audio_Notify( NOTIFY_WIFISET );
+                            raise_alarm_server(6,0, tempBuf); 
+                            break;
+                        case 0x32:
+                            HK_Audio_Notify( NOTIFY_WIFISET );
+                            video_properties_.vv[HKV_MotionSensitivity] = 0;
+                            
+                            break;
+                        case 0x34:
+                            HK_Audio_Notify( NOTIFY_WIFISET );
+                            video_properties_.vv[HKV_MotionSensitivity] = 3;
+                            
+                            break;
+                        case 0x38:
+                            HK_Audio_Notify( NOTIFY_WIFISET );
+                            video_properties_.vv[HKV_MotionSensitivity] = 1;
+                            break;
+                        default:break;   
+                    }
+                    val_write = 0;
+                    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
+                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );  
+
+                }
+                else
+                {
+                    if(setDevFlag)
+                    {
+                        if(strlen(readStr) < 80)
+                        {
+                            insertString(REMOTEFILEPATH,WRITETOTAIL,tempBuf);
+                            HK_Audio_Notify( NOTIFY_WIFISET );
+                        }
+                        else
+                        {
+                            setDevFlag = 0;
+                            HK_Audio_Notify( NOTIFY_POWEROFF ); 
+                        }
+                    }
+                
+                }
+              
             }
-            val_write = 0;
-            Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
-            Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );             
+            else if(tempBuf[1] == '2')
+            {
+
+            }
+            
+           
         }
         sleep(1);
     }

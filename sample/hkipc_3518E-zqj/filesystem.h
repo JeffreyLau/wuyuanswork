@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define IRDEVFILEPATH  "/mnt/sif/IRID.txt"
 #define REMOTEFILEPATH "/mnt/sif/remoteID.txt"
 #define WRITETOTAIL    "a+"
 #define READFROMHEAD   "r"
