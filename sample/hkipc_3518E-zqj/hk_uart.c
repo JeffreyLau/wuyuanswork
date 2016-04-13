@@ -380,14 +380,49 @@ int HK_Check_Battery(void)
         */
 }
 
+void hexToChar(char *targetStr , char *covertStr)
+{
+    char oneSet = 0;
+    char tenSet = 0;
+    int i = 0;
+
+    int len = strlen(targetStr);
+    len -= 2; 
+    for(i =0 ;i < len ;i++)
+    {
+        oneSet = targetStr[i]&0x0f;
+        tenSet = targetStr[i]&0xf0>>4;
+        if(tenSet < 0x0a)
+        {
+            covertStr[2*i] = tenSet + 0x30;
+        }
+        else
+        {
+            covertStr[2*i] = tenSet + 0x37;
+        }   
+
+        if(oneSet < 0x0a)
+        {
+            covertStr[2*i+1] = oneSet + 0x30;
+        }
+        else
+        {
+            covertStr[2*i+1] = oneSet + 0x37;
+        }  
+     }    
+}
+
 void *UART_Handler(void)
 {
     extern struct HKVProperty video_properties_;
     extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
 
     char revBuf[20];
+    char tempBuf[20];
+
     int len = 0;
     int val_write = 0;
+    int i = 0;
 
     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
@@ -395,21 +430,27 @@ void *UART_Handler(void)
     while(1)
     {
         memset(revBuf,0,20);
+        memset(tempBuf,0,20);
 
         len = read(g_UartFd, revBuf, 20);
-        if(len)
+        if(len&&(revBuf[0] == 0x01 ||revBuf[0] == 0x02)
+            &&(revBuf[5] == 0x01 || revBuf[5] == 0x02 
+            || revBuf[5] == 0x04 || revBuf[5] == 0x08))
         {
+            
+            hexToChar(revBuf, tempBuf);
+            
             val_write = 1;
             Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
             Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
             
-            printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
+            printf("uart read data--------RevBuf=%s, strlen:%d\n", tempBuf, strlen(tempBuf));
             
             switch(revBuf[5])
             {
                 case 0x01:
                     HK_Audio_Notify( NOTIFY_WIFISET );
-                    raise_alarm_server(6,0, revBuf); 
+                    raise_alarm_server(6,0, tempBuf); 
                     break;
                 case 0x02:
                     HK_Audio_Notify( NOTIFY_WIFISET );

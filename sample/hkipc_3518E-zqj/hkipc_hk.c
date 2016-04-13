@@ -3397,13 +3397,14 @@ static void initGPIO()
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
 
-#if 0
+#if 1
     /**MI8029 PIR**/
     groupnum = 7;
     bitnum   = 5; //GPIO:7_5.
-    Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_READ );
-    Hi_SetGpio_GetBit( groupnum, bitnum, &val_read ); //PIR: GPIO7_5.
-    HK_DEBUG_PRT(".......................Get GPIO %d_%d  read Value: %d....\n", groupnum, bitnum, val_read);
+    val_set  = 1;
+    Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
+    Hi_SetGpio_SetBit( groupnum, bitnum, val_set ); //PIR: GPIO7_5.
+    HK_DEBUG_PRT(".......................Get GPIO %d_%d  read Value: %d....\n", groupnum, bitnum, val_set);
 #endif
 
 	/**init IO alarm**/
