@@ -68,6 +68,9 @@ int g_HK_VideoResoType = 0;
     unsigned int g_AlarmOut_bit = 7; //alarm out:7_7.
     unsigned int g_RUN_grp      = 5;
     unsigned int g_RUN_bit      = 3; //RUN light:5_3.
+
+    unsigned int g_BeepOut_grp  = 7; //BEEP OUT :7_5
+    unsigned int g_BeepOut_bit  = 5;
 #endif
 
 

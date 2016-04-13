@@ -379,6 +379,10 @@ void *UART_Handler(void)
 
     char revBuf[20];
     int len = 0;
+    int val_write = 0;
+
+    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
+    Hi_SetGpio_GetBit( g_BeepOut_grp, g_BeepOut_bit, &val_write ); 
 
     while(1)
     {
@@ -387,6 +391,10 @@ void *UART_Handler(void)
         len = read(g_UartFd, revBuf, 20);
         if(len)
         {
+            val_write = 1;
+            Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
+            Hi_SetGpio_GetBit( g_BeepOut_grp, g_BeepOut_bit, &val_write ); 
+            
             printf("uart read data--------RevBuf=%s, strlen:%d\n", revBuf, strlen(revBuf));
             
             switch(revBuf[5])
@@ -411,6 +419,9 @@ void *UART_Handler(void)
                     break;
                 default:break;   
             }
+            val_write = 0;
+            Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
+            Hi_SetGpio_GetBit( g_BeepOut_grp, g_BeepOut_bit, &val_write );             
         }
         sleep(1);
     }
