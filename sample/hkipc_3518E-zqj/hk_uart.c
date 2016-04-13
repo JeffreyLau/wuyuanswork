@@ -391,7 +391,7 @@ void hexToChar(char *targetStr , char *covertStr)
     char tenSet = 0;
     int i = 0;
 
-    for(i =0 ;i < ONE_FRAME_LENGTH; i++)
+    for(i =0 ;i < ONE_FRAME_LENGTH/2 ; i++)
     {
         tenSet = ((targetStr[i])&0xf0)>>4;        
         oneSet = targetStr[i]&0x0f;     
@@ -477,9 +477,8 @@ void *UART_Handler(void)
             {
                 memset(readStr,0,100);
                 readString(REMOTEFILEPATH,READFROMHEAD,
-                    ONE_FRAME_LENGTH*REMOTECOUNT,readStr);
-                printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n
-                    ||||||||||||||||||||||||||||",readStr);
+                    STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
+                printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n||||||||||||||||||||||||||||\r\n",readStr);
                 for(i = 0;i< 8 ;i++)
                 {
                     if(*(readStr + i*10))
