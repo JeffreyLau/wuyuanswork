@@ -4177,6 +4177,7 @@ int HK_Check_KeyReset(void)
 #endif
 
 #if WUYUAN_DEBUG  //Wuyuan press key to set
+        g_KeyResetCount = 0;
         setDevFlag = 1;
         wuyuanFrontTime = Getms();
         printf("get into set dev mode\r\n");
