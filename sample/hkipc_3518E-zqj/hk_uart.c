@@ -452,6 +452,7 @@ void *UART_Handler(void)
     char revBuf[20];
     char tempBuf[20];
     char readStr[100] = {0};
+    char IRReadStr[88][10]={0};
     char storeStr[10] = {0};
 
     int len = 0;
@@ -480,7 +481,7 @@ void *UART_Handler(void)
                 readString(REMOTEFILEPATH,READFROMHEAD,
                     STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
                 printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n||||||||||||||||||||||||||||\r\n",readStr);
-                for(i = 0;i< 8 ;i++)
+                for(i = 0;i< REMOTECOUNT ;i++)
                 {
                     if(*(readStr + i*10))
                     {
@@ -492,7 +493,7 @@ void *UART_Handler(void)
                     }
                 }
                 
-                if(i<8)
+                if(i < REMOTECOUNT)
                 {
                     val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
@@ -548,7 +549,53 @@ void *UART_Handler(void)
             }
             else if(tempBuf[1] == '2')
             {
+                memset(IRReadStr,0,IRCOUNT*STORE_FRAME_LENGTH);
+                readString(IRDEVFILEPATH,READFROMHEAD,IRCOUNT*STORE_FRAME_LENGTH,IRReadStr);
+                printf("<>><><><><><><><><\r\n%s\r\n<><><><><><><><><>\r\n",IRReadStr);
+                for(i = 0;i<IRCOUNT;i++)
+                {
+                    if(IRReadStr[i][0])
+                    {
+                        if(!memcmp(tempBuf,IRReadStr[i],10))
+                        {
+                            printf("check out a exist IR:%d ID:%s\r\n",i,tempBuf);
+                            break;
+                        }                        
+                    }
+                }
 
+                if(i < IRCOUNT)
+                {
+                    val_write = 1;
+                    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
+                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
+                    
+                    HK_Audio_Notify( NOTIFY_WIFISET );
+                    raise_alarm_server(6,0, tempBuf); 
+ 
+                    val_write = 0;
+                    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
+                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );                    
+                }
+                else
+                {
+                    if(setDevFlag)
+                    {
+                        memset(storeStr,0,10);
+                        memcpy(storeStr,tempBuf,10);
+                        if(strlen(IRReadStr) < 880)
+                        {
+                            insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
+                            HK_Audio_Notify( NOTIFY_WIFISET );
+                        }
+                        else
+                        {
+                            setDevFlag = 0;
+                            HK_Audio_Notify( NOTIFY_POWEROFF ); 
+                        }
+                    }
+
+                }
             }
             
            
