@@ -468,7 +468,7 @@ void *UART_Handler(void)
         memset(tempBuf,0,20);
 
         len = read(g_UartFd, revBuf, 20);
-        if(len&&(revBuf[0] == 0x01 ||revBuf[0] == 0x02)
+        if(len&&(revBuf[0] == 0x01 ||revBuf[0] == 0x02 || revBuf[0] == 0x03)
             &&(revBuf[5] == 0x01 || revBuf[5] == 0x02 
             || revBuf[5] == 0x04 || revBuf[5] == 0x08))
         {
