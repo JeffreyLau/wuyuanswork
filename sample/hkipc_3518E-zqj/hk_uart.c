@@ -575,9 +575,12 @@ void *UART_Handler(void)
                     val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-                    
-                    HK_Audio_Notify( NOTIFY_WIFISET );
-                    raise_alarm_server(6,0, tempBuf); 
+
+                    if(video_properties_.vv[HKV_MotionSensitivity] > 0)
+                    {
+                        HK_Audio_Notify( NOTIFY_WIFISET );
+                        raise_alarm_server(6,0, tempBuf); 
+                    }
  
                     val_write = 0;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
