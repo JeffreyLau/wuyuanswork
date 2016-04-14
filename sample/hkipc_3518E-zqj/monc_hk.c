@@ -1524,7 +1524,7 @@ static void OnMonSetWebNetInfo( Dict *d )
 
 static void OnSendData( Dict *d )
 {
-    char *cData = DictGetStr(d, "data" );
+    char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
     unsigned int ulParam = DictGetInt(d, HK_KEY_UIPARAM );
     //sleep(20);
     //sccRecvAPPData( cData, ulParam );

@@ -422,3 +422,6 @@ Monc_hk.c (sample\hkipc_3518e-zqj):            OnMonSetWebNetInfo( d );
 ---- HK_Check_KeyReset Matches (2 in 0 files) ----
 Hkipc_hk.c (sample\hkipc_3518e-zqj):int HK_Check_KeyReset(void)
 Hkipc_hk.c (sample\hkipc_3518e-zqj):        HK_Check_KeyReset(); //system restart or reset to factory settings.
+---- sccRecvAPPData Matches (2 in 1 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):    //sccRecvAPPData( cData, ulParam );
+Monc_hk.c (sample\hkipc_3518e-zqj):    printf("scc..sccRecvAPPData=%s..111111111....\n", cData);
