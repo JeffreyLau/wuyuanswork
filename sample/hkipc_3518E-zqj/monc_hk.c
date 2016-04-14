@@ -1260,6 +1260,8 @@ void OnRestorationParam( )
     system("rm -rf /mnt/sif/light.conf");
     system("rm -rf /mnt/sif/m433.conf");
     system("rm -rf /mnt/sif/m433Code.conf");
+    system("rm /mnt/sif/remoteID.txt");
+    system("rm /mnt/sif/IRID.txt");    
     /**reset hkclient.conf**/
     conf_set_int(HOME_DIR"/hkclient.conf", "LAN_PASSWD", 123456);
     conf_set_int(HOME_DIR"/hkipc.conf", "audioalarmlv", 1);

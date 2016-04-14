@@ -451,7 +451,7 @@ void *UART_Handler(void)
 
     char revBuf[20];
     char tempBuf[20];
-    char readStr[100] = {0};
+    char readStr[8][10] = {0};
     char IRReadStr[88][10]={0};
     char storeStr[10] = {0};
 
@@ -477,15 +477,15 @@ void *UART_Handler(void)
 
             if(tempBuf[1] == '1')
             {
-                memset(readStr,0,100);
+                memset(readStr,0,STORE_FRAME_LENGTH * REMOTECOUNT);
                 readString(REMOTEFILEPATH,READFROMHEAD,
                     STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
                 printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n||||||||||||||||||||||||||||\r\n",readStr);
                 for(i = 0;i< REMOTECOUNT ;i++)
                 {
-                    if(*(readStr + i*10))
+                    if(readStr[i][0])
                     {
-                        if(!memcmp(tempBuf,readStr+i*10,10))
+                        if(!memcmp(tempBuf,readStr[i],10))
                         {
                             printf("check out a exist remote:%d ID:%s\r\n",i,tempBuf);
                             break;
@@ -535,19 +535,25 @@ void *UART_Handler(void)
                         if(strlen(readStr) < 80)
                         {
                             insertString(REMOTEFILEPATH,WRITETOTAIL,storeStr);
+                            printf("Store remote successfully!!\r\n");
                             HK_Audio_Notify( NOTIFY_WIFISET );
                         }
                         else
                         {
+                            printf("List is full!!\r\n");
                             setDevFlag = 0;
                             HK_Audio_Notify( NOTIFY_POWEROFF ); 
                         }
+                    }
+                    else
+                    {
+                        printf("This remote does not exist in th list!!\r\n");
                     }
                 
                 }
               
             }
-            else if(tempBuf[1] == '2')
+            else if(tempBuf[1] == '2' || tempBuf[1] == '3')
             {
                 memset(IRReadStr,0,IRCOUNT*STORE_FRAME_LENGTH);
                 readString(IRDEVFILEPATH,READFROMHEAD,IRCOUNT*STORE_FRAME_LENGTH,IRReadStr);
@@ -586,13 +592,19 @@ void *UART_Handler(void)
                         if(strlen(IRReadStr) < 880)
                         {
                             insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
+                            printf("Store IR successfully!!\r\n");
                             HK_Audio_Notify( NOTIFY_WIFISET );
                         }
                         else
                         {
+                            printf("List is full!!\r\n");
                             setDevFlag = 0;
                             HK_Audio_Notify( NOTIFY_POWEROFF ); 
                         }
+                    }
+                    else
+                    {
+                        printf("This IR does not exist in th list!!\r\n");
                     }
 
                 }
