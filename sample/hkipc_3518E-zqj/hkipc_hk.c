@@ -4010,6 +4010,9 @@ int scc_test_IrcutCtrl(int nboardtype)
                 bitnum   = 2; //GPIO:2_2 (ircut+).
 #endif
 #endif
+
+#if WUYUAN_DEBUG
+#else
                 val_set  = 1; //pull up.
                 Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                 Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
@@ -4019,6 +4022,10 @@ int scc_test_IrcutCtrl(int nboardtype)
                 Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                 Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
                 HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n\n", groupnum, bitnum, val_set);
+
+#endif
+
+
             }
             else if (1 == nboardtype) //ircut light board type: level 1.
             {
@@ -4052,6 +4059,9 @@ int scc_test_IrcutCtrl(int nboardtype)
                     groupnum = 2;
                     bitnum   = 2; //GPIO:2_2 (ircut+).
 #endif
+
+#if WUYUAN_DEBUG
+#else
                     val_set  = 1; //pull up.
                     Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                     Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
@@ -4061,6 +4071,9 @@ int scc_test_IrcutCtrl(int nboardtype)
                     Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                     Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
                     //HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n\n", groupnum, bitnum, val_set);
+
+#endif
+
                 }       
             }
         }

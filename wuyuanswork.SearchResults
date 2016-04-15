@@ -445,3 +445,113 @@ Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetDir( g_AlarmOut_grp, g
 Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, val_set ); //pull up.
 Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetDir( g_AlarmOut_grp, g_AlarmOut_bit, GPIO_WRITE );
 Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, val_set ); //pull down.
+---- Hi_SetGpio_SetBit Matches (109 in 10 files) ----
+Gpiodriver.c (sample\hkipc_3518e-zqj):int Hi_SetGpio_SetBit(unsigned int gpio_groupnum, unsigned int gpio_bitnum, unsigned int bitvalue)
+Gpiodriver.h (sample\hkipc_3518e-zqj):int  Hi_SetGpio_SetBit(unsigned int gpio_groupnum,unsigned int gpio_bitnum, unsigned int bitvalue);
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 7, 5, 0 );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( groupnum, bitnum, 1 );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( groupnum, bitnum, val_set ); //PIR: GPIO7_5.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( 2, 2, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    nRet = Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    nRet = Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    nRet = Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    nRet = Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    nRet = Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( gpio_grp_ircut0, gpio_bit_ircut0, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( gpio_grp_ircut0, gpio_bit_ircut0, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( gpio_grp_ircut0, gpio_bit_ircut0, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( gpio_grp_ircut0, gpio_bit_ircut0, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( gpio_grp_ircut1, gpio_bit_ircut1, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( gpio_grp_ircut1, gpio_bit_ircut1, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( gpio_grp_ircut0, gpio_bit_ircut0, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( gpio_grp_ircut0, gpio_bit_ircut0, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( gpio_grp_ircut1, gpio_bit_ircut1, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( gpio_grp_ircut1, gpio_bit_ircut1, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, 1 ); //pull up.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, 0 ); //pull down.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, val_set ); //pull up.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, val_set ); //pull down.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum1, bitnum1, val_set ); //pull down.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(g_RUN_grp, g_RUN_bit, val_se );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( g_RUN_grp, g_RUN_bit, val_se );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit(g_RUN_grp,  g_RUN_bit, val_se );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( g_RUN_grp, g_RUN_bit, val_se );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit(g_RUN_grp, g_RUN_bit, val_se );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( g_RUN_grp, g_RUN_bit, val_se );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_RUN_grp, g_RUN_bit, valSetRun ); //pull up.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_RUN_grp, g_RUN_bit, valSetRun ); //pull down.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hk_ir_decode.c (sample\hkipc_3518e-zqj):                Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hk_ir_decode.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hk_sar_adc.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( groupnum, bitnum, val_set ); //pull down.
+Hk_sysaudio.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Hk_uart.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
+Hk_uart.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
+Hk_uart.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );  
+Hk_uart.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
+Hk_uart.c (sample\hkipc_3518e-zqj):                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
+Ptz.c (sample\hkipc_3518e-zqj):		Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Ptz.c (sample\hkipc_3518e-zqj):		Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+Ptz.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(groupnum, bitnum, val_set);// output a high level 
+Ptz.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(groupnum, bitnum, val_set); // output a low level 
+Ptz.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(groupnum, bitnum, val_set);// output a high level 
+Ptz.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(groupnum, bitnum, val_set); // output a low level 
+Ptz.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(groupnum, bitnum, val_set);// output a high level 
+Ptz.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(groupnum, bitnum, val_set); // output a low level 
+Ptz.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(groupnum, bitnum, val_set);// output a high level 
+Ptz.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit(groupnum, bitnum, val_set); // output a low level 
+vbAudio_hk.c (sample\hkipc_3518e-zqj):	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+vbAudio_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+vbAudio_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+vbAudio_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+vbVideo_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+vbVideo_hk.c (sample\hkipc_3518e-zqj):            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+vbVideo_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( groupnum, bitnum, val_set ); //pull down.
+vbVideo_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_AlarmOut, g_AlarmOutbit, val_set ); //pull up.
+vbVideo_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_AlarmOut, g_AlarmOutbit, val_set ); //pull down.
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 2,3,1 );
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 2,3,0 );
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 2,3,1 );
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 2,3,0 );
