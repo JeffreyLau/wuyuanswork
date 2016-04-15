@@ -1540,8 +1540,8 @@ int storeTheAPPDev(char *dev)
             checkExist = checkDevExist(dev,storeLen);
             if(!checkExist)
             {
-                if(setDevFlag)
-                {
+                //if(setDevFlag)
+                //{
                     memset(storeStr,0,10);
                     memcpy(storeStr,dev,10);
                     if(storeLen < 80)
@@ -1558,11 +1558,11 @@ int storeTheAPPDev(char *dev)
                         setDevFlag = 0;
                         HK_Audio_Notify( NOTIFY_POWEROFF ); 
                     }
-                }
-                else
-                {
-                    printf("This remote does not exist in th list!!\r\n");
-                }
+                //}
+                //else
+                //{
+                   // printf("This remote does not exist in th list!!\r\n");
+               // }
 
             }
         }
@@ -1571,8 +1571,8 @@ int storeTheAPPDev(char *dev)
             checkExist = checkDevExist(dev,storeLen);
             if(!checkExist)
             {
-                if(setDevFlag)
-                {
+               // if(setDevFlag)
+               // {
                     memset(storeStr,0,10);
                     memcpy(storeStr,dev,10);
                     if(storeLen < 880)
@@ -1589,11 +1589,11 @@ int storeTheAPPDev(char *dev)
                         setDevFlag = 0;
                         HK_Audio_Notify( NOTIFY_POWEROFF ); 
                      }
-                 }
-                 else
-                 {
-                     printf("This IR does not exist in th list!!\r\n");
-                 }
+                // }
+                 //else
+                 //{
+                    // printf("This IR does not exist in th list!!\r\n");
+                 //}
             }            
         }   
     }
