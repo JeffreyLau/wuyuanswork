@@ -548,7 +548,7 @@ void *UART_Handler(void)
                     val_write = 0;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-                    usleep(1000*500); 
+                    usleep(1000*100); 
                     switch(tempBuf[11])
                     {
                         case 0x31:
@@ -614,7 +614,7 @@ void *UART_Handler(void)
                     val_write = 0;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-                    usleep(1000*500);
+                    usleep(1000*100);
                     
                     if(video_properties_.vv[HKV_MotionSensitivity] > 0)
                     {
