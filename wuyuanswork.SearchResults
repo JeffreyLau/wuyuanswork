@@ -562,3 +562,4 @@ vbVideo_hk.c (sample\hkipc_3518e-zqj):        scc_test_IrcutCtrl( 0 );
 ---- hk_IrcutCtrl Matches (2 in 1 files) ----
 Hkipc_hk.c (sample\hkipc_3518e-zqj):static int hk_IrcutCtrl(int nboardtype)
 Hkipc_hk.c (sample\hkipc_3518e-zqj):        hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.
+---- read_m433_data Matches (0 in 0 files) ----
