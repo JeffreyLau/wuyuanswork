@@ -502,8 +502,8 @@ void *UART_Handler(void)
                     switch(tempBuf[11])
                     {
                         case 0x31:
-                            HK_Audio_Notify( NOTIFY_WIFISET );
-                            raise_alarm_server(6,0, tempBuf); 
+                            raise_alarm_server(6,0, tempBuf);
+                            HK_Audio_Notify( NOTIFY_WIFISET );                            
                             break;
                         case 0x32:
                             HK_Audio_Notify( NOTIFY_WIFISET );
@@ -536,6 +536,7 @@ void *UART_Handler(void)
                         {
                             insertString(REMOTEFILEPATH,WRITETOTAIL,storeStr);
                             printf("Store remote successfully!!\r\n");
+                            raise_alarm_server(6,0, tempBuf);
                             HK_Audio_Notify( NOTIFY_WIFISET );
                         }
                         else
@@ -578,8 +579,8 @@ void *UART_Handler(void)
 
                     if(video_properties_.vv[HKV_MotionSensitivity] > 0)
                     {
-                        HK_Audio_Notify( NOTIFY_WIFISET );
-                        raise_alarm_server(6,0, tempBuf); 
+                        raise_alarm_server(6,0, tempBuf);
+                        HK_Audio_Notify( NOTIFY_WIFISET );                        
                     }
  
                     val_write = 0;
@@ -596,6 +597,7 @@ void *UART_Handler(void)
                         {
                             insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
                             printf("Store IR successfully!!\r\n");
+                            raise_alarm_server(6,0, tempBuf);
                             HK_Audio_Notify( NOTIFY_WIFISET );
                         }
                         else

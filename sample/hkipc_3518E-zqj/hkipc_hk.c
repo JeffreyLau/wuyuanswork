@@ -3410,7 +3410,7 @@ static void initGPIO()
     /**MI8029 PIR**/
     groupnum = 7;
     bitnum   = 5; //GPIO:7_5.
-    val_set  = 1;
+    val_set  = 0;
     Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
     Hi_SetGpio_SetBit( groupnum, bitnum, val_set ); //PIR: GPIO7_5.
     HK_DEBUG_PRT(".......................Get GPIO %d_%d  read Value: %d....\n", groupnum, bitnum, val_set);
