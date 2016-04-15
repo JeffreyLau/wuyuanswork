@@ -1535,7 +1535,7 @@ int storeTheAPPDev(char *dev)
     
     if(APP_STR_LEGAL)
     {
-        if(*dev == '1')
+        if(*(dev+1) == '1')
         { 
             checkExist = checkDevExist(dev,storeLen);
             if(!checkExist)
@@ -1566,7 +1566,7 @@ int storeTheAPPDev(char *dev)
 
             }
         }
-        else if(*dev == '2' || *dev == '3')
+        else if(*(dev+1) == '2' || *(dev+1) == '3')
         {
             checkExist = checkDevExist(dev,storeLen);
             if(!checkExist)
