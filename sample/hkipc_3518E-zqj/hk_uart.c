@@ -466,13 +466,16 @@ int checkDevExist(char *devID,int storeLen)
                     if(!memcmp(devID,readStr[i],10))
                     {
                         printf("check out a exist remote:%d ID:%s\r\n",i,devID);
-                        
-                        return 1;
+                        break;
                     }
                  }
             } 
             
-            return 0;
+            if(i < REMOTECOUNT)
+                return 1;
+            else
+                return 0;
+         
         }
         break;
         
@@ -490,14 +493,16 @@ int checkDevExist(char *devID,int storeLen)
                      if(!memcmp(devID,IRReadStr[i],10))
                      {
                          printf("check out a exist IR:%d ID:%s\r\n",i,devID);
-
-                         if(*devID == '2')return 2;
-                         if(*devID == '3')return 3;
+                         break;
                      }                        
                   }
              }
 
-             return 0;
+             if(i < REMOTECOUNT)
+                 return 1;
+             else
+                 return 0;
+
         }
         break;
 
