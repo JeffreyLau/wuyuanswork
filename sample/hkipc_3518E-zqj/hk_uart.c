@@ -68,8 +68,8 @@ int g_UartFd = -1;
 
 #if WUYUAN_DEBUG
 
-unsigned int g_BeepOut_grp  = 7; //BEEP OUT :7_5
-unsigned int g_BeepOut_bit  = 7;
+unsigned int g_BeepOut_grp  = 2; //BEEP OUT :7_5
+unsigned int g_BeepOut_bit  = 2;
 extern unsigned char setDevFlag;
 
 #endif
@@ -545,38 +545,36 @@ void *UART_Handler(void)
                 checkExist = checkDevExist(tempBuf,storeLen);
                 if(checkExist == 1)
                 {
-                    val_write = 1;
+                    val_write = 0;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-                    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( 2, 2, val_write );                     
+                     
                     switch(tempBuf[11])
                     {
                         case 0x31:
                             raise_alarm_server(6,0, tempBuf);
-                            HK_Audio_Notify( NOTIFY_WIFISET );                            
+                            //HK_Audio_Notify( NOTIFY_WIFISET );                            
                             break;
                         case 0x32:
-                            HK_Audio_Notify( NOTIFY_WIFISET );
+                            //HK_Audio_Notify( NOTIFY_WIFISET );
                             video_properties_.vv[HKV_MotionSensitivity] = 0;
                             
                             break;
                         case 0x34:
-                            HK_Audio_Notify( NOTIFY_WIFISET );
+                            //HK_Audio_Notify( NOTIFY_WIFISET );
                             video_properties_.vv[HKV_MotionSensitivity] = 3;
                             
                             break;
                         case 0x38:
-                            HK_Audio_Notify( NOTIFY_WIFISET );
+                            //HK_Audio_Notify( NOTIFY_WIFISET );
                             video_properties_.vv[HKV_MotionSensitivity] = 1;
                             break;
                         default:break;   
                     }
-                    val_write = 0;
+                    val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );  
-                    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( 2, 2, val_write ); 
+
 
                 }
                 else if(!checkExist)
@@ -613,23 +611,20 @@ void *UART_Handler(void)
                 checkExist = checkDevExist(tempBuf,storeLen);
                 if(checkExist == 2)
                 {
-                    val_write = 1;
+                    val_write = 0;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-                    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( 2, 2, val_write ); 
+ 
                     
                     if(video_properties_.vv[HKV_MotionSensitivity] > 0)
                     {
                         raise_alarm_server(6,0, tempBuf);
-                        HK_Audio_Notify( NOTIFY_WIFISET );                        
+                        //HK_Audio_Notify( NOTIFY_WIFISET );                        
                     }
  
-                    val_write = 0;
+                    val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-                    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( 2, 2, val_write ); 
                     
                 }
                 else if(!checkExist)

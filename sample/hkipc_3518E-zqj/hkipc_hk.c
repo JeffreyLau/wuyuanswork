@@ -3397,7 +3397,7 @@ static void initGPIO()
 	groupnum = 2;
 	bitnum   = 2; //GPIO:2_2 ==> IRCUT+.
 	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
-	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+	Hi_SetGpio_SetBit( groupnum, bitnum, 1 );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
 
 	groupnum = 2;
@@ -3438,6 +3438,7 @@ static void initGPIO()
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
 
+    val_set  = 1;
     Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
 	Hi_SetGpio_SetBit( 2, 2, val_set );
 
