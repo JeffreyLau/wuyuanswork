@@ -498,7 +498,7 @@ int checkDevExist(char *devID,int storeLen)
                   }
              }
 
-             if(i < REMOTECOUNT)
+             if(i < IRCOUNT)
                  return 1;
              else
                  return 0;
