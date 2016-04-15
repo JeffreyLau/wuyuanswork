@@ -69,7 +69,7 @@ int g_UartFd = -1;
 #if WUYUAN_DEBUG
 
 unsigned int g_BeepOut_grp  = 7; //BEEP OUT :7_5
-unsigned int g_BeepOut_bit  = 5;
+unsigned int g_BeepOut_bit  = 7;
 extern unsigned char setDevFlag;
 
 #endif
@@ -548,7 +548,8 @@ void *UART_Handler(void)
                     val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-                    
+                    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
+                    Hi_SetGpio_SetBit( 2, 2, val_write );                     
                     switch(tempBuf[11])
                     {
                         case 0x31:
@@ -574,6 +575,8 @@ void *UART_Handler(void)
                     val_write = 0;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );  
+                    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
+                    Hi_SetGpio_SetBit( 2, 2, val_write ); 
 
                 }
                 else if(!checkExist)
@@ -613,7 +616,9 @@ void *UART_Handler(void)
                     val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-
+                    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
+                    Hi_SetGpio_SetBit( 2, 2, val_write ); 
+                    
                     if(video_properties_.vv[HKV_MotionSensitivity] > 0)
                     {
                         raise_alarm_server(6,0, tempBuf);
@@ -622,7 +627,10 @@ void *UART_Handler(void)
  
                     val_write = 0;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );                    
+                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
+                    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
+                    Hi_SetGpio_SetBit( 2, 2, val_write ); 
+                    
                 }
                 else if(!checkExist)
                 {

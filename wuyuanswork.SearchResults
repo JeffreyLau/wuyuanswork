@@ -434,3 +434,14 @@ Monc_hk.c (sample\hkipc_3518e-zqj):    printf("scc..sccRecvAPPData=%s..111111111
 ---- sccRecvAPPData Matches (2 in 1 files) ----
 Monc_hk.c (sample\hkipc_3518e-zqj):    //sccRecvAPPData( cData, ulParam );
 Monc_hk.c (sample\hkipc_3518e-zqj):    printf("scc..sccRecvAPPData=%s..111111111....\n", cData);
+---- g_AlarmOut_grp Matches (10 in 1 files) ----
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    unsigned int g_AlarmOut_grp = 5;
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    unsigned int g_AlarmOut_grp = 7;
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetDir( g_AlarmOut_grp, g_AlarmOut_bit, GPIO_WRITE );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, 1 ); //pull up.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetDir( g_AlarmOut_grp, g_AlarmOut_bit, GPIO_WRITE );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, 0 ); //pull down.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetDir( g_AlarmOut_grp, g_AlarmOut_bit, GPIO_WRITE );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, val_set ); //pull up.
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetDir( g_AlarmOut_grp, g_AlarmOut_bit, GPIO_WRITE );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( g_AlarmOut_grp, g_AlarmOut_bit, val_set ); //pull down.

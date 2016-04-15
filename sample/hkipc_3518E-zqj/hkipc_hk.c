@@ -74,7 +74,7 @@ extern int Getms();
     unsigned int g_AlarmIn_grp  = 7;
     unsigned int g_AlarmIn_bit  = 6; //alarm in:7_6.
     unsigned int g_AlarmOut_grp = 7;
-    unsigned int g_AlarmOut_bit = 5; //alarm out:7_7.
+    unsigned int g_AlarmOut_bit = 7; //alarm out:7_7.
     unsigned int g_RUN_grp      = 5;
     unsigned int g_RUN_bit      = 3; //RUN light:5_3.
 
@@ -3437,6 +3437,10 @@ static void initGPIO()
 	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
+
+    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
+	Hi_SetGpio_SetBit( 2, 2, val_set );
+
 #endif
 
 #if 0
