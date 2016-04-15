@@ -1550,7 +1550,7 @@ int storeTheAPPDev(char *dev)
                     memcpy(storeStr,dev,10);
                     if(storeLen < 80)
                     {
-                        insertString(REMOTEFILEPATH,WRITETOTAIL,storeStr);
+                        insertString(REMOTEFILEPATH,WRITETOTAIL,dev);
                         printf("Store remote successfully!!\r\n");
                         raise_alarm_server(6,0, dev);
                         HK_Audio_Notify( NOTIFY_WIFISET );
@@ -1583,7 +1583,7 @@ int storeTheAPPDev(char *dev)
                     if(storeLen < 880)
                     {
                         printf("storeLen = %d  , storeStr = %s\r\n",storeLen,storeStr);
-                        insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
+                        insertString(IRDEVFILEPATH,WRITETOTAIL,dev);
                         printf("storeLen = %d  , storeStr = %s\r\n",storeLen,storeStr);
                         
                         printf("Store IR successfully!!\r\n");
