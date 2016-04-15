@@ -444,6 +444,68 @@ int traversalTheDevList(char *targetStr)
 
 }
 
+int checkDevExist(char *devID,char *storeLen)
+{
+    char readStr[8][10] = {0};
+    char IRReadStr[88][10]={0};
+
+    int i = 0;
+    switch(*devID)
+    {
+        case '1':
+        {
+            memset(readStr,0,STORE_FRAME_LENGTH * REMOTECOUNT);
+            readString(REMOTEFILEPATH,READFROMHEAD,
+                    STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
+            printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n||||||||||||||||||||||||||||\r\n",readStr);
+            for(i = 0;i< REMOTECOUNT ;i++)
+            {
+                if(readStr[i][0])
+                {
+                    if(!memcmp(devID,readStr[i],10))
+                    {
+                        printf("check out a exist remote:%d ID:%s\r\n",i,devID);
+                        storeLen = strlen(readStr);
+                        return 1;
+                    }
+                 }
+            } 
+            storeLen = strlen(readStr);
+            return 0;
+        }
+        break;
+        
+        case '2':
+        case '3':
+        {
+             memset(IRReadStr,0,IRCOUNT*STORE_FRAME_LENGTH);
+             readString(IRDEVFILEPATH,READFROMHEAD,IRCOUNT*STORE_FRAME_LENGTH,IRReadStr);
+             printf("<>><><><><><><><><\r\n%s\r\n<><><><><><><><><>\r\n",IRReadStr);
+             for(i = 0;i<IRCOUNT;i++)
+             {
+                 if(IRReadStr[i][0])
+                 {
+                     if(!memcmp(devID,IRReadStr[i],10))
+                     {
+                         printf("check out a exist IR:%d ID:%s\r\n",i,devID);
+                         storeLen = strlen(IRReadStr);
+                         if(*devID == '2')return 2;
+                         if(*devID == '3')return 3;
+                     }                        
+                  }
+             }
+             storeLen = strlen(IRReadStr);
+             return 0;
+        }
+        break;
+
+        default:break;
+
+    }
+    storeLen = 0;
+    return 0;
+}
+
 void *UART_Handler(void)
 {
     extern struct HKVProperty video_properties_;
@@ -451,13 +513,12 @@ void *UART_Handler(void)
 
     char revBuf[20];
     char tempBuf[20];
-    char readStr[8][10] = {0};
-    char IRReadStr[88][10]={0};
     char storeStr[10] = {0};
 
     int len = 0;
     int val_write = 0;
-    int i = 0;
+    int checkExist = 0;
+    int storeLen = 0;
 
     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
@@ -468,32 +529,14 @@ void *UART_Handler(void)
         memset(tempBuf,0,20);
 
         len = read(g_UartFd, revBuf, 20);
-        if(len&&(revBuf[0] == 0x01 ||revBuf[0] == 0x02 || revBuf[0] == 0x03)
-            &&(revBuf[5] == 0x01 || revBuf[5] == 0x02 
-            || revBuf[5] == 0x04 || revBuf[5] == 0x08))
-        {
-            
+        if(DEV_STR_LEGAL)
+        {           
             hexToChar(revBuf, tempBuf);
 
             if(tempBuf[1] == '1')
             {
-                memset(readStr,0,STORE_FRAME_LENGTH * REMOTECOUNT);
-                readString(REMOTEFILEPATH,READFROMHEAD,
-                    STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
-                printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n||||||||||||||||||||||||||||\r\n",readStr);
-                for(i = 0;i< REMOTECOUNT ;i++)
-                {
-                    if(readStr[i][0])
-                    {
-                        if(!memcmp(tempBuf,readStr[i],10))
-                        {
-                            printf("check out a exist remote:%d ID:%s\r\n",i,tempBuf);
-                            break;
-                        }
-                    }
-                }
-                
-                if(i < REMOTECOUNT)
+                checkExist = checkDevExist(tempBuf,storeLen);
+                if(checkExist == 1)
                 {
                     val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
@@ -526,13 +569,13 @@ void *UART_Handler(void)
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );  
 
                 }
-                else
+                else if(!checkExist)
                 {
                     if(setDevFlag)
                     {
                         memset(storeStr,0,10);
                         memcpy(storeStr,tempBuf,10);
-                        if(strlen(readStr) < 80)
+                        if(storeLen < 80)
                         {
                             insertString(REMOTEFILEPATH,WRITETOTAIL,storeStr);
                             printf("Store remote successfully!!\r\n");
@@ -556,22 +599,9 @@ void *UART_Handler(void)
             }
             else if(tempBuf[1] == '2' || tempBuf[1] == '3')
             {
-                memset(IRReadStr,0,IRCOUNT*STORE_FRAME_LENGTH);
-                readString(IRDEVFILEPATH,READFROMHEAD,IRCOUNT*STORE_FRAME_LENGTH,IRReadStr);
-                printf("<>><><><><><><><><\r\n%s\r\n<><><><><><><><><>\r\n",IRReadStr);
-                for(i = 0;i<IRCOUNT;i++)
-                {
-                    if(IRReadStr[i][0])
-                    {
-                        if(!memcmp(tempBuf,IRReadStr[i],10))
-                        {
-                            printf("check out a exist IR:%d ID:%s\r\n",i,tempBuf);
-                            break;
-                        }                        
-                    }
-                }
 
-                if(i < IRCOUNT)
+                checkExist = checkDevExist(tempBuf,storeLen);
+                if(checkExist == 2 || checkExist == 3)
                 {
                     val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
@@ -587,13 +617,13 @@ void *UART_Handler(void)
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
                     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write );                    
                 }
-                else
+                else if(!checkExist)
                 {
                     if(setDevFlag)
                     {
                         memset(storeStr,0,10);
                         memcpy(storeStr,tempBuf,10);
-                        if(strlen(IRReadStr) < 880)
+                        if(storeLen < 880)
                         {
                             insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
                             printf("Store IR successfully!!\r\n");

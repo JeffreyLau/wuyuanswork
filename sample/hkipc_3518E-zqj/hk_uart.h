@@ -85,8 +85,9 @@ int UART_CtrlCmd_Send(ENUM_UART_CMD enCmd, int iParam);
 int UART_CtrlCmd_Recv(unsigned int *nRecv);
 int UART_Init(void);
 void *UART_Handler(void);
+int checkDevExist(char *devID);
 
-
+#define DEV_STR_LEGAL len&&(revBuf[0] == 0x01 ||revBuf[0] == 0x02 || revBuf[0] == 0x03)&&(revBuf[5] == 0x01 || revBuf[5] == 0x02 || revBuf[5] == 0x04 || revBuf[5] == 0x08)
 
 
 #endif  /* hk_uart.h (zqj) */

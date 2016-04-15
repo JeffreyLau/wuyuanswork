@@ -425,3 +425,12 @@ Hkipc_hk.c (sample\hkipc_3518e-zqj):        HK_Check_KeyReset(); //system restar
 ---- sccRecvAPPData Matches (2 in 1 files) ----
 Monc_hk.c (sample\hkipc_3518e-zqj):    //sccRecvAPPData( cData, ulParam );
 Monc_hk.c (sample\hkipc_3518e-zqj):    printf("scc..sccRecvAPPData=%s..111111111....\n", cData);
+---- sccRecvAPPData Matches (2 in 1 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):    //sccRecvAPPData( cData, ulParam );
+Monc_hk.c (sample\hkipc_3518e-zqj):    printf("scc..sccRecvAPPData=%s..111111111....\n", cData);
+---- sccRecvAPPData Matches (2 in 1 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):    //sccRecvAPPData( cData, ulParam );
+Monc_hk.c (sample\hkipc_3518e-zqj):    printf("scc..sccRecvAPPData=%s..111111111....\n", cData);
+---- sccRecvAPPData Matches (2 in 1 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):    //sccRecvAPPData( cData, ulParam );
+Monc_hk.c (sample\hkipc_3518e-zqj):    printf("scc..sccRecvAPPData=%s..111111111....\n", cData);

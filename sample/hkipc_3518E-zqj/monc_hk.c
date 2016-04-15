@@ -8,6 +8,7 @@
 #include "ov7725.h"
 #include "hk_email.h"
 #include "hk_sysaudio.h"
+#include "hk_uart.h"
 
 #if ENABLE_ONVIF
     #include "IPCAM_Export.h"
@@ -1522,13 +1523,97 @@ static void OnMonSetWebNetInfo( Dict *d )
     sys_restart( );
 }
 
+int storeTheAPPDev(char *dev)
+{
+    extern unsigned char setDevFlag;
+
+    int len = strlen(dev);
+    char storeStr[10] = {0};
+    int checkExist = 0;
+    int storeLen = 0;
+    
+    if(DEV_STR_LEGAL)
+    {
+        if(*dev == '1')
+        { 
+            checkExist = checkDevExist(dev,storeLen);
+            if(!checkExist)
+            {
+                if(setDevFlag)
+                {
+                    memset(storeStr,0,10);
+                    memcpy(storeStr,dev,10);
+                    if(storeLen < 80)
+                    {
+                        insertString(REMOTEFILEPATH,WRITETOTAIL,storeStr);
+                        printf("Store remote successfully!!\r\n");
+                        raise_alarm_server(6,0, dev);
+                        HK_Audio_Notify( NOTIFY_WIFISET );
+                        return 1;
+                    }
+                    else
+                    {
+                        printf("List is full!!\r\n");
+                        setDevFlag = 0;
+                        HK_Audio_Notify( NOTIFY_POWEROFF ); 
+                    }
+                }
+                else
+                {
+                    printf("This remote does not exist in th list!!\r\n");
+                }
+
+            }
+        }
+        else if(*dev == '2' || *dev == '3')
+        {
+            checkExist = checkDevExist(dev,storeLen);
+            if(!checkExist)
+            {
+                if(setDevFlag)
+                {
+                    memset(storeStr,0,10);
+                    memcpy(storeStr,dev,10);
+                    if(storeLen < 880)
+                    {
+                        insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
+                        printf("Store IR successfully!!\r\n");
+                        raise_alarm_server(6,0, dev);
+                        HK_Audio_Notify( NOTIFY_WIFISET );
+                        return 1;
+                    }
+                    else
+                    {
+                        printf("List is full!!\r\n");
+                        setDevFlag = 0;
+                        HK_Audio_Notify( NOTIFY_POWEROFF ); 
+                     }
+                 }
+                 else
+                 {
+                     printf("This IR does not exist in th list!!\r\n");
+                 }
+            }            
+        }   
+    }
+    return 0;
+}
+
 static void OnSendData( Dict *d )
 {
     char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
     unsigned int ulParam = DictGetInt(d, HK_KEY_UIPARAM );
-    //sleep(20);
-    //sccRecvAPPData( cData, ulParam );
+    
     printf("scc..sccRecvAPPData=%s..111111111....\n", cData);
+
+    if(storeTheAPPDev(cData))
+    {
+        printf("APP Dev Store Successfully!");
+    }
+    else
+    {
+        printf("APP Dev Store Failed");
+    }
 }
 
 //204 open,205 alarm, 206 alarm close, 207 test, 208 Get Dev.
