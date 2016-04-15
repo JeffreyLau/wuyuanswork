@@ -3397,7 +3397,7 @@ static void initGPIO()
 	groupnum = 2;
 	bitnum   = 2; //GPIO:2_2 ==> IRCUT+.
 	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
-	Hi_SetGpio_SetBit( groupnum, bitnum, 1 );
+	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
 
 	groupnum = 2;
@@ -3437,9 +3437,6 @@ static void initGPIO()
 	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
-    
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
 
 #endif
 
@@ -5020,9 +5017,6 @@ int main(int argc, char* argv[])
     HI_SetGpio_Open();
     initGPIO();
     
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 ); 
-    
     setpidfile(getenv("PIDFILE"), getpid());
     if (getenv("wppid"))
     {
@@ -5035,16 +5029,11 @@ int main(int argc, char* argv[])
 
     tq_ = tq_create();
     
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
     
     SysInit(&cb_init);
     SysRegistASLan_0(LOCAL_ASC, 0, &cb_lan);
     first_run_check(tq_, &counter);
     //sleep(1);
-    
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
     
 #if (DEV_INFRARED)
     HK_Infrared_Decode();
@@ -5052,26 +5041,17 @@ int main(int argc, char* argv[])
 #endif
     GetAlarmEmailInfo(); //get email configuration info
     GetSdAlarmParam(); //get sd card configuration info.
-    
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
-    
+
     /**video callbacks for client operations**/
     video_RSLoadObjects( &SysRegisterDev );
     /**audio callbacks for client operations**/
     audio_RSLoadObjects( &SysRegisterDev );
-    
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
-    
+
     hk_load_sd(); //mount sd card.
     if(g_sdIsOnline == 1 ) //create tf Thread
     {
         CreateTFThread();
     }
-
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
 
     HK_MessageQueue_Recv();
     mpeg_.tq = tq_;
@@ -5092,17 +5072,12 @@ int main(int argc, char* argv[])
     }
 #endif
 
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
 
 #if (DEV_ROBOT | DEV_ANDSON | DEV_CODWIP)
     /**uart communication**/
     //HK_UART_Thread();
     test_uart(); //test.
 #endif
-
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-    Hi_SetGpio_SetBit( 2, 2, 1 );
 
 
 #if WUYUAN_DEBUG
@@ -5116,16 +5091,10 @@ int main(int argc, char* argv[])
     HK_Onvif_Init();
 #endif
 
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-    Hi_SetGpio_SetBit( 2, 2, 1 );
-
 
 #if (DEV_SHANGHAI |DEV_CHEANGDU )
     HK_SAR_ADC();
 #endif
-
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
 
 
     audio_alarm = conf_get_int("/mnt/sif/hkipc.conf", "audioalarmlv");    
@@ -5135,10 +5104,7 @@ int main(int argc, char* argv[])
     CreateAudioThread();  
     //-start voice recoder!!
     CreateVoiceRecogThread();
-#endif 
-
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-    Hi_SetGpio_SetBit( 2, 2, 1 );
+#endif
 
 
 #if (DEV_KELIV == 0)
@@ -5146,9 +5112,6 @@ int main(int argc, char* argv[])
 #if (DEV_ZIGBEE)
     HK_Zigbee_Thread_Init();
 #endif
-
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
 
 
     m433enable = conf_get_int("/mnt/sif/hkipc.conf", "m433enable");
@@ -5232,8 +5195,6 @@ int main(int argc, char* argv[])
     } 
     #endif
     #endif  
-    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
-	Hi_SetGpio_SetBit( 2, 2, 1 );
 /*<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
     for ( ; !quit_; counter++)
     {
