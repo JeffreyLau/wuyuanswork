@@ -457,7 +457,7 @@ int checkDevExist(char *devID,int storeLen)
             memset(readStr,0,STORE_FRAME_LENGTH * REMOTECOUNT);
             readString(REMOTEFILEPATH,READFROMHEAD,
                     STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
-            storeLen = strlen(readStr);
+            storeLen = strlen((const char *)readStr);
             printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n||||||||||||||||||||||||||||\r\n",readStr);
             for(i = 0;i< REMOTECOUNT ;i++)
             {
@@ -481,7 +481,7 @@ int checkDevExist(char *devID,int storeLen)
         {
              memset(IRReadStr,0,IRCOUNT*STORE_FRAME_LENGTH);
              readString(IRDEVFILEPATH,READFROMHEAD,IRCOUNT*STORE_FRAME_LENGTH,IRReadStr);
-             storeLen = strlen(IRReadStr);
+             storeLen = strlen((const char *)IRReadStr);
              printf("<>><><><><><><><><\r\n%s\r\n<><><><><><><><><>\r\n",IRReadStr);
              for(i = 0;i<IRCOUNT;i++)
              {

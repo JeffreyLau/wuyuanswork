@@ -1527,7 +1527,7 @@ int storeTheAPPDev(char *dev)
 {
     extern unsigned char setDevFlag;
 
-    int len = strlen(dev);
+    int len = strlen((const char *)dev);
     char storeStr[10] = {0};
     int checkExist = 0;
     int storeLen = 0;
