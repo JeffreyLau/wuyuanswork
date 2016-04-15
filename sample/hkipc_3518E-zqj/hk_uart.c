@@ -604,7 +604,7 @@ void *UART_Handler(void)
                 }
               
             }
-            else if(tempBuf[1] == '2')
+            else if(tempBuf[1] == '2' || tempBuf[1] == '3')
             {
 
                 checkExist = checkDevExist(tempBuf,storeLen);
