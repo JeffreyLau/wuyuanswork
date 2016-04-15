@@ -37,6 +37,7 @@ static bool b_testEmail = false;
 
 extern short g_sdIsOnline;
 static void OnMonDeletePhoto(const char *cFileName, int iDel );
+char getStr[10] = {0};
 
 unsigned long get_file_size(const char *filename)
 {
@@ -1535,7 +1536,7 @@ int storeTheAPPDev(char *dev)
     
     if(APP_STR_LEGAL)
     {
-        if(*(dev+1) == '1')
+        if(dev[1] == '1')
         { 
             checkExist = checkDevExist(dev,storeLen);
             if(!checkExist)
@@ -1566,7 +1567,7 @@ int storeTheAPPDev(char *dev)
 
             }
         }
-        else if(*(dev+1) == '2' || *(dev+1) == '3')
+        else if(dev[1] == '2' || dev[1] == '3')
         {
             checkExist = checkDevExist(dev,storeLen);
             if(!checkExist)
@@ -1601,19 +1602,27 @@ int storeTheAPPDev(char *dev)
 }
 
 static void OnSendData( Dict *d )
-{
+{   
     char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
-    unsigned int ulParam = DictGetInt(d, HK_KEY_UIPARAM );
-    
-    printf("scc..sccRecvAPPData=%s..111111111....\n", cData);
+    if(*cData)
+    {
 
-    if(storeTheAPPDev(cData))
-    {
-        printf("APP Dev Store Successfully!");
-    }
-    else
-    {
-        printf("APP Dev Store Failed");
+        memset(getStr,0,10);
+        memcpy(getStr,cData,10);
+        
+        unsigned int ulParam = DictGetInt(d, HK_KEY_UIPARAM );
+        
+        printf("scc..sccRecvAPPData=%s..111111111....\n", getStr);
+
+
+        if(storeTheAPPDev(getStr))
+        {
+            printf("APP Dev Store Successfully!");
+        }
+        else
+        {
+            printf("APP Dev Store Failed");
+        }
     }
 }
 
