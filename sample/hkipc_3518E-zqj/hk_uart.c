@@ -499,7 +499,7 @@ int checkDevExist(char *devID,int storeLen)
              }
 
              if(i < IRCOUNT)
-                 return 1;
+                 return 2;
              else
                  return 0;
 
@@ -604,7 +604,7 @@ void *UART_Handler(void)
                 }
               
             }
-            else if(tempBuf[1] == '2' || tempBuf[1] == '3')
+            else if(tempBuf[1] == '2')
             {
 
                 checkExist = checkDevExist(tempBuf,storeLen);
