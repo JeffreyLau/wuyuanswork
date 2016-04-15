@@ -450,7 +450,7 @@ int checkDevExist(char *devID,int storeLen)
     char IRReadStr[88][10]={0};
 
     int i = 0;
-    switch(*devID)
+    switch(*(devID+1))
     {
         case '1':
         {
