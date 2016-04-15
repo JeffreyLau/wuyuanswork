@@ -9,6 +9,7 @@
 #include "hk_email.h"
 #include "hk_sysaudio.h"
 #include "hk_uart.h"
+#include "filesystem.h"
 
 #if ENABLE_ONVIF
     #include "IPCAM_Export.h"
@@ -1532,7 +1533,7 @@ int storeTheAPPDev(char *dev)
     int checkExist = 0;
     int storeLen = 0;
     
-    if(DEV_STR_LEGAL)
+    if(APP_STR_LEGAL)
     {
         if(*dev == '1')
         { 
