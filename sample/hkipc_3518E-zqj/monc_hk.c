@@ -1530,6 +1530,9 @@ int storeTheAPPDev(char *dev)
     extern unsigned char setDevFlag;
 
     int len = strlen((const char *)dev);
+
+    printf("dev = %s\r\n",dev);
+    
     char storeStr[10] = {0};
     int checkExist = 0;
     int storeLen = 0;
@@ -1576,9 +1579,13 @@ int storeTheAPPDev(char *dev)
                // {
                     memset(storeStr,0,10);
                     memcpy(storeStr,dev,10);
+                    printf("storeStr = %s\r\n",storeStr);
                     if(storeLen < 880)
                     {
+                        printf("storeLen = %d  , storeStr = %s\r\n",storeLen,storeStr);
                         insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
+                        printf("storeLen = %d  , storeStr = %s\r\n",storeLen,storeStr);
+                        
                         printf("Store IR successfully!!\r\n");
                         raise_alarm_server(6,0, dev);
                         HK_Audio_Notify( NOTIFY_WIFISET );
