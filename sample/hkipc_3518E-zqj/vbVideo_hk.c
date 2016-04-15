@@ -5974,7 +5974,11 @@ static void OnMonDevNetproxy(const char *ev )
     int iFlag = GetParamUN(pFrameHead,HK_KEY_FLAG);
     if( iFlag == 1 )
     {
+    #if WUYUAN_DEBUG
+    #else
         scc_test_IrcutCtrl( 0 );
+    #endif
+        
 
         DestroyFrame( pFrameHead );
         return;

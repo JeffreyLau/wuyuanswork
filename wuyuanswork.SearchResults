@@ -555,3 +555,10 @@ vbVideo_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 2,3,1 );
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 2,3,0 );
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 2,3,1 );
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        Hi_SetGpio_SetBit( 2,3,0 );
+---- scc_test_IrcutCtrl Matches (3 in 3 files) ----
+Hkipc_hk.c (sample\hkipc_3518e-zqj):int scc_test_IrcutCtrl(int nboardtype)
+Hkipc_hk.h (sample\hkipc_3518e-zqj):int scc_test_IrcutCtrl(int nboardtype);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        scc_test_IrcutCtrl( 0 );
+---- hk_IrcutCtrl Matches (2 in 1 files) ----
+Hkipc_hk.c (sample\hkipc_3518e-zqj):static int hk_IrcutCtrl(int nboardtype)
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.

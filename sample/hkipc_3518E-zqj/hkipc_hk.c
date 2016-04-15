@@ -5252,7 +5252,11 @@ int main(int argc, char* argv[])
             
         }
     #endif
+    #if WUYUAN_DEBUG
+    #else
         hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.
+    #endif
+        
 
     #if ((HK_PLATFORM_HI3518E | DEV_ANDSON | DEV_INFRARED) && !DEV_YANXIN)
         HK_Check_KeyReset(); //system restart or reset to factory settings.
