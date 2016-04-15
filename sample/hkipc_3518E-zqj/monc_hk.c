@@ -1533,7 +1533,6 @@ int storeTheAPPDev(char *dev)
 
     printf("dev = %s\r\n",dev);
     
-    char storeStr[10] = {0};
     int checkExist = 0;
     int storeLen = 0;
     
@@ -1544,30 +1543,20 @@ int storeTheAPPDev(char *dev)
             checkExist = checkDevExist(dev,storeLen);
             if(!checkExist)
             {
-                //if(setDevFlag)
-                //{
-                    memset(storeStr,0,10);
-                    memcpy(storeStr,dev,10);
-                    if(storeLen < 80)
-                    {
-                        insertString(REMOTEFILEPATH,WRITETOTAIL,dev);
-                        printf("Store remote successfully!!\r\n");
-                        raise_alarm_server(6,0, dev);
-                        HK_Audio_Notify( NOTIFY_WIFISET );
-                        return 1;
-                    }
-                    else
-                    {
-                        printf("List is full!!\r\n");
-                        setDevFlag = 0;
-                        HK_Audio_Notify( NOTIFY_POWEROFF ); 
-                    }
-                //}
-                //else
-                //{
-                   // printf("This remote does not exist in th list!!\r\n");
-               // }
-
+               if(storeLen < 80)
+               {
+                   insertString(REMOTEFILEPATH,WRITETOTAIL,dev);
+                   printf("Store remote successfully!!\r\n");
+                   raise_alarm_server(6,0, dev);
+                   HK_Audio_Notify( NOTIFY_WIFISET );
+                   return 1;
+               }
+               else
+               {
+                   printf("List is full!!\r\n");
+                   setDevFlag = 0;
+                   HK_Audio_Notify( NOTIFY_POWEROFF ); 
+               }
             }
         }
         else if(dev[1] == '2' || dev[1] == '3')
@@ -1575,33 +1564,20 @@ int storeTheAPPDev(char *dev)
             checkExist = checkDevExist(dev,storeLen);
             if(!checkExist)
             {
-               // if(setDevFlag)
-               // {
-                    memset(storeStr,0,10);
-                    memcpy(storeStr,dev,10);
-                    printf("storeStr = %s\r\n",storeStr);
-                    if(storeLen < 880)
-                    {
-                        printf("storeLen = %d  , storeStr = %s\r\n",storeLen,storeStr);
-                        insertString(IRDEVFILEPATH,WRITETOTAIL,dev);
-                        printf("storeLen = %d  , storeStr = %s\r\n",storeLen,storeStr);
-                        
-                        printf("Store IR successfully!!\r\n");
-                        raise_alarm_server(6,0, dev);
-                        HK_Audio_Notify( NOTIFY_WIFISET );
-                        return 1;
-                    }
-                    else
-                    {
-                        printf("List is full!!\r\n");
-                        setDevFlag = 0;
-                        HK_Audio_Notify( NOTIFY_POWEROFF ); 
-                     }
-                // }
-                 //else
-                 //{
-                    // printf("This IR does not exist in th list!!\r\n");
-                 //}
+               if(storeLen < 880)
+               {
+                  insertString(IRDEVFILEPATH,WRITETOTAIL,dev);                        
+                  printf("Store IR successfully!!\r\n");
+                  raise_alarm_server(6,0, dev);
+                  HK_Audio_Notify( NOTIFY_WIFISET );
+                  return 1;
+               }
+               else
+               {
+                  printf("List is full!!\r\n");
+                  setDevFlag = 0;
+                  HK_Audio_Notify( NOTIFY_POWEROFF ); 
+               }
             }            
         }   
     }
