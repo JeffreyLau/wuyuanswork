@@ -5192,7 +5192,8 @@ int main(int argc, char* argv[])
     } 
     #endif
     #endif  
-    
+    Hi_SetGpio_SetDir( 2, 2, GPIO_WRITE );
+	Hi_SetGpio_SetBit( 2, 2, 1 );
 /*<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
     for ( ; !quit_; counter++)
     {
