@@ -444,7 +444,7 @@ int traversalTheDevList(char *targetStr)
 
 }
 
-int checkDevExist(char *devID,char *storeLen)
+int checkDevExist(char *devID,int storeLen)
 {
     char readStr[8][10] = {0};
     char IRReadStr[88][10]={0};
