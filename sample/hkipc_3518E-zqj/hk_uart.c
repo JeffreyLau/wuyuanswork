@@ -457,6 +457,7 @@ int checkDevExist(char *devID,int storeLen)
             memset(readStr,0,STORE_FRAME_LENGTH * REMOTECOUNT);
             readString(REMOTEFILEPATH,READFROMHEAD,
                     STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
+            storeLen = strlen(readStr);
             printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n||||||||||||||||||||||||||||\r\n",readStr);
             for(i = 0;i< REMOTECOUNT ;i++)
             {
@@ -465,12 +466,12 @@ int checkDevExist(char *devID,int storeLen)
                     if(!memcmp(devID,readStr[i],10))
                     {
                         printf("check out a exist remote:%d ID:%s\r\n",i,devID);
-                        storeLen = strlen(readStr);
+                        
                         return 1;
                     }
                  }
             } 
-            storeLen = strlen(readStr);
+            
             return 0;
         }
         break;
@@ -480,6 +481,7 @@ int checkDevExist(char *devID,int storeLen)
         {
              memset(IRReadStr,0,IRCOUNT*STORE_FRAME_LENGTH);
              readString(IRDEVFILEPATH,READFROMHEAD,IRCOUNT*STORE_FRAME_LENGTH,IRReadStr);
+             storeLen = strlen(IRReadStr);
              printf("<>><><><><><><><><\r\n%s\r\n<><><><><><><><><>\r\n",IRReadStr);
              for(i = 0;i<IRCOUNT;i++)
              {
@@ -488,13 +490,13 @@ int checkDevExist(char *devID,int storeLen)
                      if(!memcmp(devID,IRReadStr[i],10))
                      {
                          printf("check out a exist IR:%d ID:%s\r\n",i,devID);
-                         storeLen = strlen(IRReadStr);
+
                          if(*devID == '2')return 2;
                          if(*devID == '3')return 3;
                      }                        
                   }
              }
-             storeLen = strlen(IRReadStr);
+
              return 0;
         }
         break;
