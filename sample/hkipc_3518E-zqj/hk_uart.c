@@ -608,7 +608,7 @@ void *UART_Handler(void)
             {
 
                 checkExist = checkDevExist(tempBuf,storeLen);
-                if(checkExist == 2 || checkExist == 3)
+                if(checkExist == 2)
                 {
                     val_write = 1;
                     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
