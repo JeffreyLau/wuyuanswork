@@ -1694,10 +1694,11 @@ static void OnSendData( Dict *d )
         {
             if(!memcmp(cData,"deleteall",9))
             {
+                raise_alarm_server(6,0, "deleteall");
                 insertString(REMOTEFILEPATH,EMPTYWRITE,"");
                 insertString(IRDEVFILEPATH,EMPTYWRITE,"");
                 HK_Audio_Notify( NOTIFY_WIFISET );
-                raise_alarm_server(6,0, "deleteall");
+                
             }                
         }
         else if(len == 10)
