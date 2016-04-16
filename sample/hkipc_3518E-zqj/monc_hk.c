@@ -1587,8 +1587,6 @@ int storeTheAPPDev(char *dev)
 
 int APPDeleteStr(char *dev)
 {
-
-    char returnStr[16] = {0};
     char readStr[8][10] = {0};
     char writeStr[8][10] = {0};
 
@@ -1610,6 +1608,7 @@ int APPDeleteStr(char *dev)
         if(dev[1] == '1')
         { 
             checkExist = checkDevExist(dev,storeLen,existIndex);
+            
             if(checkExist)
             {
                 memset(readStr,0,80);
@@ -1627,11 +1626,7 @@ int APPDeleteStr(char *dev)
                 //insertString(REMOTEFILEPATH,EMPTYWRITE,"");
                 insertString(REMOTEFILEPATH,WRITETOTAIL,writeStr);
                 
-                memset(returnStr,0,16);
-                memcpy(returnStr,(const char *)"delete",6);
-                memcpy(returnStr+6,(const char *)dev,10);
-                raise_alarm_server(6,0, returnStr);
-                HK_Audio_Notify( NOTIFY_WIFISET );  
+
                 return 1;
             }
         }
@@ -1643,22 +1638,22 @@ int APPDeleteStr(char *dev)
                 memset(IRReadStr,0,880);
                 memset(IRWriteStr,0,880);
                 readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,IRReadStr);
+                printf("IRReadStr : %s \r\n",IRReadStr);            
+                
                 memcpy(IRWriteStr,(const char *)IRReadStr,existIndex * STORE_FRAME_LENGTH);
+                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , firstReadLength = %d \r\n",existIndex,STORE_FRAME_LENGTH,existIndex * STORE_FRAME_LENGTH);
+
                 memcpy(IRWriteStr + existIndex * STORE_FRAME_LENGTH , (const char *)(IRReadStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
 
+                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
                 printf("IRWriteStr: %s\r\n",IRWriteStr);
-
                 
                 system("rm /mnt/sif/IRID.txt");               
                 setupAFile(IRDEVFILEPATH);
                 //insertString(IRDEVFILEPATH,EMPTYWRITE,""); 
                 insertString(IRDEVFILEPATH,WRITETOTAIL,IRWriteStr);
-                
-                memset(returnStr,0,16);
-                memcpy(returnStr,(const char *)"delete",6);
-                memcpy(returnStr+6,(const char *)dev,10);
-                raise_alarm_server(6,0, returnStr);
-                HK_Audio_Notify( NOTIFY_WIFISET );  
+
+ 
                 return 1;
             }           
         }   
@@ -1675,7 +1670,7 @@ static void OnSendData( Dict *d )
     if(*cData)
     {
         len = strlen(cData);
-        printf("APP Send Data=%s----Len = %d\n", getStr,len);
+        printf("APP Send Data=%s----Len = %d\n", cData,len);
         memset(getStr,0,10);
         
         if(len == 16)
@@ -1685,6 +1680,8 @@ static void OnSendData( Dict *d )
                 memcpy(getStr,cData+6,10);
                 if(APPDeleteStr(getStr))
                 {
+                    raise_alarm_server(6,0, cData);
+                    HK_Audio_Notify( NOTIFY_WIFISET );                
                     printf("Delete Dev:%s successfully",getStr);
                 }
                 else
