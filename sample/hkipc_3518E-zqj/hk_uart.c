@@ -444,7 +444,7 @@ int traversalTheDevList(char *targetStr)
 
 }
 
-int checkDevExist(char *devID,int storeLen)
+int checkDevExist(char *devID , int storeLen , int existIndex)
 {
     char readStr[8][10] = {0};
     char IRReadStr[88][10]={0};
@@ -465,7 +465,8 @@ int checkDevExist(char *devID,int storeLen)
                 {
                     if(!memcmp(devID,readStr[i],10))
                     {
-                        printf("check out a exist remote:%d ID:%s\r\n",i,devID);
+                        existIndex = i;
+                        printf("check out a exist remote:%d ID:%s\r\n",existIndex,devID);
                         break;
                     }
                  }
@@ -492,7 +493,8 @@ int checkDevExist(char *devID,int storeLen)
                  {
                      if(!memcmp(devID,IRReadStr[i],10))
                      {
-                         printf("check out a exist IR:%d ID:%s\r\n",i,devID);
+                         existIndex = i;
+                         printf("check out a exist IR:%d ID:%s\r\n",existIndex,devID);
                          break;
                      }                        
                   }
@@ -526,6 +528,7 @@ void *UART_Handler(void)
     int val_write = 0;
     int checkExist = 0;
     int storeLen = 0;
+    int existIndex = 0;
 
     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
@@ -542,7 +545,7 @@ void *UART_Handler(void)
 
             if(tempBuf[1] == '1')
             {
-                checkExist = checkDevExist(tempBuf,storeLen);
+                checkExist = checkDevExist(tempBuf,storeLen,existIndex);
                 if(checkExist == 1)
                 {
                     val_write = 0;
@@ -613,7 +616,7 @@ void *UART_Handler(void)
             else if(tempBuf[1] == '2' || tempBuf[1] == '3')
             {
 
-                checkExist = checkDevExist(tempBuf,storeLen);
+                checkExist = checkDevExist(tempBuf,storeLen,existIndex);
                 if(checkExist == 2)
                 {
                     val_write = 0;

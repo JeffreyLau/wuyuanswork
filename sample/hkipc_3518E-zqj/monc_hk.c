@@ -1535,12 +1535,13 @@ int storeTheAPPDev(char *dev)
     
     int checkExist = 0;
     int storeLen = 0;
+    int existIndex = 0;
     
     if(APP_STR_LEGAL)
     {
         if(dev[1] == '1')
         { 
-            checkExist = checkDevExist(dev,storeLen);
+            checkExist = checkDevExist(dev,storeLen,existIndex);
             if(!checkExist)
             {
                if(storeLen < 80)
@@ -1561,7 +1562,7 @@ int storeTheAPPDev(char *dev)
         }
         else if(dev[1] == '2' || dev[1] == '3')
         {
-            checkExist = checkDevExist(dev,storeLen);
+            checkExist = checkDevExist(dev,storeLen,existIndex);
             if(!checkExist)
             {
                if(storeLen < 880)
@@ -1584,28 +1585,124 @@ int storeTheAPPDev(char *dev)
     return 0;
 }
 
+int APPDeleteStr(char *dev)
+{
+
+    char returnStr[16] = {0};
+    char readStr[8][10] = {0};
+    char writeStr[8][10] = {0};
+
+    char IRReadStr[88][10] = {0};
+    char IRWriteStr[88][10] = {0};    
+    
+    int len = strlen((const char *)dev);
+
+    printf("dev = %s\r\n",dev);
+    
+    int checkExist = 0;
+    int storeLen = 0;
+    int existIndex = 0;
+    int existSum = 0;
+    int i = 0;
+    
+    if(APP_STR_LEGAL)
+    {
+        if(dev[1] == '1')
+        { 
+            checkExist = checkDevExist(dev,storeLen,existIndex);
+            if(checkExist)
+            {
+                memset(readStr,0,80);
+                memset(writeStr,0,80);
+                readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
+                for(i = 0;i<existIndex;i++)
+                {
+                    writeStr[i] = readStr[i];
+                }
+                for(i = existIndex ; i<(storeLen/STORE_FRAME_LENGTH) ; i++)
+                {
+                    writeStr[i] = readStr[i+1];
+                }
+                insertString(REMOTEFILEPATH,EMPTYWRITE,writeStr); 
+                memset(returnStr,0,16);
+                memcpy(returnStr,"delete",6);
+                memcpy(returnStr+6,dev);
+                raise_alarm_server(6,0, dev);
+                HK_Audio_Notify( NOTIFY_WIFISET );  
+                return 1;
+            }
+        }
+        else if(dev[1] == '2' || dev[1] == '3')
+        {
+            checkExist = checkDevExist(dev,storeLen,existIndex);
+            if(checkExist)
+            {
+                memset(IRReadStr,0,880);
+                memset(IRWriteStr,0,880);
+                readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,IRReadStr);
+                for(i = 0;i<existIndex;i++)
+                {
+                    IRWriteStr[i] = IRReadStr[i];
+                }
+                for(i = existIndex ; i<(storeLen/STORE_FRAME_LENGTH) ; i++)
+                {
+                    IRWriteStr[i] = IRReadStr[i+1];
+                }
+                insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
+                memset(returnStr,0,16);
+                memcpy(returnStr,"delete",6);
+                memcpy(returnStr+6,dev);
+                raise_alarm_server(6,0, dev);
+                HK_Audio_Notify( NOTIFY_WIFISET );  
+                return 1;
+            }           
+        }   
+    }
+    return 0;    
+
+
+}
+
 static void OnSendData( Dict *d )
 {   
     char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
+    int len = 0;
     if(*cData)
-    {
-
+    {
+        len = strlen(cData);
+        printf("APP Send Data=%s----Len = %d\n", getStr,len);
         memset(getStr,0,10);
-        memcpy(getStr,cData,10);
         
-        unsigned int ulParam = DictGetInt(d, HK_KEY_UIPARAM );
-        
-        printf("scc..sccRecvAPPData=%s..111111111....\n", getStr);
-
-
-        if(storeTheAPPDev(getStr))
+        if(len == 16)
         {
-            printf("APP Dev Store Successfully!");
+            if(!memcmp(cData,"delete",6))
+            {
+                memcpy(getStr,cData+6,10);
+                if(APPDeleteStr(getStr))
+                {
+                    printf("Delete Dev:%s successfully",getStr);
+                }
+                else
+                {
+                    printf("Delete Dev failed");
+                }
+            }
         }
-        else
+        else if(len == 10)
         {
-            printf("APP Dev Store Failed");
+            
+            memcpy(getStr,cData,10);
+            
+            if(storeTheAPPDev(getStr))
+            {
+                printf("APP Dev Store Successfully!");
+            }
+            else
+            {
+                printf("APP Dev Store Failed");
+            }
         }
+
     }
 }
 

@@ -8,6 +8,7 @@
 #define REMOTEFILEPATH "/mnt/sif/remoteID.txt"
 #define WRITETOTAIL    "a+"
 #define READFROMHEAD   "r"
+#define EMPTYWRITE     "w+"
 
 void readString(const char *path , char *operateType,int len,char *cpyStr);
 void insertString(const char *path , char *operateType,char *string);
