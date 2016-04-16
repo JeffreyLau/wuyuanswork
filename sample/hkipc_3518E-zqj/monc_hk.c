@@ -1740,6 +1740,8 @@ void checkAllDev(void)
     raise_alarm_server(6,0, "checkall");
     readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,allDev[0]);
     readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,allDev[(strlen(allDev)/STORE_FRAME_LENGTH)]);
+    printf("check all dev : %s ",allDev);
+
     HK_Audio_Notify( NOTIFY_WIFISET );
 }
 
