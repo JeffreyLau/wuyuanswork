@@ -1651,7 +1651,7 @@ int APPDeleteStr(char *dev)
                 insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
                 memset(returnStr,0,16);
                 memcpy(returnStr,"delete",6);
-                memcpy(returnStr+6,dev);
+                memcpy(returnStr+6,dev,10);
                 raise_alarm_server(6,0, dev);
                 HK_Audio_Notify( NOTIFY_WIFISET );  
                 return 1;
