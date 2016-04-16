@@ -525,8 +525,6 @@ void *UART_Handler(void)
     int len = 0;
     int val_write = 0;
     int checkExist = 0;
-    int storeLen = 0;
-    int existIndex = 0;
 
     Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
     Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
@@ -543,7 +541,7 @@ void *UART_Handler(void)
 
             if(tempBuf[1] == '1')
             {
-                checkExist = checkDevExist(tempBuf,storeLen,existIndex);
+                checkExist = checkDevExist(tempBuf);
                 if(checkExist == 1)
                 {
                     val_write = 0;
@@ -614,7 +612,7 @@ void *UART_Handler(void)
             else if(tempBuf[1] == '2' || tempBuf[1] == '3')
             {
 
-                checkExist = checkDevExist(tempBuf,storeLen,existIndex);
+                checkExist = checkDevExist(tempBuf);
                 if(checkExist == 2)
                 {
                     val_write = 0;
