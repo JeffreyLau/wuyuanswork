@@ -1618,7 +1618,8 @@ int APPDeleteStr(char *dev)
                 memcpy(writeStr,(const char *)readStr,existIndex * STORE_FRAME_LENGTH);
                 memcpy(writeStr + existIndex * STORE_FRAME_LENGTH , (const char *)(readStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
                 
-                insertString(REMOTEFILEPATH,EMPTYWRITE,writeStr); 
+                insertString(REMOTEFILEPATH,EMPTYWRITE,"");
+                insertString(REMOTEFILEPATH,WRITETOTAIL,writeStr);
                 memset(returnStr,0,16);
                 memcpy(returnStr,(const char *)"delete",6);
                 memcpy(returnStr+6,(const char *)dev,10);
@@ -1637,7 +1638,8 @@ int APPDeleteStr(char *dev)
                 readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,IRReadStr);
                 memcpy(IRWriteStr,(const char *)IRReadStr,existIndex * STORE_FRAME_LENGTH);
                 memcpy(IRWriteStr + existIndex * STORE_FRAME_LENGTH , (const char *)(IRReadStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
-                insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
+                insertString(IRDEVFILEPATH,EMPTYWRITE,""); 
+                insertString(IRDEVFILEPATH,WRITETOTAIL,writeStr);
                 memset(returnStr,0,16);
                 memcpy(returnStr,(const char *)"delete",6);
                 memcpy(returnStr+6,(const char *)dev,10);
