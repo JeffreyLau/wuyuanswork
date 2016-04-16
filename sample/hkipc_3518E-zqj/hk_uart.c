@@ -3,10 +3,7 @@
 #include "hk_sysaudio.h"
 #include "filesystem.h"
 
-#define  ONE_FRAME_LENGTH 12
-#define  STORE_FRAME_LENGTH 10
-#define  REMOTECOUNT      8
-#define  IRCOUNT          88
+
 
 //#define DEBUG_ZIGBEE
 
