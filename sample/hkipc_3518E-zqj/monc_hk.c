@@ -1616,34 +1616,18 @@ int APPDeleteStr(char *dev)
                 memset(writeStr,0,80);
                 readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
                 printf("readStr : %s \r\n",readStr);
-                if(existIndex != 0)
-                {
-                    memcpy(writeStr,(const char *)readStr,existIndex * STORE_FRAME_LENGTH);
-                    printf("existIndex = %d , STORE_FRAME_LENGTH = %d , firstReadLength = %d \r\n",existIndex,STORE_FRAME_LENGTH,existIndex * STORE_FRAME_LENGTH);
 
-                    memcpy(writeStr + existIndex * STORE_FRAME_LENGTH , (const char *)(readStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
+                memcpy(writeStr,(const char *)readStr,existIndex * STORE_FRAME_LENGTH);
+                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , firstReadLength = %d \r\n",existIndex,STORE_FRAME_LENGTH,existIndex * STORE_FRAME_LENGTH);
 
-                    printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d\r\n",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
-                    printf("IRWriteStr: %s\r\n",writeStr);
+                memcpy(writeStr[existIndex], (const char *)readStr[existIndex+1],(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
+
+                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d\r\n",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
+                printf("IRWriteStr: %s\r\n",writeStr);
                     
-                    //system("rm /mnt/sif/IRID.txt");               
-                    //setupAFile(IRDEVFILEPATH);
-                    insertString(REMOTEFILEPATH,EMPTYWRITE,writeStr); 
-                    //insertString(IRDEVFILEPATH,WRITETOTAIL,IRWriteStr);
-                }
-                else
-                {
-                    memcpy(writeStr, (const char *)(readStr + STORE_FRAME_LENGTH),(storeLen - STORE_FRAME_LENGTH));
+     
+                insertString(REMOTEFILEPATH,EMPTYWRITE,writeStr); 
 
-                    printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d\r\n",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
-                    printf("IRWriteStr: %s\r\n",writeStr);
-                    
-                    //system("rm /mnt/sif/IRID.txt");               
-                    //setupAFile(IRDEVFILEPATH);
-                    insertString(REMOTEFILEPATH,EMPTYWRITE,writeStr); 
-                    //insertString(IRDEVFILEPATH,WRITETOTAIL,IRWriteStr);
-
-                }  
 
 
                 return 1;
@@ -1659,36 +1643,17 @@ int APPDeleteStr(char *dev)
                 readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,IRReadStr);
                 printf("IRReadStr : %s \r\n",IRReadStr);            
 
-                if(existIndex != 0)
-                {
-                    memcpy(IRWriteStr,(const char *)IRReadStr,existIndex * STORE_FRAME_LENGTH);
-                    printf("existIndex = %d , STORE_FRAME_LENGTH = %d , firstReadLength = %d \r\n",existIndex,STORE_FRAME_LENGTH,existIndex * STORE_FRAME_LENGTH);
 
-                    memcpy(IRWriteStr + existIndex * STORE_FRAME_LENGTH , (const char *)(IRReadStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
+                memcpy(IRWriteStr,(const char *)IRReadStr,existIndex * STORE_FRAME_LENGTH);
+                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , firstReadLength = %d \r\n",existIndex,STORE_FRAME_LENGTH,existIndex * STORE_FRAME_LENGTH);
 
-                    printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
-                    printf("IRWriteStr: %s\r\n",IRWriteStr);
+                memcpy(IRWriteStr[existIndex] , (const char *)IRReadStr[existIndex + 1],(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
+
+                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
+                printf("IRWriteStr: %s\r\n",IRWriteStr);
+
+                insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
                     
-                    //system("rm /mnt/sif/IRID.txt");               
-                    //setupAFile(IRDEVFILEPATH);
-                    insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
-                    //insertString(IRDEVFILEPATH,WRITETOTAIL,IRWriteStr);
-                }
-                else
-                {
-                    memcpy(IRWriteStr, (const char *)(IRReadStr + STORE_FRAME_LENGTH),(storeLen - STORE_FRAME_LENGTH));
-
-                    printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
-                    printf("IRWriteStr: %s\r\n",IRWriteStr);
-                    
-                    //system("rm /mnt/sif/IRID.txt");               
-                    //setupAFile(IRDEVFILEPATH);
-                    insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
-                    //insertString(IRDEVFILEPATH,WRITETOTAIL,IRWriteStr);
-
-                }    
-                    
- 
                 return 1;
             }           
         }   
@@ -1731,6 +1696,7 @@ static void OnSendData( Dict *d )
             {
                 insertString(REMOTEFILEPATH,EMPTYWRITE,"");
                 insertString(IRDEVFILEPATH,EMPTYWRITE,"");
+                HK_Audio_Notify( NOTIFY_WIFISET );
                 raise_alarm_server(6,0, "deleteall");
             }                
         }
