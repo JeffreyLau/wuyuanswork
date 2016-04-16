@@ -1638,6 +1638,7 @@ int APPDeleteStr(char *dev)
                 readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,IRReadStr);
                 memcpy(IRWriteStr,(const char *)IRReadStr,existIndex * STORE_FRAME_LENGTH);
                 memcpy(IRWriteStr + existIndex * STORE_FRAME_LENGTH , (const char *)(IRReadStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
+
                 insertString(IRDEVFILEPATH,EMPTYWRITE,""); 
                 insertString(IRDEVFILEPATH,WRITETOTAIL,writeStr);
                 memset(returnStr,0,16);
@@ -1678,6 +1679,15 @@ static void OnSendData( Dict *d )
                     printf("Delete Dev failed");
                 }
             }
+        }
+        else if(len == 9)
+        {
+            if(!memcmp(cData,"deleteall",9))
+            {
+                insertString(REMOTEFILEPATH,EMPTYWRITE,"");
+                insertString(IRDEVFILEPATH,EMPTYWRITE,"");
+                raise_alarm_server(6,0, "deleteall");
+            }                
         }
         else if(len == 10)
         {
