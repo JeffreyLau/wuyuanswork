@@ -42,6 +42,12 @@ extern short g_sdIsOnline;
 static void OnMonDeletePhoto(const char *cFileName, int iDel );
 char getStr[10] = {0};
 
+int storeTheAPPDev(char *dev);
+int APPDeleteStr(char *dev);
+void deleteAllDev(void);
+void checkAllDev(void);
+
+
 unsigned long get_file_size(const char *filename)
 {
     struct stat buf;
@@ -758,7 +764,7 @@ static void OnGetWanPpoe( int nCmd, int iSubCmd, Dict *d)
 
 static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
 {
-#if 1
+#if 0
     char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
     printf("scc...Penetrate...%s...\n",cData );
     printf("____####____####___%s___####____####____\r\n",cData);
@@ -789,6 +795,63 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
     NetSend( HK_KEY_MONSERVER, cBuf, iPacketLen );
     DictDestroy( DictPacket );
 #endif
+
+    char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
+    int len = 0;
+    if(*cData)
+    {
+        len = strlen(cData);
+        printf("APP Send Data=%s----Len = %d\n", cData,len);
+        memset(getStr,0,10);
+        
+        if(len == 16)
+        {
+            if(!memcmp(cData,"delete",6))
+            {
+                memcpy(getStr,cData+6,10);
+                if(APPDeleteStr(getStr))
+                {
+                    raise_alarm_server(6,0, cData);
+                    HK_Audio_Notify( NOTIFY_WIFISET );                
+                    printf("Delete Dev:%s successfully",getStr);
+                }
+                else
+                {
+                    printf("Delete Dev failed");
+                }
+            }
+        }
+        else if(len == 9)
+        {
+            if(!memcmp(cData,"deleteall",9))
+            {
+                deleteAllDev();               
+            }                
+        }
+        else if(len == 10)
+        {
+            
+            memcpy(getStr,cData,10);
+            
+            if(storeTheAPPDev(getStr))
+            {
+                printf("APP Dev Store Successfully!");
+            }
+            else
+            {
+                printf("APP Dev Store Failed");
+            }
+        }
+        else if(len == 8)
+        {
+            if(!memcmp(cData,"checkall",8))
+            {
+                checkAllDev();    
+            }
+        }
+    }
+
+
 }
 
 static void OnGetWebWifiInfo(int nCmd, int iSubCmd, Dict *d)
@@ -1663,6 +1726,23 @@ int APPDeleteStr(char *dev)
 
 }
 
+void deleteAllDev(void)
+{
+    raise_alarm_server(6,0, "deleteall");
+    insertString(REMOTEFILEPATH,EMPTYWRITE,"");
+    insertString(IRDEVFILEPATH,EMPTYWRITE,"");
+    HK_Audio_Notify( NOTIFY_WIFISET );
+}
+
+void checkAllDev(void)
+{
+    char allDev[96][10] = {0};
+    raise_alarm_server(6,0, "checkall");
+    readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,allDev[0]);
+    readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,allDev[(strlen(allDev)/STORE_FRAME_LENGTH)]);
+    HK_Audio_Notify( NOTIFY_WIFISET );
+}
+
 static void OnSendData( Dict *d )
 {   
     char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
@@ -1694,11 +1774,7 @@ static void OnSendData( Dict *d )
         {
             if(!memcmp(cData,"deleteall",9))
             {
-                raise_alarm_server(6,0, "deleteall");
-                insertString(REMOTEFILEPATH,EMPTYWRITE,"");
-                insertString(IRDEVFILEPATH,EMPTYWRITE,"");
-                HK_Audio_Notify( NOTIFY_WIFISET );
-                
+                deleteAllDev();               
             }                
         }
         else if(len == 10)
@@ -1715,7 +1791,13 @@ static void OnSendData( Dict *d )
                 printf("APP Dev Store Failed");
             }
         }
-
+        else if(len == 8)
+        {
+            if(!memcmp(cData,"checkall",8))
+            {
+                checkAllDev();    
+            }
+        }
     }
 }
 
