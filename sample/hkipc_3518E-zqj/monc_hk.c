@@ -1737,9 +1737,15 @@ void deleteAllDev(void)
 void checkAllDev(void)
 {
     char allDev[96][10] = {0};
-    raise_alarm_server(6,0, "checkall");
+    char checkall[968] = {0};
+    //raise_alarm_server(6,0, "checkall");
     readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,allDev[0]);
     readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,allDev[(strlen(allDev)/STORE_FRAME_LENGTH)]);
+
+    memcpy(checkall,(const char *)"checkall",8);
+    memcpy(checkall + strlen(checkall),(const char *)allDev,strlen(allDev));
+    raise_alarm_server(6,0, checkall);
+
     printf("check all dev : %s ",allDev);
 
     HK_Audio_Notify( NOTIFY_WIFISET );
