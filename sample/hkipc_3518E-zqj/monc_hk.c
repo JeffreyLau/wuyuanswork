@@ -1615,18 +1615,13 @@ int APPDeleteStr(char *dev)
                 memset(readStr,0,80);
                 memset(writeStr,0,80);
                 readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
-                for(i = 0;i<existIndex;i++)
-                {
-                    writeStr[i] = readStr[i];
-                }
-                for(i = existIndex ; i<(storeLen/STORE_FRAME_LENGTH) ; i++)
-                {
-                    writeStr[i] = readStr[i+1];
-                }
+                memcpy(writeStr,(const char *)readStr,existIndex * STORE_FRAME_LENGTH);
+                memcpy(writeStr + existIndex * STORE_FRAME_LENGTH , (const char *)(readStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
+                
                 insertString(REMOTEFILEPATH,EMPTYWRITE,writeStr); 
                 memset(returnStr,0,16);
-                memcpy(returnStr,"delete",6);
-                memcpy(returnStr+6,dev);
+                memcpy(returnStr,(const char *)"delete",6);
+                memcpy(returnStr+6,(const char *)dev,10);
                 raise_alarm_server(6,0, dev);
                 HK_Audio_Notify( NOTIFY_WIFISET );  
                 return 1;
@@ -1640,18 +1635,12 @@ int APPDeleteStr(char *dev)
                 memset(IRReadStr,0,880);
                 memset(IRWriteStr,0,880);
                 readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,IRReadStr);
-                for(i = 0;i<existIndex;i++)
-                {
-                    IRWriteStr[i] = IRReadStr[i];
-                }
-                for(i = existIndex ; i<(storeLen/STORE_FRAME_LENGTH) ; i++)
-                {
-                    IRWriteStr[i] = IRReadStr[i+1];
-                }
+                memcpy(IRWriteStr,(const char *)IRReadStr,existIndex * STORE_FRAME_LENGTH);
+                memcpy(IRWriteStr + existIndex * STORE_FRAME_LENGTH , (const char *)(IRReadStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
                 insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
                 memset(returnStr,0,16);
-                memcpy(returnStr,"delete",6);
-                memcpy(returnStr+6,dev,10);
+                memcpy(returnStr,(const char *)"delete",6);
+                memcpy(returnStr+6,(const char *)dev,10);
                 raise_alarm_server(6,0, dev);
                 HK_Audio_Notify( NOTIFY_WIFISET );  
                 return 1;
