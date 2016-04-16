@@ -4,7 +4,8 @@
 #include "filesystem.h"
 
 
-
+int storeLen = 0;
+int existIndex = 0;
 //#define DEBUG_ZIGBEE
 
 #pragma pack(1)
@@ -441,7 +442,7 @@ int traversalTheDevList(char *targetStr)
 
 }
 
-int checkDevExist(char *devID , int storeLen , int existIndex)
+int checkDevExist(char *devID)
 {
     char readStr[8][10] = {0};
     char IRReadStr[88][10]={0};

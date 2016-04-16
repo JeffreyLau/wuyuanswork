@@ -15,6 +15,9 @@
     #include "IPCAM_Export.h"
 #endif
 
+extern int existIndex;
+extern int storeLen;
+
 extern int g_sccDevCode;
 extern char authMode[4][8];
 extern char encType[4][8];
@@ -1534,14 +1537,13 @@ int storeTheAPPDev(char *dev)
     printf("dev = %s\r\n",dev);
     
     int checkExist = 0;
-    int storeLen = 0;
-    int existIndex = 0;
+
     
     if(APP_STR_LEGAL)
     {
         if(dev[1] == '1')
         { 
-            checkExist = checkDevExist(dev,storeLen,existIndex);
+            checkExist = checkDevExist(dev);
             if(!checkExist)
             {
                if(storeLen < 80)
@@ -1562,7 +1564,7 @@ int storeTheAPPDev(char *dev)
         }
         else if(dev[1] == '2' || dev[1] == '3')
         {
-            checkExist = checkDevExist(dev,storeLen,existIndex);
+            checkExist = checkDevExist(dev);
             if(!checkExist)
             {
                if(storeLen < 880)
@@ -1592,14 +1594,13 @@ int APPDeleteStr(char *dev)
 
     char IRReadStr[88][10] = {0};
     char IRWriteStr[88][10] = {0};    
+
     
     int len = strlen((const char *)dev);
 
     printf("dev = %s\r\n",dev);
     
     int checkExist = 0;
-    int storeLen = 0;
-    int existIndex = 0;
     int existSum = 0;
     int i = 0;
     
@@ -1607,7 +1608,7 @@ int APPDeleteStr(char *dev)
     {
         if(dev[1] == '1')
         { 
-            checkExist = checkDevExist(dev,storeLen,existIndex);
+            checkExist = checkDevExist(dev);
             
             if(checkExist)
             {
@@ -1632,7 +1633,7 @@ int APPDeleteStr(char *dev)
         }
         else if(dev[1] == '2' || dev[1] == '3')
         {
-            checkExist = checkDevExist(dev,storeLen,existIndex);
+            checkExist = checkDevExist(dev);
             if(checkExist)
             {
                 memset(IRReadStr,0,880);

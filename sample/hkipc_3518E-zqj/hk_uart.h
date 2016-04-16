@@ -91,7 +91,7 @@ int UART_CtrlCmd_Send(ENUM_UART_CMD enCmd, int iParam);
 int UART_CtrlCmd_Recv(unsigned int *nRecv);
 int UART_Init(void);
 void *UART_Handler(void);
-int checkDevExist(char *devID , int storeLen , int existIndex);
+int checkDevExist(char *devID);
 
 #define DEV_STR_LEGAL len&&(revBuf[0] == 0x01 ||revBuf[0] == 0x02 || revBuf[0] == 0x03)&&(revBuf[5] == 0x01 || revBuf[5] == 0x02 || revBuf[5] == 0x04 || revBuf[5] == 0x08)
 #define APP_STR_LEGAL (len == 10)&&(*(dev+1) == 0x31 ||*(dev+1) == 0x32 || *(dev+1) == 0x33)
