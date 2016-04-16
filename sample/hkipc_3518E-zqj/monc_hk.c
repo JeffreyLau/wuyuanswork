@@ -1615,17 +1615,21 @@ int APPDeleteStr(char *dev)
                 memset(readStr,0,80);
                 memset(writeStr,0,80);
                 readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
+                printf("readStr : %s \r\n",readStr);
                 memcpy(writeStr,(const char *)readStr,existIndex * STORE_FRAME_LENGTH);
+                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , firstReadLength = %d \r\n",existIndex,STORE_FRAME_LENGTH,existIndex * STORE_FRAME_LENGTH);
+          
                 memcpy(writeStr + existIndex * STORE_FRAME_LENGTH , (const char *)(readStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
-
+                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
                 printf("writeStr: %s\r\n",writeStr);
+
                     
     
-                system("rm /mnt/sif/remoteID.txt");
-                setupAFile(REMOTEFILEPATH);
+                //system("rm /mnt/sif/remoteID.txt");
+                //setupAFile(REMOTEFILEPATH);
                 
-                //insertString(REMOTEFILEPATH,EMPTYWRITE,"");
-                insertString(REMOTEFILEPATH,WRITETOTAIL,writeStr);
+                insertString(REMOTEFILEPATH,EMPTYWRITE,writeStr);
+                //insertString(REMOTEFILEPATH,WRITETOTAIL,writeStr);
                 
 
                 return 1;
@@ -1649,10 +1653,10 @@ int APPDeleteStr(char *dev)
                 printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
                 printf("IRWriteStr: %s\r\n",IRWriteStr);
                 
-                system("rm /mnt/sif/IRID.txt");               
-                setupAFile(IRDEVFILEPATH);
-                //insertString(IRDEVFILEPATH,EMPTYWRITE,""); 
-                insertString(IRDEVFILEPATH,WRITETOTAIL,IRWriteStr);
+                //system("rm /mnt/sif/IRID.txt");               
+                //setupAFile(IRDEVFILEPATH);
+                insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
+                //insertString(IRDEVFILEPATH,WRITETOTAIL,IRWriteStr);
 
  
                 return 1;
