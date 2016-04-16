@@ -1617,13 +1617,20 @@ int APPDeleteStr(char *dev)
                 readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
                 memcpy(writeStr,(const char *)readStr,existIndex * STORE_FRAME_LENGTH);
                 memcpy(writeStr + existIndex * STORE_FRAME_LENGTH , (const char *)(readStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
+
+                printf("writeStr: %s\r\n",writeStr);
+                    
+    
+                system("rm /mnt/sif/remoteID.txt");
+                setupAFile(REMOTEFILEPATH);
                 
-                insertString(REMOTEFILEPATH,EMPTYWRITE,"");
+                //insertString(REMOTEFILEPATH,EMPTYWRITE,"");
                 insertString(REMOTEFILEPATH,WRITETOTAIL,writeStr);
+                
                 memset(returnStr,0,16);
                 memcpy(returnStr,(const char *)"delete",6);
                 memcpy(returnStr+6,(const char *)dev,10);
-                raise_alarm_server(6,0, dev);
+                raise_alarm_server(6,0, returnStr);
                 HK_Audio_Notify( NOTIFY_WIFISET );  
                 return 1;
             }
@@ -1639,12 +1646,18 @@ int APPDeleteStr(char *dev)
                 memcpy(IRWriteStr,(const char *)IRReadStr,existIndex * STORE_FRAME_LENGTH);
                 memcpy(IRWriteStr + existIndex * STORE_FRAME_LENGTH , (const char *)(IRReadStr + (existIndex+1) * STORE_FRAME_LENGTH),(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
 
-                insertString(IRDEVFILEPATH,EMPTYWRITE,""); 
-                insertString(IRDEVFILEPATH,WRITETOTAIL,writeStr);
+                printf("IRWriteStr: %s\r\n",IRWriteStr);
+
+                
+                system("rm /mnt/sif/IRID.txt");               
+                setupAFile(IRDEVFILEPATH);
+                //insertString(IRDEVFILEPATH,EMPTYWRITE,""); 
+                insertString(IRDEVFILEPATH,WRITETOTAIL,IRWriteStr);
+                
                 memset(returnStr,0,16);
                 memcpy(returnStr,(const char *)"delete",6);
                 memcpy(returnStr+6,(const char *)dev,10);
-                raise_alarm_server(6,0, dev);
+                raise_alarm_server(6,0, returnStr);
                 HK_Audio_Notify( NOTIFY_WIFISET );  
                 return 1;
             }           
