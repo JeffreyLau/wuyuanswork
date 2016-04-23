@@ -1650,6 +1650,66 @@ int storeTheAPPDev(char *dev)
     return 0;
 }
 
+int lanStoreTheAPPDev(char *dev)
+{
+    extern unsigned char setDevFlag;
+
+    int len = strlen((const char *)dev);
+
+    printf("dev = %s\r\n",dev);
+    
+    int checkExist = 0;
+
+    
+    if(APP_STR_LEGAL)
+    {
+        if(dev[1] == '1')
+        { 
+            checkExist = checkDevExist(dev);
+            if(!checkExist)
+            {
+               if(storeLen < 80)
+               {
+                   insertString(REMOTEFILEPATH,WRITETOTAIL,dev);
+                   printf("Store remote successfully!!\r\n");
+                   sccLocalAlarm(6,0, dev);
+                   HK_Audio_Notify( NOTIFY_WIFISET );
+                   return 1;
+               }
+               else
+               {
+                   printf("List is full!!\r\n");
+                   setDevFlag = 0;
+                   HK_Audio_Notify( NOTIFY_POWEROFF ); 
+               }
+            }
+        }
+        else if(dev[1] == '2' || dev[1] == '3')
+        {
+            checkExist = checkDevExist(dev);
+            if(!checkExist)
+            {
+               if(storeLen < 880)
+               {
+                  insertString(IRDEVFILEPATH,WRITETOTAIL,dev);                        
+                  printf("Store IR successfully!!\r\n");
+                  sccLocalAlarm(6,0, dev);
+                  HK_Audio_Notify( NOTIFY_WIFISET );
+                  return 1;
+               }
+               else
+               {
+                  printf("List is full!!\r\n");
+                  setDevFlag = 0;
+                  HK_Audio_Notify( NOTIFY_POWEROFF ); 
+               }
+            }            
+        }   
+    }
+    return 0;
+}
+
+
 int APPDeleteStr(char *dev)
 {
     char readStr[8][10] = {0};
@@ -1734,6 +1794,15 @@ void deleteAllDev(void)
     HK_Audio_Notify( NOTIFY_WIFISET );
 }
 
+void lanDeleteAllDev(void)
+{
+    sccLocalAlarm(6,0, "deleteall");
+    insertString(REMOTEFILEPATH,EMPTYWRITE,"");
+    insertString(IRDEVFILEPATH,EMPTYWRITE,"");
+    HK_Audio_Notify( NOTIFY_WIFISET );
+}
+
+
 void checkAllDev(void)
 {
     char checkDev[968] = {0};
@@ -1747,6 +1816,21 @@ void checkAllDev(void)
 
     HK_Audio_Notify( NOTIFY_WIFISET );
 }
+
+void lanCheckAllDev(void)
+{
+    char checkDev[968] = {0};
+    memcpy(checkDev,(const char *)"checkall",8);
+    readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,checkDev + 8);
+    readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,checkDev + strlen(checkDev));
+
+    sccLocalAlarm(6,0, checkDev);
+
+    printf("check all dev : %s ",checkDev);
+
+    HK_Audio_Notify( NOTIFY_WIFISET );
+}
+
 
 static void OnSendData( Dict *d )
 {   
@@ -1765,7 +1849,7 @@ static void OnSendData( Dict *d )
                 memcpy(getStr,cData+6,10);
                 if(APPDeleteStr(getStr))
                 {
-                    raise_alarm_server(6,0, cData);
+                    sccLocalAlarm(6,0, cData);
                     HK_Audio_Notify( NOTIFY_WIFISET );                
                     printf("Delete Dev:%s successfully",getStr);
                 }
@@ -1779,7 +1863,7 @@ static void OnSendData( Dict *d )
         {
             if(!memcmp(cData,"deleteall",9))
             {
-                deleteAllDev();               
+                lanDeleteAllDev();               
             }                
         }
         else if(len == 10)
@@ -1787,7 +1871,7 @@ static void OnSendData( Dict *d )
             
             memcpy(getStr,cData,10);
             
-            if(storeTheAPPDev(getStr))
+            if(lanStoreTheAPPDev(getStr))
             {
                 printf("APP Dev Store Successfully!");
             }
@@ -1800,7 +1884,7 @@ static void OnSendData( Dict *d )
         {
             if(!memcmp(cData,"checkall",8))
             {
-                checkAllDev();    
+                lanCheckAllDev();    
             }
         }
     }
