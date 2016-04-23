@@ -1828,7 +1828,7 @@ void lanCheckAllDev(void)
 
     sccLocalAlarm(0,6,0, checkDev);
 
-    printf("check all dev : %s ",checkDev);
+    printf("LAN check all dev : %s ",checkDev);
 
     HK_Audio_Notify( NOTIFY_WIFISET );
 }
@@ -1841,7 +1841,7 @@ static void OnSendData( Dict *d )
     if(*cData)
     {
         len = strlen(cData);
-        printf("APP Send Data=%s----Len = %d\n", cData,len);
+        printf("APP LAN Send Data=%s----Len = %d\n", cData,len);
         memset(getStr,0,10);
         
         if(len == 16)
