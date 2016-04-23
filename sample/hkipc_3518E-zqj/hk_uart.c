@@ -517,6 +517,7 @@ void *UART_Handler(void)
 {
     extern struct HKVProperty video_properties_;
     extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
+    extern int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData);
 
     char revBuf[20];
     char tempBuf[20];
@@ -555,6 +556,7 @@ void *UART_Handler(void)
                     {
                         case 0x31:
                             raise_alarm_server(6,0, tempBuf);
+                            sccLocalAlarm(0,6,0,tempBuf);
                             //HK_Audio_Notify( NOTIFY_WIFISET );                            
                             break;
                         case 0x32:
@@ -592,6 +594,7 @@ void *UART_Handler(void)
                             insertString(REMOTEFILEPATH,WRITETOTAIL,storeStr);
                             printf("Store remote successfully!!\r\n");
                             raise_alarm_server(6,0, tempBuf);
+                            sccLocalAlarm(0,6,0,tempBuf);
                             HK_Audio_Notify( NOTIFY_WIFISET );
                         }
                         else
@@ -625,6 +628,7 @@ void *UART_Handler(void)
                     if(video_properties_.vv[HKV_MotionSensitivity] > 0)
                     {
                         raise_alarm_server(6,0, tempBuf);
+                        sccLocalAlarm(0,6,0,tempBuf);
                         //HK_Audio_Notify( NOTIFY_WIFISET );                        
                     }
  
@@ -645,6 +649,7 @@ void *UART_Handler(void)
                             insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
                             printf("Store IR successfully!!\r\n");
                             raise_alarm_server(6,0, tempBuf);
+                            sccLocalAlarm(0,6,0,tempBuf);
                             HK_Audio_Notify( NOTIFY_WIFISET );
                         }
                         else
