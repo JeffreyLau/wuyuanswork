@@ -803,7 +803,7 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
     if(*cData)
     {
         len = strlen(cData);
-        printf("APP Send Data=%s----Len = %d\n", cData,len);
+        printf("APP LAN Send Data=%s----Len = %d\n", cData,len);
         memset(getStr,0,10);
         
         if(len == 16)
@@ -813,7 +813,7 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
                 memcpy(getStr,cData+6,10);
                 if(APPDeleteStr(getStr))
                 {
-                    raise_alarm_server(6,0, cData);
+                    sccLocalAlarm(0,6,0, cData);
                     HK_Audio_Notify( NOTIFY_WIFISET );                
                     printf("Delete Dev:%s successfully",getStr);
                 }
@@ -827,7 +827,7 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
         {
             if(!memcmp(cData,"deleteall",9))
             {
-                deleteAllDev();               
+                lanDeleteAllDev();               
             }                
         }
         else if(len == 10)
@@ -835,7 +835,7 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
             
             memcpy(getStr,cData,10);
             
-            if(storeTheAPPDev(getStr))
+            if(lanStoreTheAPPDev(getStr))
             {
                 printf("APP Dev Store Successfully!");
             }
@@ -848,7 +848,7 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
         {
             if(!memcmp(cData,"checkall",8))
             {
-                checkAllDev();    
+                lanCheckAllDev();    
             }
         }
     }
@@ -1841,7 +1841,7 @@ static void OnSendData( Dict *d )
     if(*cData)
     {
         len = strlen(cData);
-        printf("APP LAN Send Data=%s----Len = %d\n", cData,len);
+        printf("APP WAN Send Data=%s----Len = %d\n", cData,len);
         memset(getStr,0,10);
         
         if(len == 16)
@@ -1851,7 +1851,7 @@ static void OnSendData( Dict *d )
                 memcpy(getStr,cData+6,10);
                 if(APPDeleteStr(getStr))
                 {
-                    sccLocalAlarm(0,6,0, cData);
+                    raise_alarm_server(6,0, cData);
                     HK_Audio_Notify( NOTIFY_WIFISET );                
                     printf("Delete Dev:%s successfully",getStr);
                 }
@@ -1865,7 +1865,7 @@ static void OnSendData( Dict *d )
         {
             if(!memcmp(cData,"deleteall",9))
             {
-                lanDeleteAllDev();               
+                deleteAllDev();               
             }                
         }
         else if(len == 10)
@@ -1873,7 +1873,7 @@ static void OnSendData( Dict *d )
             
             memcpy(getStr,cData,10);
             
-            if(lanStoreTheAPPDev(getStr))
+            if(storeTheAPPDev(getStr))
             {
                 printf("APP Dev Store Successfully!");
             }
@@ -1886,7 +1886,7 @@ static void OnSendData( Dict *d )
         {
             if(!memcmp(cData,"checkall",8))
             {
-                lanCheckAllDev();    
+                checkAllDev();    
             }
         }
     }

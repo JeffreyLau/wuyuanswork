@@ -727,3 +727,7 @@ vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nRe
 ---- sccEncodeBuf Matches (2 in 1 files) ----
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        //sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
+---- OnSetDevParam Matches (3 in 1 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):static void OnSetDevParam( int nCmd, int hkid, Dict *d,const char *buf)
+Monc_hk.c (sample\hkipc_3518e-zqj):            printf("OnSetDevParam------");
+Monc_hk.c (sample\hkipc_3518e-zqj):           OnSetDevParam( nCmd, hkid, d, buf);
