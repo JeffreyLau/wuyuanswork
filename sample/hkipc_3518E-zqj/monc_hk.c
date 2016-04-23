@@ -15,6 +15,8 @@
     #include "IPCAM_Export.h"
 #endif
 
+extern int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData);
+
 extern int existIndex;
 extern int storeLen;
 

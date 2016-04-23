@@ -2218,6 +2218,30 @@ static int CreatePICThread(void)
     return 0;
 }
 
+#ifdef WUYUAN_DEBUG
+int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
+{
+    char cBuf[2048]={0};
+    HKFrameHead *hfAlarm = CreateFrameB();
+
+    DictSetInt( hfAlarm, HK_KEY_CHANNEL, nReserved );
+    DictSetInt( hfAlarm, HK_KEY_ALERT_TYPE, nAlarmType );
+    DictSetStr( hfAlarm, HK_KEY_FROM, getenv("USER"));
+    if ( NULL != cFtpData )
+    {
+        char outBuf[1024]={0};
+        //sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
+        DictSetStr( hfAlarm, HK_KEY_FTPSERVER, outBuf );
+    }
+
+    int iLen = DictEncode(cBuf, sizeof(cBuf), hfAlarm);
+    cBuf[iLen] = '\0';
+
+    be_present2( iLen, cBuf, "LocalAlarm", 0);
+    DestroyFrame( hfAlarm );
+}
+
+#else
 static int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
 {
     char cBuf[2048]={0};
@@ -2239,6 +2263,9 @@ static int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtp
     be_present2( iLen, cBuf, "LocalAlarm", 0);
     DestroyFrame( hfAlarm );
 }
+
+#endif
+
 
 static int g_jswPowerFlag=0;
 static int g_jswRunTime = 0;
