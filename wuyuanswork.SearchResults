@@ -684,3 +684,46 @@ vbVideo_hk.c (sample\hkipc_3518e-zqj):static int sccLocalAlarm(int iChannel, int
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(0, POWER_CMD, g_jswPowerFlag, NULL);//105
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
+---- sccLocalAlarm Matches (11 in 2 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):extern int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData);
+Monc_hk.c (sample\hkipc_3518e-zqj):                   sccLocalAlarm(0,6,0, dev);
+Monc_hk.c (sample\hkipc_3518e-zqj):                  sccLocalAlarm(0,6,0, dev);
+Monc_hk.c (sample\hkipc_3518e-zqj):    sccLocalAlarm(0,6,0, "deleteall");
+Monc_hk.c (sample\hkipc_3518e-zqj):    sccLocalAlarm(0,6,0, checkDev);
+Monc_hk.c (sample\hkipc_3518e-zqj):                    sccLocalAlarm(0,6,0, cData);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
+vbVideo_hk.c (sample\hkipc_3518e-zqj):static int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(0, POWER_CMD, g_jswPowerFlag, NULL);//105
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
+---- raise_alarm_server Matches (15 in 3 files) ----
+Hk_uart.c (sample\hkipc_3518e-zqj):    extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
+Hk_uart.c (sample\hkipc_3518e-zqj):                            raise_alarm_server(6,0, tempBuf);
+Hk_uart.c (sample\hkipc_3518e-zqj):                            raise_alarm_server(6,0, tempBuf);
+Hk_uart.c (sample\hkipc_3518e-zqj):                        raise_alarm_server(6,0, tempBuf);
+Hk_uart.c (sample\hkipc_3518e-zqj):                            raise_alarm_server(6,0, tempBuf);
+Monc_hk.c (sample\hkipc_3518e-zqj):                    raise_alarm_server(6,0, cData);
+Monc_hk.c (sample\hkipc_3518e-zqj):                   raise_alarm_server(6,0, dev);
+Monc_hk.c (sample\hkipc_3518e-zqj):                  raise_alarm_server(6,0, dev);
+Monc_hk.c (sample\hkipc_3518e-zqj):    raise_alarm_server(6,0, "deleteall");
+Monc_hk.c (sample\hkipc_3518e-zqj):    raise_alarm_server(6,0, checkDev);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):void raise_alarm_server( int iType, int nReserved,char *cFtpData)
+vbVideo_hk.c (sample\hkipc_3518e-zqj):static void raise_alarm_server( int iType, int nReserved,char *cFtpData)
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        raise_alarm_server( POWER_CMD, g_jswPowerFlag, NULL);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        raise_alarm_server(iType, nReserved, cFtpData);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        raise_alarm_server(iType ,nReserved, cFtpData);
+---- sccLocalAlarm Matches (11 in 2 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):extern int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData);
+Monc_hk.c (sample\hkipc_3518e-zqj):                   sccLocalAlarm(0,6,0, dev);
+Monc_hk.c (sample\hkipc_3518e-zqj):                  sccLocalAlarm(0,6,0, dev);
+Monc_hk.c (sample\hkipc_3518e-zqj):    sccLocalAlarm(0,6,0, "deleteall");
+Monc_hk.c (sample\hkipc_3518e-zqj):    sccLocalAlarm(0,6,0, checkDev);
+Monc_hk.c (sample\hkipc_3518e-zqj):                    sccLocalAlarm(0,6,0, cData);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
+vbVideo_hk.c (sample\hkipc_3518e-zqj):static int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(0, POWER_CMD, g_jswPowerFlag, NULL);//105
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
+---- sccEncodeBuf Matches (2 in 1 files) ----
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        //sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));

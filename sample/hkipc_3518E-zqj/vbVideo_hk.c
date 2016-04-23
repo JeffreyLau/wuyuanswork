@@ -2229,8 +2229,9 @@ int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
     DictSetStr( hfAlarm, HK_KEY_FROM, getenv("USER"));
     if ( NULL != cFtpData )
     {
+        printf("lan alarm send : %s",cFtpData);
         char outBuf[1024]={0};
-        //sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
+        sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
         DictSetStr( hfAlarm, HK_KEY_FTPSERVER, outBuf );
     }
 
