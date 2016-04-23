@@ -672,3 +672,15 @@ vbVideo_hk.c (sample\hkipc_3518e-zqj):            raise_alarm("video.vbVideo.MPE
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        raise_alarm_server(iType ,nReserved, cFtpData);
 vbVideo_hk.c (sample\hkipc_3518e-zqj):            raise_alarm("video.vbVideo.MPEG4", MPEG4);
 vbVideo_hk.c (sample\hkipc_3518e-zqj):        //raise_alarm("video.vbVideo.MPEG4", MPEG4);
+---- sccLocalAlarm Matches (11 in 2 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):extern int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData);
+Monc_hk.c (sample\hkipc_3518e-zqj):                   sccLocalAlarm(6,0, dev);
+Monc_hk.c (sample\hkipc_3518e-zqj):                  sccLocalAlarm(6,0, dev);
+Monc_hk.c (sample\hkipc_3518e-zqj):    sccLocalAlarm(6,0, "deleteall");
+Monc_hk.c (sample\hkipc_3518e-zqj):    sccLocalAlarm(6,0, checkDev);
+Monc_hk.c (sample\hkipc_3518e-zqj):                    sccLocalAlarm(6,0, cData);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
+vbVideo_hk.c (sample\hkipc_3518e-zqj):static int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(0, POWER_CMD, g_jswPowerFlag, NULL);//105
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
+vbVideo_hk.c (sample\hkipc_3518e-zqj):        sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
