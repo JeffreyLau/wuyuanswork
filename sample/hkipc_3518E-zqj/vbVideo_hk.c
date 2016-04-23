@@ -2227,12 +2227,14 @@ int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
     DictSetInt( hfAlarm, HK_KEY_CHANNEL, nReserved );
     DictSetInt( hfAlarm, HK_KEY_ALERT_TYPE, nAlarmType );
     DictSetStr( hfAlarm, HK_KEY_FROM, getenv("USER"));
+    DictSetStr( hfAlarm, HK_KEY_EVENT, "alarm" );
     if ( NULL != cFtpData )
     {
         printf("lan alarm send : %s",cFtpData);
-        char outBuf[1024]={0};
-        sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
-        DictSetStr( hfAlarm, HK_KEY_FTPSERVER, outBuf );
+        //char outBuf[1024]={0};
+        //sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
+        //DictSetStr( hfAlarm, HK_KEY_FTPSERVER, outBuf );
+        DictSetStr( hfAlarm, HK_KEY_FTPSERVER, cFtpData );
     }
 
     int iLen = DictEncode(cBuf, sizeof(cBuf), hfAlarm);
