@@ -851,6 +851,26 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
                 lanCheckAllDev();    
             }
         }
+        else
+        {
+            if(!memcmp(cData,"arm",3))
+            {
+                video_properties_.vv[HKV_MotionSensitivity] = 3;
+            }
+            else if(!memcmp(cData,"disarm",6))
+            {
+                video_properties_.vv[HKV_MotionSensitivity] = 0;
+            }
+            else if(!memcmp(cData,"home",4))
+            {
+                video_properties_.vv[HKV_MotionSensitivity] = 1;
+            }
+            else if(!memcmp(cData,"sos",3))
+            {
+                raise_alarm_server(6,0, NULL);
+                sccLocalAlarm(0,6,0,NULL);
+            }
+        }
     }
 
 
@@ -1887,6 +1907,26 @@ static void OnSendData( Dict *d )
             if(!memcmp(cData,"checkall",8))
             {
                 checkAllDev();    
+            }
+        }
+        else
+        {
+            if(!memcmp(cData,"arm",3))
+            {
+                video_properties_.vv[HKV_MotionSensitivity] = 3;
+            }
+            else if(!memcmp(cData,"disarm",6))
+            {
+                video_properties_.vv[HKV_MotionSensitivity] = 0;
+            }
+            else if(!memcmp(cData,"home",4))
+            {
+                video_properties_.vv[HKV_MotionSensitivity] = 1;
+            }
+            else if(!memcmp(cData,"sos",3))
+            {
+                raise_alarm_server(6,0, NULL);
+                sccLocalAlarm(0,6,0,NULL);
             }
         }
     }

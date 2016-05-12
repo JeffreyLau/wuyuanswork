@@ -2546,3 +2546,7 @@ voiceRecog.h (sample\hkipc_3518e-zqj):可支持任何平台，常见的平台android, iphone,
 ---- disarm Matches (2 in 1 files) ----
 vbVideo_hk.c (sample\hkipc_3518e-zqj):                printf("SYSTEM DISARM iPt:%d \n",iPt);
 vbVideo_hk.c (sample\hkipc_3518e-zqj):                printf("SYSTEM DISARM iPt:%d \n",iPt);
+---- APP WAN Send Data Matches (1 in 1 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):        printf("APP WAN Send Data=%s----Len = %d\n", cData,len);
+---- APP LAN Send Data Matches (1 in 1 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):        printf("APP LAN Send Data=%s----Len = %d\n", cData,len);
