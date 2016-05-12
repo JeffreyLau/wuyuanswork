@@ -4942,8 +4942,8 @@ void OnMonPtz( const char *ev )
                 printf("HOME ARM iPt:%d \n",iPt);
                 break;
             case 19:
-                raise_alarm_server(6,0, tempBuf);
-                sccLocalAlarm(0,6,0,tempBuf);
+                raise_alarm_server(6,0, NULL);
+                sccLocalAlarm(0,6,0,NULL);
                 printf("SOS ALARM iPt:%d \n",iPt);
                 break;                 
             default:
@@ -5000,8 +5000,8 @@ void OnMonPtz( const char *ev )
                 printf("HOME ARM iPt:%d \n",iPt);
                 break;
             case 19:
-                raise_alarm_server(6,0, tempBuf);
-                sccLocalAlarm(0,6,0,tempBuf);
+                raise_alarm_server(6,0, NULL);
+                sccLocalAlarm(0,6,0,NULL);
                 printf("SOS ALARM iPt:%d \n",iPt);
                 break;  
             default:
