@@ -4933,23 +4933,6 @@ void OnLanConChange( int nConCnt )
     return;
 }
 
-void WY_Remote_Delay_thread(void)
-{
-    int ret = 0;
-    pthread_t Remote_Event;
-    void *thread_result;
-
-    ret = pthread_create(&Remote_Event, NULL, (void *)UART_Handler, NULL);
-    if (0 != ret)
-    {
-        printf("pthread_create failed with:%d, %s\n", errno, strerror(errno));
-        pthread_detach(Remote_Event);
-        return -1;
-    }
-    
-    pthread_detach(Remote_Event);
-}
-
 int remote_come_flag = 0;
 
 void Remote_Dealy(void)
@@ -4973,6 +4956,26 @@ void Remote_Dealy(void)
     }
 
 }
+
+
+void WY_Remote_Delay_thread(void)
+{
+    int ret = 0;
+    pthread_t Remote_Event;
+    void *thread_result;
+
+    ret = pthread_create(&Remote_Event, NULL, (void *)Remote_Dealy, NULL);
+    if (0 != ret)
+    {
+        printf("pthread_create failed with:%d, %s\n", errno, strerror(errno));
+        pthread_detach(Remote_Event);
+        return -1;
+    }
+    
+    pthread_detach(Remote_Event);
+}
+
+
 
 int main(int argc, char* argv[])
 {  
