@@ -4947,7 +4947,7 @@ void Remote_Dealy(void)
              while(delay_count--)
              {      
                  if(!remote_come_flag)break;
-                 usleep(1000 * 2000);
+                 usleep(1000 * 1800);
                  BEEP_RUN;           
              }
              if(!delay_count)
