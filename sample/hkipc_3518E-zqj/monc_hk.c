@@ -763,7 +763,7 @@ static void OnGetWanPpoe( int nCmd, int iSubCmd, Dict *d)
     free( cBuf );
     DictDestroy( DictPacket );
 }
-
+extern int remote_come_flag;
 static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
 {
 #if 0
@@ -855,15 +855,18 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
         {
             if(!memcmp(cData,"arm",3))
             {
-                video_properties_.vv[HKV_MotionSensitivity] = 3;
+                remote_come_flag = 1;
+                //video_properties_.vv[HKV_MotionSensitivity] = 3;
             }
             else if(!memcmp(cData,"disarm",6))
             {
+                remote_come_flag = 0;
                 video_properties_.vv[HKV_MotionSensitivity] = 0;
             }
             else if(!memcmp(cData,"home",4))
             {
-                video_properties_.vv[HKV_MotionSensitivity] = 1;
+                remote_come_flag = 1;
+                //video_properties_.vv[HKV_MotionSensitivity] = 1;
             }
             else if(!memcmp(cData,"sos",3))
             {
@@ -1913,15 +1916,18 @@ static void OnSendData( Dict *d )
         {
             if(!memcmp(cData,"arm",3))
             {
-                video_properties_.vv[HKV_MotionSensitivity] = 3;
+                remote_come_flag = 1;
+                //video_properties_.vv[HKV_MotionSensitivity] = 3;
             }
             else if(!memcmp(cData,"disarm",6))
             {
+                remote_come_flag = 0;
                 video_properties_.vv[HKV_MotionSensitivity] = 0;
             }
             else if(!memcmp(cData,"home",4))
             {
-                video_properties_.vv[HKV_MotionSensitivity] = 1;
+                remote_come_flag = 1;
+                //video_properties_.vv[HKV_MotionSensitivity] = 1;
             }
             else if(!memcmp(cData,"sos",3))
             {

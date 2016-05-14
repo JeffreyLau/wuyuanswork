@@ -4946,7 +4946,7 @@ void Remote_Dealy(void)
              int delay_count = 30;
              while(delay_count--)
              {
-                 usleep(1000 * 1000);
+                 usleep(1000 * 2000);
                  BEEP_RUN;           
              }
              video_properties_.vv[HKV_MotionSensitivity] = 3;
