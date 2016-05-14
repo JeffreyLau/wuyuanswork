@@ -545,7 +545,16 @@ void *UART_Handler(void)
                 checkExist = checkDevExist(tempBuf);
                 if(checkExist == 1)
                 {
-                    BEEP_RUN;
+                    Hi_SetGpio_SetDir( 2, 2, 1 );
+                    Hi_SetGpio_SetBit( 2, 2, 0 ); 
+                    Hi_SetGpio_SetDir( 2, 4, 1 );
+                    Hi_SetGpio_SetBit( 2, 4, 1 );
+                    usleep(1000*200); 
+                    Hi_SetGpio_SetDir( 2, 2, 1 );
+                    Hi_SetGpio_SetBit( 2, 2, 0 ); 
+                    Hi_SetGpio_SetDir( 2, 4, 1 );
+                    Hi_SetGpio_SetBit( 2, 4, 0 );
+
                     switch(tempBuf[11])
                     {
                         case 0x31:
@@ -606,7 +615,16 @@ void *UART_Handler(void)
                 checkExist = checkDevExist(tempBuf);
                 if(checkExist == 2)
                 {
-                    BEEP_RUN;
+                    Hi_SetGpio_SetDir( 2, 2, 1 );
+                    Hi_SetGpio_SetBit( 2, 2, 0 ); 
+                    Hi_SetGpio_SetDir( 2, 4, 1 );
+                    Hi_SetGpio_SetBit( 2, 4, 1 );
+                    usleep(1000*200); 
+                    Hi_SetGpio_SetDir( 2, 2, 1 );
+                    Hi_SetGpio_SetBit( 2, 2, 0 ); 
+                    Hi_SetGpio_SetDir( 2, 4, 1 );
+                    Hi_SetGpio_SetBit( 2, 4, 0 );
+
                     if(video_properties_.vv[HKV_MotionSensitivity] > 0)
                     {
                         raise_alarm_server(6,0, tempBuf);

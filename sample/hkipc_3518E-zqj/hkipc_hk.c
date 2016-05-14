@@ -4963,7 +4963,16 @@ void Remote_Dealy(void)
              while(delay_count--)
              {
                  usleep(1000 * 1000);
-                 BEEP_RUN;
+                 Hi_SetGpio_SetDir( 2, 2, 1 );
+                 Hi_SetGpio_SetBit( 2, 2, 0 ); 
+                 Hi_SetGpio_SetDir( 2, 4, 1 );
+                 Hi_SetGpio_SetBit( 2, 4, 1 );
+                 usleep(1000*200); 
+                 Hi_SetGpio_SetDir( 2, 2, 1 );
+                 Hi_SetGpio_SetBit( 2, 2, 0 ); 
+                 Hi_SetGpio_SetDir( 2, 4, 1 );
+                 Hi_SetGpio_SetBit( 2, 4, 0 );
+
              
              }
 
