@@ -4954,6 +4954,7 @@ int remote_come_flag = 0;
 
 void Remote_Dealy(void)
 {
+    extern struct HKVProperty video_properties_;
     while(1)
     {
          usleep(1000);
@@ -4963,20 +4964,11 @@ void Remote_Dealy(void)
              while(delay_count--)
              {
                  usleep(1000 * 1000);
-                 Hi_SetGpio_SetDir( 2, 2, 1 );
-                 Hi_SetGpio_SetBit( 2, 2, 0 ); 
-                 Hi_SetGpio_SetDir( 2, 4, 1 );
-                 Hi_SetGpio_SetBit( 2, 4, 1 );
-                 usleep(1000*200); 
-                 Hi_SetGpio_SetDir( 2, 2, 1 );
-                 Hi_SetGpio_SetBit( 2, 2, 0 ); 
-                 Hi_SetGpio_SetDir( 2, 4, 1 );
-                 Hi_SetGpio_SetBit( 2, 4, 0 );
-
-             
+                 BEEP_RUN;           
              }
-
-         }
+             video_properties_.vv[HKV_MotionSensitivity] = 3;
+             remote_come_flag = 0;
+         } 
 
     }
 

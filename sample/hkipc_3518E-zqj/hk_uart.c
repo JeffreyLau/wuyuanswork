@@ -516,6 +516,7 @@ int checkDevExist(char *devID)
 void *UART_Handler(void)
 {
     extern struct HKVProperty video_properties_;
+    extern int remote_come_flag;
     extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
     extern int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData);
 
@@ -545,36 +546,26 @@ void *UART_Handler(void)
                 checkExist = checkDevExist(tempBuf);
                 if(checkExist == 1)
                 {
-                    Hi_SetGpio_SetDir( 2, 2, 1 );
-                    Hi_SetGpio_SetBit( 2, 2, 0 ); 
-                    Hi_SetGpio_SetDir( 2, 4, 1 );
-                    Hi_SetGpio_SetBit( 2, 4, 1 );
-                    usleep(1000*200); 
-                    Hi_SetGpio_SetDir( 2, 2, 1 );
-                    Hi_SetGpio_SetBit( 2, 2, 0 ); 
-                    Hi_SetGpio_SetDir( 2, 4, 1 );
-                    Hi_SetGpio_SetBit( 2, 4, 0 );
-
+                    BEEP_RUN;
                     switch(tempBuf[11])
                     {
                         case 0x31:
                             raise_alarm_server(6,0, tempBuf);
-                            sccLocalAlarm(0,6,0,tempBuf);
-                            //HK_Audio_Notify( NOTIFY_WIFISET );                            
+                            sccLocalAlarm(0,6,0,tempBuf);                         
                             break;
                         case 0x32:
-                            //HK_Audio_Notify( NOTIFY_WIFISET );
+                            remote_come_flag = 0;
                             video_properties_.vv[HKV_MotionSensitivity] = 0;
                             
                             break;
                         case 0x34:
-                            //HK_Audio_Notify( NOTIFY_WIFISET );
-                            video_properties_.vv[HKV_MotionSensitivity] = 3;
+                            remote_come_flag = 1;
+                            //video_properties_.vv[HKV_MotionSensitivity] = 3;
                             
                             break;
-                        case 0x38:
-                            //HK_Audio_Notify( NOTIFY_WIFISET );
-                            video_properties_.vv[HKV_MotionSensitivity] = 1;
+                        case 0x38:
+                            remote_come_flag = 1;
+                            //video_properties_.vv[HKV_MotionSensitivity] = 1;
                             break;
                         default:break;   
                      }
@@ -615,15 +606,7 @@ void *UART_Handler(void)
                 checkExist = checkDevExist(tempBuf);
                 if(checkExist == 2)
                 {
-                    Hi_SetGpio_SetDir( 2, 2, 1 );
-                    Hi_SetGpio_SetBit( 2, 2, 0 ); 
-                    Hi_SetGpio_SetDir( 2, 4, 1 );
-                    Hi_SetGpio_SetBit( 2, 4, 1 );
-                    usleep(1000*200); 
-                    Hi_SetGpio_SetDir( 2, 2, 1 );
-                    Hi_SetGpio_SetBit( 2, 2, 0 ); 
-                    Hi_SetGpio_SetDir( 2, 4, 1 );
-                    Hi_SetGpio_SetBit( 2, 4, 0 );
+                    BEEP_RUN;
 
                     if(video_properties_.vv[HKV_MotionSensitivity] > 0)
                     {
