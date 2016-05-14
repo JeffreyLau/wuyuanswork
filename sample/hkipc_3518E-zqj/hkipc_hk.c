@@ -4945,11 +4945,15 @@ void Remote_Dealy(void)
          {
              int delay_count = 30;
              while(delay_count--)
-             {
+             {      
+                 if(!remote_come_flag)break;
                  usleep(1000 * 2000);
                  BEEP_RUN;           
              }
-             video_properties_.vv[HKV_MotionSensitivity] = 3;
+             if(!delay_count)
+             {
+                 video_properties_.vv[HKV_MotionSensitivity] = 3;
+             }
              remote_come_flag = 0;
          } 
 
