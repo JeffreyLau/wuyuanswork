@@ -4943,17 +4943,23 @@ void Remote_Dealy(void)
          usleep(1000);
          if(remote_come_flag)
          {
-             int delay_count = 30;
+             int delay_count = 3;
              while(delay_count--)
-             {      
-                 if(!remote_come_flag)break;
+             {    
                  usleep(1000 * 1800);
-                 BEEP_RUN;           
+                 BEEP_RUN; 
+                 if(!remote_come_flag)break;
+          
              }
-             if(!delay_count)
+             if(remote_come_flag)
              {
                  video_properties_.vv[HKV_MotionSensitivity] = 3;
              }
+             else
+             {
+                 video_properties_.vv[HKV_MotionSensitivity] = 1;
+             }
+             printf(">>>>>>>>>>>>>>>>>>vv:%d<<<<<<<<<<<<<<<<<<<",video_properties_.vv[HKV_MotionSensitivity]);
              remote_come_flag = 0;
          } 
 
