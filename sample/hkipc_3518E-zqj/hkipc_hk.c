@@ -4957,7 +4957,7 @@ void Remote_Dealy(void)
              }
              else
              {
-                 video_properties_.vv[HKV_MotionSensitivity] = 1;
+                 video_properties_.vv[HKV_MotionSensitivity] = 0;
              }
              printf(">>>>>>>>>>>>>>>>>>vv:%d<<<<<<<<<<<<<<<<<<<",video_properties_.vv[HKV_MotionSensitivity]);
              remote_come_flag = 0;
