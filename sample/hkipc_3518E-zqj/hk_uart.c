@@ -545,13 +545,7 @@ void *UART_Handler(void)
                 checkExist = checkDevExist(tempBuf);
                 if(checkExist == 1)
                 {
-                    val_write = 0;
-                    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-
-                    Hi_SetGpio_SetDir( g_BeepOut_grp, 4, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, 4, 1 ); 
-                    usleep(1000*200); 
+                    BEEP_RUN;
                     switch(tempBuf[11])
                     {
                         case 0x31:
@@ -574,13 +568,7 @@ void *UART_Handler(void)
                             video_properties_.vv[HKV_MotionSensitivity] = 1;
                             break;
                         default:break;   
-                    }
-                    val_write = 1;
-                    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, 0 );  
-                    Hi_SetGpio_SetDir( g_BeepOut_grp, 4, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, 4, 0); 
-
+                     }
 
                 }
                 else if(!checkExist)
@@ -618,25 +606,13 @@ void *UART_Handler(void)
                 checkExist = checkDevExist(tempBuf);
                 if(checkExist == 2)
                 {
-                    val_write = 0;
-                    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-                    Hi_SetGpio_SetDir( g_BeepOut_grp, 4, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, 4, 1 );
-                    usleep(1000*200);
-                    
+                    BEEP_RUN;
                     if(video_properties_.vv[HKV_MotionSensitivity] > 0)
                     {
                         raise_alarm_server(6,0, tempBuf);
                         sccLocalAlarm(0,6,0,tempBuf);
                         //HK_Audio_Notify( NOTIFY_WIFISET );                        
-                    }
- 
-                    val_write = 1;
-                    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, 0 ); 
-                    Hi_SetGpio_SetDir( g_BeepOut_grp, 4, GPIO_WRITE );
-                    Hi_SetGpio_SetBit( g_BeepOut_grp, 4, 0 );                     
+                    }                   
                 }
                 else if(!checkExist)
                 {

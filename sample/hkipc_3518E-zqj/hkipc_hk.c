@@ -4933,6 +4933,56 @@ void OnLanConChange( int nConCnt )
     return;
 }
 
+void WY_Remote_Delay_thread(void)
+{
+    int ret = 0;
+    pthread_t Remote_Event;
+    void *thread_result;
+
+    ret = pthread_create(&Remote_Event, NULL, (void *)UART_Handler, NULL);
+    if (0 != ret)
+    {
+        printf("pthread_create failed with:%d, %s\n", errno, strerror(errno));
+        pthread_detach(Remote_Event);
+        return -1;
+    }
+    
+    pthread_detach(Remote_Event);
+}
+
+int remote_come_flag = 0;
+
+void Remote_Dealy(void)
+{
+    while(1)
+    {
+         usleep(1000);
+         if(remote_come_flag)
+         {
+             int delay_count = 30;
+             while(delay_count--)
+             {
+                 Hi_SetGpio_SetDir( 2, 2, 1 );
+                 Hi_SetGpio_SetBit( 2, 2, 0 ); 
+
+                 Hi_SetGpio_SetDir( 2, 4, 1 );
+                 Hi_SetGpio_SetBit( 2, 4, 1 );
+
+                 usleep(1000*200);
+                 Hi_SetGpio_SetDir( 2, 2, 1 );
+                 Hi_SetGpio_SetBit( 2, 2, 0 ); 
+
+                 Hi_SetGpio_SetDir( 2, 4, 1 );
+                 Hi_SetGpio_SetBit( 2, 4, 0 );
+             
+             }
+
+         }
+
+    }
+
+}
+
 int main(int argc, char* argv[])
 {  
     unsigned long tmStartDDNS  =  0;
@@ -5082,6 +5132,8 @@ int main(int argc, char* argv[])
 
 #if WUYUAN_DEBUG
     HK_UART_Thread();
+    WY_Remote_Delay_thread();
+
     //UART_Init();
 #endif
 
