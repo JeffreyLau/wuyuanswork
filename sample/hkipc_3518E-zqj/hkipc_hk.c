@@ -4943,7 +4943,7 @@ void Remote_Dealy(void)
          usleep(1000);
          if(remote_come_flag)
          {
-             int delay_count = 3;
+             int delay_count = 15;
              while(delay_count--)
              {    
                  usleep(1000 * 1800);
