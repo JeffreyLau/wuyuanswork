@@ -2550,3 +2550,7 @@ vbVideo_hk.c (sample\hkipc_3518e-zqj):                printf("SYSTEM DISARM iPt:
 Monc_hk.c (sample\hkipc_3518e-zqj):        printf("APP WAN Send Data=%s----Len = %d\n", cData,len);
 ---- APP LAN Send Data Matches (1 in 1 files) ----
 Monc_hk.c (sample\hkipc_3518e-zqj):        printf("APP LAN Send Data=%s----Len = %d\n", cData,len);
+---- wuyuanFrontTime Matches (3 in 1 files) ----
+Hkipc_hk.c (sample\hkipc_3518e-zqj):unsigned int wuyuanFrontTime   = 0;
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        wuyuanFrontTime = Getms();
+Hkipc_hk.c (sample\hkipc_3518e-zqj):        if(wuyuanCurrentTime - wuyuanFrontTime > 20000)

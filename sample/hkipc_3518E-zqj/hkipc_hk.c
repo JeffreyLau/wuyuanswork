@@ -28,7 +28,7 @@
 #if ENABLE_ONVIF
     #include "IPCAM_Export.h"
 #endif
-/********************* Video ************************/
+/*********************   ************************/
 #define VIDEVID     0
 #define VICHNID     0
 #define VOCHNID     0
@@ -5097,7 +5097,11 @@ int main(int argc, char* argv[])
     GetSdAlarmParam(); //get sd card configuration info.
 
     /**video callbacks for client operations**/
-    video_RSLoadObjects( &SysRegisterDev );
+
+    //2016.6.3 郑少欣注释 关闭摄像头初始化
+    //video_RSLoadObjects( &SysRegisterDev );
+
+    
     /**audio callbacks for client operations**/
     audio_RSLoadObjects( &SysRegisterDev );
 
@@ -5134,7 +5138,7 @@ int main(int argc, char* argv[])
 #endif
 
 
-#if WUYUAN_DEBUG
+#if   
     HK_UART_Thread();
     WY_Remote_Delay_thread();
 
@@ -5158,6 +5162,8 @@ int main(int argc, char* argv[])
     static REMOTE_WIFI_FIND wifiFindTmp;
     ScanWifiInfo(&wifiFindTmp);
     CreateAudioThread();  
+
+    
     //-start voice recoder!!
     CreateVoiceRecogThread();
 #endif
