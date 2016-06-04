@@ -4968,7 +4968,12 @@ void Remote_Dealy(void)
 }
 
 
-void WY_Remote_Delay_thread(void)
+/************************************************
+修改日期:2016.6.4
+修改人:郑少欣
+修改内容:将函数的返回值改为 int型 ，原来为 void型
+*************************************************/
+int WY_Remote_Delay_thread(void)
 {
     int ret = 0;
     pthread_t Remote_Event;
@@ -5060,12 +5065,14 @@ int main(int argc, char* argv[])
     //HK_DEBUG_PRT("g_isWifiInit:%d, g_HK_SensorType:%d, g_HK_VideoResoType:%d, g_DevIndex:%d, g_isWanEnable:%d, g_lanPort:%d, g_irOpen:%d, g_onePtz:%d, g_DevPTZ:%d, DdnsTimeInterval:%d, IRCutBoardType:%d\n", \
             g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
   
-    /**** init video Sub System. ****/
+    /**** init video Sub System. ****/    
+/*2016.6.4 郑少欣 屏蔽视频初始化
     if ( HI_SUCCESS != Video_SubSystem_Init() )
     {
         printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
     }
     HK_DEBUG_PRT("video sub system init OK!\n");
+*/
 
     /**GPIO init**/
     HI_SetGpio_Open();
@@ -5098,7 +5105,7 @@ int main(int argc, char* argv[])
 
     /**video callbacks for client operations**/
 
-    //2016.6.3 郑少欣注释 关闭摄像头初始化
+    //2016.6.3 郑少欣注释 关闭摄像头
     //video_RSLoadObjects( &SysRegisterDev );
 
     
