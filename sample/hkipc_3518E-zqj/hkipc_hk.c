@@ -902,6 +902,8 @@ static int UpdateSystemTimestamp(void)
 	return 0;
 }
 
+/**************************************
+2016.6.4 ÖØÆôº¯Êý×¢ÊÍ Ö£ÉÙÐÀ
 void wrap_sys_restart( )
 {
 #if DEV_ROBOT
@@ -919,7 +921,7 @@ void wrap_sys_restart( )
     system("umount /mnt/mmc/");
     system("reboot");
 }
-
+*************************************/
 #if 0
 void SetSTCRst()
 {
