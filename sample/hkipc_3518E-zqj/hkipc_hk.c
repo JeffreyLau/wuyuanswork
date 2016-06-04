@@ -5130,8 +5130,10 @@ int main(int argc, char* argv[])
     //test_tF info
     //CreateTestThread();
 #if (HK_PLATFORM_HI3518E)
+
     /*****neck Cruise*****/
-    if (1 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
+    /* 2016.6.4 去掉云台电机 */
+    if (0 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
     {
         HK_PtzMotor();
     }
