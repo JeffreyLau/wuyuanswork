@@ -5145,7 +5145,7 @@ int main(int argc, char* argv[])
 #endif
 
 
-#if   
+#if 1   
     HK_UART_Thread();
     WY_Remote_Delay_thread();
 
