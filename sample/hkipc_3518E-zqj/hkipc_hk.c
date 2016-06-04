@@ -902,10 +902,10 @@ static int UpdateSystemTimestamp(void)
 	return 0;
 }
 
-/**************************************
-2016.6.4 重启函数注释 郑少欣
+
 void wrap_sys_restart( )
 {
+/*2016.6.4 郑少欣 屏蔽重新启动
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
@@ -920,8 +920,9 @@ void wrap_sys_restart( )
     system("sync");
     system("umount /mnt/mmc/");
     system("reboot");
+*/
 }
-*************************************/
+
 #if 0
 void SetSTCRst()
 {

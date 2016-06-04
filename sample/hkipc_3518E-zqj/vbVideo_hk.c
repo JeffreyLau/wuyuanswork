@@ -5310,6 +5310,7 @@ void ResetToDefaultSettings(void)
     return;
 }
 
+wrap_sys_restart
 
 #if 0
 void OnMonSet99141ResetParam()
