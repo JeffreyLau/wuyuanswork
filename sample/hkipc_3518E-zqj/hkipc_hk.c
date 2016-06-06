@@ -905,7 +905,7 @@ static int UpdateSystemTimestamp(void)
 
 void wrap_sys_restart( )
 {
-/*2016.6.4 郑少欣 屏蔽重新启动
+
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
@@ -920,7 +920,6 @@ void wrap_sys_restart( )
     system("sync");
     system("umount /mnt/mmc/");
     system("reboot");
-*/
 }
 
 #if 0
@@ -5069,13 +5068,12 @@ int main(int argc, char* argv[])
             g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
   
     /**** init video Sub System. ****/    
-/*2016.6.4 郑少欣 屏蔽视频初始化
     if ( HI_SUCCESS != Video_SubSystem_Init() )
     {
         printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
     }
     HK_DEBUG_PRT("video sub system init OK!\n");
-*/
+
 
     /**GPIO init**/
     HI_SetGpio_Open();
@@ -5108,8 +5106,7 @@ int main(int argc, char* argv[])
 
     /**video callbacks for client operations**/
 
-    //2016.6.3 郑少欣注释 关闭摄像头
-    //video_RSLoadObjects( &SysRegisterDev );
+    video_RSLoadObjects( &SysRegisterDev );
 
     
     /**audio callbacks for client operations**/
@@ -5135,8 +5132,7 @@ int main(int argc, char* argv[])
 #if (HK_PLATFORM_HI3518E)
 
     /*****neck Cruise*****/
-    /* 2016.6.4 去掉云台电机 */
-    if (0 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
+    if (1 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
     {
         HK_PtzMotor();
     }
@@ -5179,7 +5175,6 @@ int main(int argc, char* argv[])
     //-start voice recoder!!
     CreateVoiceRecogThread();
 #endif
-
 
 #if (DEV_KELIV == 0)
     //init m433  by yy
