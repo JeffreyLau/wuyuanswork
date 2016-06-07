@@ -909,6 +909,12 @@ void wrap_sys_restart( )
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
+
+/**********************
+2016.6.7 
+郑少欣: 关闭系统重启
+**********************/
+#if 0
     g_sdIsOnline=0;
     be_present(0);
     sd_record_stop();
@@ -920,6 +926,7 @@ void wrap_sys_restart( )
     system("sync");
     system("umount /mnt/mmc/");
     system("reboot");
+#endif
 }
 
 #if 0
@@ -4992,8 +4999,6 @@ int WY_Remote_Delay_thread(void)
     pthread_detach(Remote_Event);
 }
 
-
-
 int main(int argc, char* argv[])
 {  
     unsigned long tmStartDDNS  =  0;
@@ -5067,12 +5072,14 @@ int main(int argc, char* argv[])
     //HK_DEBUG_PRT("g_isWifiInit:%d, g_HK_SensorType:%d, g_HK_VideoResoType:%d, g_DevIndex:%d, g_isWanEnable:%d, g_lanPort:%d, g_irOpen:%d, g_onePtz:%d, g_DevPTZ:%d, DdnsTimeInterval:%d, IRCutBoardType:%d\n", \
             g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
   
-    /**** init video Sub System. ****/    
-    if ( HI_SUCCESS != Video_SubSystem_Init() )
-    {
-        printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
-    }
-    HK_DEBUG_PRT("video sub system init OK!\n");
+    /**** init video Sub System. ****/
+    
+    /*****郑少欣 2016.6.7 屏蔽摄像头初始化*************/
+    //if ( HI_SUCCESS != Video_SubSystem_Init() )
+    //{
+    //    printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
+    //}
+    //HK_DEBUG_PRT("video sub system init OK!\n");
 
 
     /**GPIO init**/
@@ -5104,9 +5111,11 @@ int main(int argc, char* argv[])
     GetAlarmEmailInfo(); //get email configuration info
     GetSdAlarmParam(); //get sd card configuration info.
 
+
     /**video callbacks for client operations**/
 
-    video_RSLoadObjects( &SysRegisterDev );
+    /*郑少欣 2016.6.7 屏蔽摄像头加载工程*/
+    //video_RSLoadObjects( &SysRegisterDev );
 
     
     /**audio callbacks for client operations**/
@@ -5132,7 +5141,8 @@ int main(int argc, char* argv[])
 #if (HK_PLATFORM_HI3518E)
 
     /*****neck Cruise*****/
-    if (1 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
+    /*郑少欣2016.6.7 关闭云台电机*/
+    if (0 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
     {
         HK_PtzMotor();
     }
