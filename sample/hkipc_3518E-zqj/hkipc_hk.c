@@ -5190,6 +5190,7 @@ int main(int argc, char* argv[])
 #if AUDIO_SET_WIFI
     static REMOTE_WIFI_FIND wifiFindTmp;
     ScanWifiInfo(&wifiFindTmp);
+    
     CreateAudioThread();  
 
     
@@ -5409,7 +5410,7 @@ int main(int argc, char* argv[])
         }
 
     #if (HK_PLATFORM_HI3518E)
-        if (1 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
+        if (0 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
         {
             HK_PTZ_AutoRotate_Stop( 9 );
         }
