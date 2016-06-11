@@ -1687,7 +1687,7 @@ static void* thd_nonblock_login(void* a)
         {
             char cBuf[64] = {0};
             HKFrameHead *framePacket = CreateFrameB();
-            //printf( "login in\n" );
+            printf( "login in\n" );
             gSysTime     = time(0);
             gbStartTime  = 1;
 
@@ -5075,7 +5075,6 @@ int main(int argc, char* argv[])
             g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
   
     /**** init video Sub System. ****/
-    
     /*****郑少欣 2016.6.7 屏蔽摄像头初始化*************/
     //if ( HI_SUCCESS != Video_SubSystem_Init() )
     //{
@@ -5087,7 +5086,10 @@ int main(int argc, char* argv[])
     /**GPIO init**/
     HI_SetGpio_Open();
     initGPIO();
-
+    printf("***********************************************************\n");
+    printf("**********************initGPIO****************************\n");
+    getchar();
+    
     setpidfile(getenv("PIDFILE"), getpid());
     if (getenv("wppid"))
     {
@@ -5106,6 +5108,10 @@ int main(int argc, char* argv[])
     first_run_check(tq_, &counter);
     //sleep(1);
 
+    printf("***********************************************************\n");
+    printf("****************HK_Infrared_Decode*************************\n");
+    getchar();   
+
 #if (DEV_INFRARED)
     HK_Infrared_Decode();//开启红外遥控解码
     Init_Light_Conf();
@@ -5117,22 +5123,28 @@ int main(int argc, char* argv[])
     /**video callbacks for client operations**/
     //video_RSLoadObjects( &SysRegisterDev );
 
-    
+    printf("***********************************************************\n");
+    printf("****************audio_RSLoadObjects*************************\n");  
     /**audio callbacks for client operations**/
     audio_RSLoadObjects( &SysRegisterDev );
+    getchar();
 
+    /*2016.6.11 屏蔽sd卡的加载 -by shaoxin*/
+    /********************************************
     hk_load_sd(); //mount sd card.
     if(g_sdIsOnline == 1 ) //create tf Thread
     {
         CreateTFThread();
     }
-
+    *********************************************/
+    
     HK_MessageQueue_Recv();
     mpeg_.tq = tq_;
     LanNetworking(1);
     monc_start(NULL, HK_PASSWD_FAIL); 
     if (g_isWanEnable != 1)
     {
+        //登录到服务器，如果失败则重启系统
         start_nonblock_login(); //set host_
     }
 
@@ -5277,20 +5289,28 @@ int main(int argc, char* argv[])
     #endif
     #endif  
 /*<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+
     for ( ; !quit_; counter++)
     {
         if (1 != HI3518_WDTFeed())
         {
-            printf("Feed Dog Failed!\n");
+            //printf("Feed Dog Failed!\n");
         }
         ISP_Ctrl_Sharpness();
 
+    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<AUDIO_DETECT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+    getchar();
+    
+    /* 音频监测 */
     #if (AUDIO_DETECT)
         if (audio_alarm > 1 && g_AudioSetWifi >= g_AUDIO_SET_WIFI_TIME )
         {
             if (1 == audioSense(audio_alarm))
             {
-                //printf("------------- audio ALARM --------\n");
+                printf("------------- audio ALARM --------\n");
                 //CheckIOAlarm();  
                 sccOnAlarm(0, 2, 0);
             }
@@ -5397,9 +5417,11 @@ int main(int argc, char* argv[])
         {
             g_AudioSetWifi++;
         }
-    }
+    }//end main loop
 
-    sd_record_stop();
+    /* SD卡停止记录 */
+    //sd_record_stop();
+    
     g_AudioSetWifi = g_AUDIO_SET_WIFI_TIME;
     gSysTime = time(0);
     gbStartTime = 1;

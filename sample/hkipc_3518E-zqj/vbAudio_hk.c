@@ -154,6 +154,7 @@ typedef struct IM_Input_Object
     RSObjectIRQEvent irq;
 
 } IM_Input_Object;
+
 extern IM_Input_Object vbAudio;
 IM_Input_Object vbAudio;
 
