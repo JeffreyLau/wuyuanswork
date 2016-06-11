@@ -411,7 +411,7 @@ HI_S32 LPCM_Audio_Open()
 #if 1
 	unsigned int groupnum = 5;
 	unsigned int bitnum = 0; //GPIO:5_0 (audio out).
-	unsigned int val_set = 5; //pull up.
+	unsigned int val_set = 2; //pull up.
 	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
