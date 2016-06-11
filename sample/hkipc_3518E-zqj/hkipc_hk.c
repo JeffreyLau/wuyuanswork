@@ -4473,7 +4473,7 @@ static void CheckDevCfg()
         unsigned long  nGW      = inet_addr( eth0Addr.gateway );
         if( (nGW&nMask)!=(nIP&nMask) )
         {
-            system( "route add default dev eth0" );
+            system( "route add default dev eth0" );//添加默认路由eth0
         }
     }
 }
@@ -4608,6 +4608,7 @@ static void hk_load_pppoe()
 }
 
 //Dynamic testing server
+//动态测试服务器
 static void sccCKRate()
 {
     if( strcmp(host_,"www.scc21.com")==0||strcmp(host_,"www.uipcam.com")==0|| strcmp(host_,"hzd.scc21.net")==0||strcmp(host_,"sulatra.scc21.net")==0)
@@ -4758,8 +4759,10 @@ void HK_Onvif_Init(void)
     sccInitVideoData( PSTREAMTWO);	
     sccResetVideData( PSTREAMTWO, slaveVideoDataP );
     CreateAudioThread();
-    CreateVideoThread(); 
-    CreateSubVideoThread(); 
+    
+    //2016.6.11 关闭摄像头线程 by shaoxin
+    //CreateVideoThread(); 
+    //CreateSubVideoThread(); 
 
     EnableOnvif = conf_get_int("/mnt/sif/web.conf", "bOnvifEnable");
     if(EnableOnvif)
@@ -5040,7 +5043,7 @@ int main(int argc, char* argv[])
 
     printf ("Modfiy by Wuyuan");
     
-    char cSensorType[32]={0};
+    char cSensorType[32]={0}; //传感器类型
     conf_get( HOME_DIR"/sensor.conf", "sensortype", cSensorType, 32 );
     if (strcmp(cSensorType, "ar0130") == 0)
     {
@@ -5085,7 +5088,11 @@ int main(int argc, char* argv[])
     /**GPIO init**/
     HI_SetGpio_Open();
     initGPIO();
-    
+
+/**************************************************
+ *     郑少欣 以上代码已阅读 2016.6.7 15:59       *
+ **************************************************/  
+
     setpidfile(getenv("PIDFILE"), getpid());
     if (getenv("wppid"))
     {
@@ -5100,12 +5107,15 @@ int main(int argc, char* argv[])
     
     
     SysInit(&cb_init);
-    SysRegistASLan_0(LOCAL_ASC, 0, &cb_lan);
+    SysRegistASLan_0(LOCAL_ASC, 0, &cb_lan);//系统注册aslan_0
     first_run_check(tq_, &counter);
     //sleep(1);
-    
+
+/**************************************************
+ *     郑少欣 以上代码已阅读 2016.6.7 18:25       *
+ **************************************************/    
 #if (DEV_INFRARED)
-    HK_Infrared_Decode();
+    HK_Infrared_Decode();//开启红外遥控解码
     Init_Light_Conf();
 #endif
     GetAlarmEmailInfo(); //get email configuration info

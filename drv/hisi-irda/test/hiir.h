@@ -72,7 +72,7 @@ typedef struct
 
 typedef struct
 {
-    unsigned long irkey_datah;
+    unsigned long irkey_datah;//Ó²¼ş±à½âÂëÆ÷
     unsigned long irkey_datal;
     unsigned long irkey_state_code;
 }irkey_info_s;

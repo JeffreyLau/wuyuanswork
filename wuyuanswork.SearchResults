@@ -2554,3 +2554,4 @@ Monc_hk.c (sample\hkipc_3518e-zqj):        printf("APP LAN Send Data=%s----Len =
 Hkipc_hk.c (sample\hkipc_3518e-zqj):unsigned int wuyuanFrontTime   = 0;
 Hkipc_hk.c (sample\hkipc_3518e-zqj):        wuyuanFrontTime = Getms();
 Hkipc_hk.c (sample\hkipc_3518e-zqj):        if(wuyuanCurrentTime - wuyuanFrontTime > 20000)
+---- wrap_sys_restart Matches (0 in 0 files) ----

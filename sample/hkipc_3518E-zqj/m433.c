@@ -132,7 +132,7 @@ static void arbitration(unsigned int code)
         {
             if (i < 4)
             {
-                if ((m433dev.telecontrol >> i) & 0x1) //é¥æ§ç æ§åˆ¶æ ‡è®°ä¸º
+                if ((m433dev.telecontrol >> i) & 0x1) //Ò£¿ØÆ÷¿ØÖÆ±ê¼ÇÎª
                 {
                     printf("--- judge learn Telecontrol code ---\n");
                     if (m433_data.reference_table[i] != 0)
@@ -151,7 +151,7 @@ static void arbitration(unsigned int code)
                                 if (TeleConRoll == 4)
                                     TeleConRoll = 0;
                                 break;
-                                //alarm_handler();//æ¥æ”¶åˆ°é¥æ§ç å­¦ä¹ å®Œæˆ
+                                //alarm_handler();//½ÓÊÕµ½Ò£¿ØÑ§Ï°ÂëÑ§Ï°Íê³É
                             }
                             else
                             {
@@ -168,7 +168,7 @@ static void arbitration(unsigned int code)
                         tx.code = m433_data.reference_table[i];
                         tx.mode = LEARN_MODE;
                         tx.flag = TELECONTROL; 
-                        //alarm_handler();//æ¥æ”¶åˆ°é¥æ§ç å­¦ä¹ å®Œæˆ
+                        //alarm_handler();//½ÓÊÕµ½Ò£¿ØÂëÑ§Ï°Íê³É
                         break;
                     }
                 }
@@ -187,7 +187,7 @@ static void arbitration(unsigned int code)
                     tx.code = m433_data.reference_table[i];
                     tx.mode = LEARN_MODE;
                     tx.flag = FLAG_LEARN; 
-                    //alarm_handler();//æ¥æ”¶åˆ°è®¾å¤‡ç å­¦ä¹ å®Œæˆ
+                    //alarm_handler();//½ÓÊÕµ½Éè±¸ÂëÑ§Ï°Íê³É
                     m433dev.normal_mode = 1;
                     m433_data.alarm_flag = 1;
                     sccOnAlarm(0,100,m433_data.current_ad);
@@ -206,7 +206,7 @@ static void arbitration(unsigned int code)
                         tx.flag = FLAG_LEARN; 
                         sccOnAlarm(0,100,m433_data.current_ad);
                         m433_save_param();
-                        //alarm_handler();//æ¥æ”¶åˆ°è®¾å¤‡ç å­¦ä¹ å®Œæˆ
+                        //alarm_handler();//½ÓÊÕµ½Éè±¸ÂëÑ§Ï°Íê³É
                         break;
                     }
                     else
@@ -229,12 +229,12 @@ static void arbitration(unsigned int code)
             }
         }
     }
-    else //æ­£å¸¸æ¨¡å¼
+    else //Õı³£Ä£Ê½
     {
         //printf("--- normal mode alarm flag = %d---\n", m433_data.alarm_flag);
-        for (i = 0; i < REFERENCE_MAX; i++) //å¯¹æ¯”ç è¡¨ç å€¼
+        for (i = 0; i < REFERENCE_MAX; i++) //¶Ô±ÈÂë±íÂëÖµ
         {
-            if (m433_data.current_ad == m433_data.reference_table[i]) //å¦‚æœæœ‰å’Œæ¥æ”¶ç å€¼ä¸€è‡´æ—¶
+            if (m433_data.current_ad == m433_data.reference_table[i]) //Èç¹ûÓĞºÍ½ÓÊÜÂëÖµÒ»ÖÂÊ±
             {
                 ///g_M433_AD_Valprintf("--- match code, i:%d ---\n", i);
                 if (i == 0)
@@ -368,15 +368,15 @@ int init_m433(pid_t pid)
 {
     int ret = 0;
     printf("433 pid: %d\n", pid);
-    g_M433_Fd = open("/dev/m433dev", O_RDWR); //æ‰“å¼€æ–‡ä»¶èŠ‚ç‚¹
+    g_M433_Fd = open("/dev/m433dev", O_RDWR); //´ò¿ªÎÄ¼ş½Úµã
     if (g_M433_Fd < 0)
     {
         printf("can't open!\n");
         return -1;
     }
 
-    ioctl(g_M433_Fd, M433SIG, &pid);//ä¼ å…¥è¿›ç¨‹pid
-    ioctl(g_M433_Fd, PROBE, &ret); //æ¢æµ‹è®¾å¤‡
+    ioctl(g_M433_Fd, M433SIG, &pid);//´«Èë½ø³Ìpid
+    ioctl(g_M433_Fd, PROBE, &ret); //Ì½²âÉè±¸
     printf("--- probe ret = %d ---\n", ret);
     if (ret != 1)
     {
@@ -388,7 +388,7 @@ int init_m433(pid_t pid)
 
     m433_get_param();
     m433_set_code();
-    ioctl(g_M433_Fd, START, &ret);//å¼€å¯è®¾å¤‡
+    ioctl(g_M433_Fd, START, &ret);//¿ªÆôÉè±¸
     printf("--- start ret = %d ---\n", ret);
     if (ret != 1)
     {
