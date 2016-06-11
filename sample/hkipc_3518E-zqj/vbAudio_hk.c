@@ -958,7 +958,8 @@ static void AudioThread(void)
 				s32ret = HI_MPI_AENC_GetStream(s_AencChn, &stStream, HI_FALSE);
 				if (HI_SUCCESS != s32ret )
 				{
-					printf("%s: HI_MPI_AENC_GetStream(%d) failed with %#x!\n", __FUNCTION__, s_AencChn, s32ret);
+				    //2016.6.11 πÿ±’¥Ú”° -by shaoxin
+					//printf("%s: HI_MPI_AENC_GetStream(%d) failed with %#x!\n", __FUNCTION__, s_AencChn, s32ret);
 					break;
 				}
 

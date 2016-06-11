@@ -1,10 +1,4 @@
----- HI_MPI_AENC_GetStream Matches (9 in 4 files) ----
-Mpi_aenc.h (include):HI_S32 HI_MPI_AENC_GetStream(AENC_CHN AeChn, AUDIO_STREAM_S *pstStream, HI_BOOL bBlock); 
-Sample_comm_audio.c (sample\common):            s32Ret = HI_MPI_AENC_GetStream(pstAencCtl->AeChn, &stStream, HI_FALSE);
-Sample_comm_audio.c (sample\common):                printf("%s: HI_MPI_AENC_GetStream(%d), failed with %#x!\n",\
-Sample_comm_audio.c (sample\hkipc_3518e-zqj):            s32Ret = HI_MPI_AENC_GetStream(pstAencCtl->AeChn, &stStream, HI_FALSE);
-Sample_comm_audio.c (sample\hkipc_3518e-zqj):                printf("%s: HI_MPI_AENC_GetStream(%d), failed with %#x!\n",\
-vbAudio_hk.c (sample\hkipc_3518e-zqj):				s32ret = HI_MPI_AENC_GetStream(s_AencChn, &stStream, HI_FALSE);
-vbAudio_hk.c (sample\hkipc_3518e-zqj):					printf("%s: HI_MPI_AENC_GetStream(%d) failed with %#x!\n", __FUNCTION__, s_AencChn, s32ret);
-vbAudio_hk.c (sample\hkipc_3518e-zqj):				s32ret = HI_MPI_AENC_GetStream(s_AencChn, &stStream, HI_FALSE);
-vbAudio_hk.c (sample\hkipc_3518e-zqj):					printf("%s: HI_MPI_AENC_GetStream(%d) failed with %#x!\n", __FUNCTION__, s_AencChn, s32ret);
+---- OnPenetrateData Matches (3 in 1 files) ----
+Monc_hk.c (sample\hkipc_3518e-zqj):static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
+Monc_hk.c (sample\hkipc_3518e-zqj):            OnPenetrateData( nCmd, iSubCmd, d);
+Monc_hk.c (sample\hkipc_3518e-zqj):            OnPenetrateData(nCmd, iSubCmd, d);
