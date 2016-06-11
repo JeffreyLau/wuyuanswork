@@ -23,12 +23,10 @@
 #include "hk_message.h"
 #include "hk_sysaudio.h"
 
-#include "filesystem.h"
-
 #if ENABLE_ONVIF
     #include "IPCAM_Export.h"
 #endif
-/*********************   ************************/
+/********************* Video ************************/
 #define VIDEVID     0
 #define VICHNID     0
 #define VOCHNID     0
@@ -53,15 +51,6 @@ int g_HK_SensorType = 0; //sensor type: 1(ar0130); 2(ov9712d).
  */
 int g_HK_VideoResoType = 0;
 
-/************ remote device set flag Wuyuan******/
-
-unsigned char setDevFlag = 0;
-
-unsigned int wuyuanCurrentTime = 0; 
-unsigned int wuyuanFrontTime   = 0;
-extern int Getms();
-
-
 /***************** GPIO params ******************/
 
 //#define DEBUG
@@ -77,8 +66,6 @@ extern int Getms();
     unsigned int g_AlarmOut_bit = 7; //alarm out:7_7.
     unsigned int g_RUN_grp      = 5;
     unsigned int g_RUN_bit      = 3; //RUN light:5_3.
-
-
 #endif
 
 
@@ -158,7 +145,7 @@ struct ethtool_value
 
 short g_DevPTZ = 0; //0: without PTZ; 1: PTZ device.
 short g_onePtz = 0;
-int  g_DevVer = 523; //nvr update
+int  g_DevVer = 524; //nvr update
 short g_DevIndex = 0;
 //int g_startCheckAlarm = 0;
 volatile int g_AudioSetWifi = 0;
@@ -902,19 +889,12 @@ static int UpdateSystemTimestamp(void)
 	return 0;
 }
 
-
 void wrap_sys_restart( )
 {
-
+/*
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
-
-/**********************
-2016.6.7 
-郑少欣: 关闭系统重启
-**********************/
-#if 0
     g_sdIsOnline=0;
     be_present(0);
     sd_record_stop();
@@ -926,7 +906,7 @@ void wrap_sys_restart( )
     system("sync");
     system("umount /mnt/mmc/");
     system("reboot");
-#endif
+    */
 }
 
 #if 0
@@ -1687,7 +1667,7 @@ static void* thd_nonblock_login(void* a)
         {
             char cBuf[64] = {0};
             HKFrameHead *framePacket = CreateFrameB();
-            printf( "login in\n" );
+            //printf( "login in\n" );
             gSysTime     = time(0);
             gbStartTime  = 1;
 
@@ -1708,7 +1688,7 @@ static void* thd_nonblock_login(void* a)
             SetParamUN( framePacket,HK_KEY_VERTYPE, HK_DEV_TYPE );//502
             GetFramePacketBuf( framePacket, cBuf, sizeof(cBuf) );
             DestroyFrame( framePacket );
-            printf("wuyuan test  point scc..Host=%s.........\n", host_);
+            printf("scc..Host=%s.........\n", host_);
             SysLogin_ex(user_, passwd_, cBuf, host_, atoi(port_), 0);
             gbStartTime = 0;
         }
@@ -3415,14 +3395,13 @@ static void initGPIO()
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
 
-#if 1
+#if 0
     /**MI8029 PIR**/
     groupnum = 7;
     bitnum   = 5; //GPIO:7_5.
-    val_set  = 0;
-    Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
-    Hi_SetGpio_SetBit( groupnum, bitnum, val_set ); //PIR: GPIO7_5.
-    HK_DEBUG_PRT(".......................Get GPIO %d_%d  read Value: %d....\n", groupnum, bitnum, val_set);
+    Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_READ );
+    Hi_SetGpio_GetBit( groupnum, bitnum, &val_read ); //PIR: GPIO7_5.
+    HK_DEBUG_PRT(".......................Get GPIO %d_%d  read Value: %d....\n", groupnum, bitnum, val_read);
 #endif
 
 	/**init IO alarm**/
@@ -3446,7 +3425,6 @@ static void initGPIO()
 	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
-
 #endif
 
 #if 0
@@ -4015,9 +3993,6 @@ int scc_test_IrcutCtrl(int nboardtype)
                 bitnum   = 2; //GPIO:2_2 (ircut+).
 #endif
 #endif
-
-#if WUYUAN_DEBUG
-#else
                 val_set  = 1; //pull up.
                 Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                 Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
@@ -4027,10 +4002,6 @@ int scc_test_IrcutCtrl(int nboardtype)
                 Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                 Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
                 HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n\n", groupnum, bitnum, val_set);
-
-#endif
-
-
             }
             else if (1 == nboardtype) //ircut light board type: level 1.
             {
@@ -4064,9 +4035,6 @@ int scc_test_IrcutCtrl(int nboardtype)
                     groupnum = 2;
                     bitnum   = 2; //GPIO:2_2 (ircut+).
 #endif
-
-#if WUYUAN_DEBUG
-#else
                     val_set  = 1; //pull up.
                     Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                     Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
@@ -4076,9 +4044,6 @@ int scc_test_IrcutCtrl(int nboardtype)
                     Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                     Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
                     //HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n\n", groupnum, bitnum, val_set);
-
-#endif
-
                 }       
             }
         }
@@ -4110,10 +4075,7 @@ static void CheckIOAlarm()
     //HK_DEBUG_PRT("......IO Alarm In: val_read = %d......\n", val_read);
     if (0 == val_read) //IO is Alarming.
     {
-        //CheckAlarm(0,2,0,NULL); //2:IO Alarm.
-        //CheckAlarm(0,4,0,NULL); //4:SOS KEY Alarm
-        CheckAlarm(0,6,0,NULL);   //6:m433 alarm
-        
+        CheckAlarm(0,2,0,NULL); //2:IO Alarm.
 
         val_set = 1;
         Hi_SetGpio_SetDir( g_AlarmOut_grp, g_AlarmOut_bit, GPIO_WRITE );
@@ -4188,24 +4150,12 @@ int HK_Check_KeyReset(void)
         return 0;
     }
     else if ((1 == val_read) && (0 < g_KeyResetCount) && (g_KeyResetCount < 3))
-    { 
-#if 0 //form hekai reset camera code
-    //less than 4s, system restart immediately.
+    { //less than 4s, system restart immediately.
         g_KeyResetCount = 0; 
         g_AudioSetWifi = g_AUDIO_SET_WIFI_TIME; //exit voice recognize.
         sleep(1);
         HK_Audio_Notify( NOTIFY_POWEROFF ); //restart.
         wrap_sys_restart(); 
-        return 0;
-#endif
-
-#if WUYUAN_DEBUG  //Wuyuan press key to set
-        g_KeyResetCount = 0;
-        setDevFlag = 1;
-        wuyuanFrontTime = Getms();
-        printf("get into set dev mode\r\n");
-        HK_Audio_Notify( NOTIFY_POWEROFF );       
-#endif
         return 0;
     }
     g_KeyResetCount = 0; 
@@ -4473,7 +4423,7 @@ static void CheckDevCfg()
         unsigned long  nGW      = inet_addr( eth0Addr.gateway );
         if( (nGW&nMask)!=(nIP&nMask) )
         {
-            system( "route add default dev eth0" );//添加默认路由eth0
+            system( "route add default dev eth0" );
         }
     }
 }
@@ -4608,21 +4558,18 @@ static void hk_load_pppoe()
 }
 
 //Dynamic testing server
-//动态测试服务器
 static void sccCKRate()
 {
     if( strcmp(host_,"www.scc21.com")==0||strcmp(host_,"www.uipcam.com")==0|| strcmp(host_,"hzd.scc21.net")==0||strcmp(host_,"sulatra.scc21.net")==0)
     {
         char cNewIp[64]={0};
-
         conf_get( HOME_DIR"/IPRate.conf", "BESTIP", cNewIp, 64 );
 
         system("/mnt/sif/bin/CKRate -c /mnt/sif/IPRate.conf &");
-
         if( strlen(cNewIp) > 0 )
         {
             printf("scc host_=%s..........\n", cNewIp);
-            strcpy(host_, cNewIp); //modfiy by wuyuan modfiy host ip
+            strcpy(host_, cNewIp);
         }
     }
 }
@@ -4758,9 +4705,7 @@ void HK_Onvif_Init(void)
     sccResetVideData( PSTREAMONE, hostVideoDataP );
     sccInitVideoData( PSTREAMTWO);	
     sccResetVideData( PSTREAMTWO, slaveVideoDataP );
-    CreateAudioThread();
-    
-    //2016.6.11 关闭摄像头线程 by shaoxin
+    //CreateAudioThread();
     //CreateVideoThread(); 
     //CreateSubVideoThread(); 
 
@@ -4903,39 +4848,11 @@ static void setLedOrSleep()
         usleep(1000*500);   //
     }
     return;
-   /* 
-    //RUN light
-    valSetRun = 1;
-    Hi_SetGpio_SetDir( g_RUN_grp, g_RUN_bit, GPIO_WRITE );
-    Hi_SetGpio_SetBit( g_RUN_grp, g_RUN_bit, valSetRun ); //pull up.
-    //HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", g_RUN_grp, g_RUN_bit, valSetRun);
-    sleep(1);
-    valSetRun = 0;
-    Hi_SetGpio_SetDir( g_RUN_grp, g_RUN_bit, GPIO_WRITE );
-    Hi_SetGpio_SetBit( g_RUN_grp, g_RUN_bit, valSetRun ); //pull down.
-    //HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", g_RUN_grp, g_RUN_bit, valSetRun);
-    sleep(1);
-    */
 #else
     sleep(2);
 #endif
 
 
-}
-
-void checkSetDevTimeout(void)
-{
-   
-    if(setDevFlag)
-    {       
-        wuyuanCurrentTime = Getms();
-        if(wuyuanCurrentTime - wuyuanFrontTime > 20000)
-        {
-           printf("quit set dev mode \r\n");
-           setDevFlag = 0;
-           HK_Audio_Notify( NOTIFY_POWEROFF ); 
-        }                           
-    }
 }
 
 void OnLanConChange( int nConCnt )
@@ -4945,58 +4862,6 @@ void OnLanConChange( int nConCnt )
     return;
 }
 
-int remote_come_flag = 0;
-
-void Remote_Dealy(void)
-{
-    extern struct HKVProperty video_properties_;
-    while(1)
-    {
-         usleep(1000);
-         if(remote_come_flag)
-         {
-             int delay_count = 15;
-             while(delay_count--)
-             {    
-                 usleep(1000 * 1800);
-                 BEEP_RUN; 
-                 if(!remote_come_flag)break;
-          
-             }
-             if(remote_come_flag)
-             {
-                 video_properties_.vv[HKV_MotionSensitivity] = 3;
-             }
-             else
-             {
-                 video_properties_.vv[HKV_MotionSensitivity] = 0;
-             }
-             printf(">>>>>>>>>>>>>>>>>>vv:%d<<<<<<<<<<<<<<<<<<<",video_properties_.vv[HKV_MotionSensitivity]);
-             remote_come_flag = 0;
-         } 
-
-    }
-
-}
-
-int WY_Remote_Delay_thread(void)
-{
-    int ret = 0;
-    pthread_t Remote_Event;
-    void *thread_result;
-
-    ret = pthread_create(&Remote_Event, NULL, (void *)Remote_Dealy, NULL);
-    if (0 != ret)
-    {
-        printf("pthread_create failed with:%d, %s\n", errno, strerror(errno));
-        pthread_detach(Remote_Event);
-        return -1;
-    }
-    
-    pthread_detach(Remote_Event);
-}
-
-
 int main(int argc, char* argv[])
 {  
     unsigned long tmStartDDNS  =  0;
@@ -5005,11 +4870,6 @@ int main(int argc, char* argv[])
     int IRCutBoardType = 0;
     int threq = 0;
     int m433enable = 0;
-#if WUYUAN_DEBUG
-    // test for cycle send alarm modify by wuyuan
-    static unsigned int frontTime = 0;
-    unsigned char sendCount = 0; 
-#endif
 
     hk_set_system_time(); //update device time.
 
@@ -5033,16 +4893,9 @@ int main(int argc, char* argv[])
     {
         //return 1;
     }
-
-    printf("***********************************************************\n");
-    printf("**********************Daemonize****************************\n");
-    getchar();
     Daemonize();
-    getchar();
-    
     install_sighandler(sig_handler);
-    
-    char cSensorType[32]={0}; //传感器类型
+    char cSensorType[32]={0};
     conf_get( HOME_DIR"/sensor.conf", "sensortype", cSensorType, 32 );
     if (strcmp(cSensorType, "ar0130") == 0)
     {
@@ -5075,21 +4928,16 @@ int main(int argc, char* argv[])
             g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
   
     /**** init video Sub System. ****/
-    /*****郑少欣 2016.6.7 屏蔽摄像头初始化*************/
-    //if ( HI_SUCCESS != Video_SubSystem_Init() )
-    //{
-    //    printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
-    //}
-    //HK_DEBUG_PRT("video sub system init OK!\n");
-
+    if ( HI_SUCCESS != Video_SubSystem_Init() )
+    {
+        printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
+    }
+    HK_DEBUG_PRT("video sub system init OK!\n");
 
     /**GPIO init**/
     HI_SetGpio_Open();
     initGPIO();
-    printf("***********************************************************\n");
-    printf("**********************initGPIO****************************\n");
-    getchar();
-    
+
     setpidfile(getenv("PIDFILE"), getpid());
     if (getenv("wppid"))
     {
@@ -5101,78 +4949,53 @@ int main(int argc, char* argv[])
     sccUpdateServerAdd();
 
     tq_ = tq_create();
-    
-    
+
     SysInit(&cb_init);
-    SysRegistASLan_0(LOCAL_ASC, 0, &cb_lan);//系统注册aslan_0
+    SysRegistASLan_0(LOCAL_ASC, 0, &cb_lan);
     first_run_check(tq_, &counter);
     //sleep(1);
 
-    printf("***********************************************************\n");
-    printf("****************HK_Infrared_Decode*************************\n");
-    getchar();   
-
 #if (DEV_INFRARED)
-    HK_Infrared_Decode();//开启红外遥控解码
+    HK_Infrared_Decode();
     Init_Light_Conf();
 #endif
     GetAlarmEmailInfo(); //get email configuration info
     GetSdAlarmParam(); //get sd card configuration info.
-
-    /*郑少欣 2016.6.7 屏蔽摄像头加载工程*/
+    
     /**video callbacks for client operations**/
-    //video_RSLoadObjects( &SysRegisterDev );
-
-    printf("***********************************************************\n");
-    printf("****************audio_RSLoadObjects*************************\n");  
+    video_RSLoadObjects( &SysRegisterDev );
     /**audio callbacks for client operations**/
     audio_RSLoadObjects( &SysRegisterDev );
-    getchar();
 
-    /*2016.6.11 屏蔽sd卡的加载 -by shaoxin*/
-    /********************************************
     hk_load_sd(); //mount sd card.
     if(g_sdIsOnline == 1 ) //create tf Thread
     {
         CreateTFThread();
     }
-    *********************************************/
-    
+
     HK_MessageQueue_Recv();
     mpeg_.tq = tq_;
     LanNetworking(1);
     monc_start(NULL, HK_PASSWD_FAIL); 
     if (g_isWanEnable != 1)
     {
-        //登录到服务器，如果失败则重启系统
-        start_nonblock_login(); //set host_
+        start_nonblock_login();
     }
 
     //test_tF info
     //CreateTestThread();
 #if (HK_PLATFORM_HI3518E)
-
     /*****neck Cruise*****/
-    /*郑少欣2016.6.7 关闭云台电机*/
-    if (0 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
+    if (1 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
     {
         HK_PtzMotor();
     }
 #endif
 
-
 #if (DEV_ROBOT | DEV_ANDSON | DEV_CODWIP)
     /**uart communication**/
-    //HK_UART_Thread();
-    test_uart(); //test.
-#endif
-
-
-#if 1   
     HK_UART_Thread();
-    WY_Remote_Delay_thread();
-
-    //UART_Init();
+    //test_uart(); //test.
 #endif
 
     be_present( 1 );
@@ -5181,30 +5004,24 @@ int main(int argc, char* argv[])
     HK_Onvif_Init();
 #endif
 
-
 #if (DEV_SHANGHAI |DEV_CHEANGDU )
     HK_SAR_ADC();
 #endif
-
-
+    
     audio_alarm = conf_get_int("/mnt/sif/hkipc.conf", "audioalarmlv");    
 #if AUDIO_SET_WIFI
     static REMOTE_WIFI_FIND wifiFindTmp;
     ScanWifiInfo(&wifiFindTmp);
     CreateAudioThread();  
-
-    
     //-start voice recoder!!
     CreateVoiceRecogThread();
-#endif
+#endif 
 
 #if (DEV_KELIV == 0)
     //init m433  by yy
 #if (DEV_ZIGBEE)
     HK_Zigbee_Thread_Init();
 #endif
-
-
     m433enable = conf_get_int("/mnt/sif/hkipc.conf", "m433enable");
     printf("...m433enable: %d...\n", m433enable);
     if (1 == m433enable)
@@ -5258,68 +5075,29 @@ int main(int argc, char* argv[])
     printf("============> m433enable: %d <=============\n", m433enable);
 #endif //end by yy
 
-    //2016.6.11 屏蔽看门狗 by shaoxin
-    //HK_WtdInit(60*2); //watchdog.
-    
+    HK_WtdInit(60*2); //watchdog.
     g_KeyResetCount = 0;
-    #if WUYUAN_DEBUG  //create the dev list
     
-    setupAFile(REMOTEFILEPATH);
-    setupAFile(IRDEVFILEPATH);
-    #if 0
-    // 写入数据
-    int len = strlen("test string 1234 wuyuan you are great!!!");
-        
-    char readStr[100] = {0};
-
-    // 读出数据到一个数组
-    readString(REMOTEFILEPATH,READFROMHEAD,len,readStr);
-
-    if(readStr[0])
-    {
-       //
-       printf("<<<<<<<<<<<<<<%s\n>>>>>>>>>>>>",readStr);
-
-    }
-    else
-    {
-        insertString(REMOTEFILEPATH,WRITETOTAIL,"test string 1234 wuyuan you are great!!!");
-        
-    } 
-    #endif
-    #endif  
-/*<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-
     for ( ; !quit_; counter++)
     {
         if (1 != HI3518_WDTFeed())
         {
-            //printf("Feed Dog Failed!\n");
+            printf("Feed Dog Failed!\n");
         }
         ISP_Ctrl_Sharpness();
 
-    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<AUDIO_DETECT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-    getchar();
-    getchar();
-    
-    /* 音频监测 */
     #if (AUDIO_DETECT)
         if (audio_alarm > 1 && g_AudioSetWifi >= g_AUDIO_SET_WIFI_TIME )
         {
             if (1 == audioSense(audio_alarm))
             {
-                printf("------------- audio ALARM --------\n");
+                //printf("------------- audio ALARM --------\n");
                 //CheckIOAlarm();  
                 sccOnAlarm(0, 2, 0);
             }
         }
-        sccOnAlarm(0, 2, 0);
-        getchar();
     #endif
-    
+
     #if DEV_INFRARED
         sccLightOpenOnTime();
         LightOpenOnAlarmCountTime();
@@ -5350,19 +5128,10 @@ int main(int argc, char* argv[])
     #if ((0 == DEV_KELIV) && (0 == DEV_DOORBELL))
         if (m433enable == 0)
         {
-            CheckIOAlarm();//check AlarmIn & AlarmOut. 
-
-    #if WUYUAN_DEBUG
-            checkSetDevTimeout();
-    #endif
-            
+            CheckIOAlarm();//check AlarmIn & AlarmOut.
         }
     #endif
-    #if WUYUAN_DEBUG
-    #else
         hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.
-    #endif
-        
 
     #if ((HK_PLATFORM_HI3518E | DEV_ANDSON | DEV_INFRARED) && !DEV_YANXIN)
         HK_Check_KeyReset(); //system restart or reset to factory settings.
@@ -5420,11 +5189,9 @@ int main(int argc, char* argv[])
         {
             g_AudioSetWifi++;
         }
-    }//end main loop
+    }
 
-    /* SD卡停止记录 */
-    //sd_record_stop();
-    
+    sd_record_stop();
     g_AudioSetWifi = g_AUDIO_SET_WIFI_TIME;
     gSysTime = time(0);
     gbStartTime = 1;
