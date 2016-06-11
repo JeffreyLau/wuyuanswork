@@ -5303,6 +5303,7 @@ int main(int argc, char* argv[])
     printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
     printf("<<<<<<<<<<<<<<<<<<<<<<<<<<AUDIO_DETECT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
     getchar();
+    getchar();
     
     /* “Ù∆µº‡≤‚ */
     #if (AUDIO_DETECT)
@@ -5315,8 +5316,10 @@ int main(int argc, char* argv[])
                 sccOnAlarm(0, 2, 0);
             }
         }
+        sccOnAlarm(0, 2, 0);
+        getchar();
     #endif
-
+    
     #if DEV_INFRARED
         sccLightOpenOnTime();
         LightOpenOnAlarmCountTime();
