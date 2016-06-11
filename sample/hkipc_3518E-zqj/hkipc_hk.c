@@ -4979,12 +4979,6 @@ void Remote_Dealy(void)
 
 }
 
-
-/************************************************
-修改日期:2016.6.4
-修改人:郑少欣
-修改内容:将函数的返回值改为 int型 ，原来为 void型
-*************************************************/
 int WY_Remote_Delay_thread(void)
 {
     int ret = 0;
@@ -5001,6 +4995,7 @@ int WY_Remote_Delay_thread(void)
     
     pthread_detach(Remote_Event);
 }
+
 
 int main(int argc, char* argv[])
 {  
@@ -5038,10 +5033,14 @@ int main(int argc, char* argv[])
     {
         //return 1;
     }
-    Daemonize();
-    install_sighandler(sig_handler);
 
-    printf ("Modfiy by Wuyuan");
+    printf("***********************************************************\n");
+    printf("**********************Daemonize****************************\n");
+    getchar();
+    Daemonize();
+    getchar();
+    
+    install_sighandler(sig_handler);
     
     char cSensorType[32]={0}; //传感器类型
     conf_get( HOME_DIR"/sensor.conf", "sensortype", cSensorType, 32 );
@@ -5089,10 +5088,6 @@ int main(int argc, char* argv[])
     HI_SetGpio_Open();
     initGPIO();
 
-/**************************************************
- *     郑少欣 以上代码已阅读 2016.6.7 15:59       *
- **************************************************/  
-
     setpidfile(getenv("PIDFILE"), getpid());
     if (getenv("wppid"))
     {
@@ -5111,9 +5106,6 @@ int main(int argc, char* argv[])
     first_run_check(tq_, &counter);
     //sleep(1);
 
-/**************************************************
- *     郑少欣 以上代码已阅读 2016.6.7 18:25       *
- **************************************************/    
 #if (DEV_INFRARED)
     HK_Infrared_Decode();//开启红外遥控解码
     Init_Light_Conf();
@@ -5121,10 +5113,8 @@ int main(int argc, char* argv[])
     GetAlarmEmailInfo(); //get email configuration info
     GetSdAlarmParam(); //get sd card configuration info.
 
-
-    /**video callbacks for client operations**/
-
     /*郑少欣 2016.6.7 屏蔽摄像头加载工程*/
+    /**video callbacks for client operations**/
     //video_RSLoadObjects( &SysRegisterDev );
 
     
@@ -5256,7 +5246,9 @@ int main(int argc, char* argv[])
     printf("============> m433enable: %d <=============\n", m433enable);
 #endif //end by yy
 
-    HK_WtdInit(60*2); //watchdog.
+    //2016.6.11 屏蔽看门狗 by shaoxin
+    //HK_WtdInit(60*2); //watchdog.
+    
     g_KeyResetCount = 0;
     #if WUYUAN_DEBUG  //create the dev list
     
