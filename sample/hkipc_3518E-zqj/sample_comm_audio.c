@@ -196,7 +196,7 @@ void *SAMPLE_COMM_AUDIO_AencProc(void *parg)
             s32Ret = HI_MPI_AENC_GetStream(pstAencCtl->AeChn, &stStream, HI_FALSE);
             if (HI_SUCCESS != s32Ret )
             {
-                printf("%s: HI_MPI_AENC_GetStream(%d), failed with %#x!\n",\
+              //printf("%s: HI_MPI_AENC_GetStream(%d), failed with %#x!\n",\
                        __FUNCTION__, pstAencCtl->AeChn, s32Ret);
                 pstAencCtl->bStart = HI_FALSE;
                 return NULL;
