@@ -1024,6 +1024,10 @@ static void* insert0(const char* fn, const char* line)
         printf(fmt);\
     } while(0)
 
+/********************************************
+函数功能:开启守护进程
+入口参数:无
+********************************************/
 static void Daemonize( void )
 {
     pid_t pid = fork();
@@ -4497,7 +4501,7 @@ static void GetWifiSdi()
 
 static void init_conf()
 {
-    system("touch /mnt/sif/sdvideo.conf");
+    //system("touch /mnt/sif/sdvideo.conf");
     system("touch /mnt/sif/subipc.conf");
     system("touch /mnt/sif/time.conf");
     system("touch /mnt/sif/RngMD.conf");
@@ -4752,12 +4756,13 @@ void HK_Onvif_Init(void)
     int EnableOnvif = 0;
     Context_InitSysteBuffer();
 
-    sccInitVideoData( PSTREAUDIO );
-    sccResetVideData( PSTREAUDIO, slaveAudioDataP );	
-    sccInitVideoData( PSTREAMONE);	
-    sccResetVideData( PSTREAMONE, hostVideoDataP );
-    sccInitVideoData( PSTREAMTWO);	
-    sccResetVideData( PSTREAMTWO, slaveVideoDataP );
+    //sccInitVideoData( PSTREAUDIO );
+    //sccResetVideData( PSTREAUDIO, slaveAudioDataP );	
+    //sccInitVideoData( PSTREAMONE);	
+    //sccResetVideData( PSTREAMONE, hostVideoDataP );
+    //sccInitVideoData( PSTREAMTWO);	
+    //sccResetVideData( PSTREAMTWO, slaveVideoDataP );
+
     CreateAudioThread();
     
     //2016.6.11 关闭摄像头线程 by shaoxin
@@ -5029,16 +5034,11 @@ int main(int argc, char* argv[])
             port_ = argv[4];
         }
     }
-    else
-    {
-        //return 1;
-    }
 
-    printf("***********************************************************\n");
-    printf("**********************Daemonize****************************\n");
+    /** 开启守护进程 **/
     Daemonize();
-    getchar();
-    
+
+    /**信号安装并处理**/
     install_sighandler(sig_handler);
     
     char cSensorType[32]={0}; //传感器类型
@@ -5061,7 +5061,7 @@ int main(int argc, char* argv[])
 
     g_iZone = conf_get_int(HOME_DIR"/time.conf", "zone");
     g_isWifiInit       = conf_get_int(HOME_DIR"/wifinet.cfg", "isopen");
-    g_HK_VideoResoType = conf_get_int(HOME_DIR"/hkipc.conf", "HKVIDEOTYPE");
+    //g_HK_VideoResoType = conf_get_int(HOME_DIR"/hkipc.conf", "HKVIDEOTYPE");
     g_DevIndex         = conf_get_int(HOME_DIR"/hkclient.conf", "IndexID"); 
     g_isWanEnable      = conf_get_int(HOME_DIR"/hkclient.conf", "WANENABLE");
     g_lanPort          = conf_get_int(HOME_DIR"/hkclient.conf", "LANPORT");
@@ -5085,9 +5085,6 @@ int main(int argc, char* argv[])
     /**GPIO init**/
     HI_SetGpio_Open();
     initGPIO();
-    printf("***********************************************************\n");
-    printf("**********************initGPIO****************************\n");
-    getchar();
     
     setpidfile(getenv("PIDFILE"), getpid());
     if (getenv("wppid"))
@@ -5107,16 +5104,12 @@ int main(int argc, char* argv[])
     first_run_check(tq_, &counter);
     //sleep(1);
 
-    printf("***********************************************************\n");
-    printf("****************HK_Infrared_Decode*************************\n");
-    getchar();   
-
 #if (DEV_INFRARED)
     HK_Infrared_Decode();//开启红外遥控解码
     Init_Light_Conf();
 #endif
     GetAlarmEmailInfo(); //get email configuration info
-    GetSdAlarmParam(); //get sd card configuration info.
+    //GetSdAlarmParam(); //get sd card configuration info.
 
     /*郑少欣 2016.6.7 屏蔽摄像头加载工程*/
     /**video callbacks for client operations**/
@@ -5136,11 +5129,18 @@ int main(int argc, char* argv[])
         CreateTFThread();
     }
     *********************************************/
-    
+
+    /**开启线程获取消息队列的消息并解析**/
     HK_MessageQueue_Recv();
+    
     mpeg_.tq = tq_;
+
+    
     LanNetworking(1);
+
+    /**网络消息接受**/
     monc_start(NULL, HK_PASSWD_FAIL); 
+    
     if (g_isWanEnable != 1)
     {
         //登录到服务器，如果失败则重启系统
@@ -5173,7 +5173,6 @@ int main(int argc, char* argv[])
 
     //UART_Init();
 #endif
-
     be_present( 1 );
     IPCAM_StartWebServer();
 #if ENABLE_ONVIF
@@ -5191,8 +5190,7 @@ int main(int argc, char* argv[])
     static REMOTE_WIFI_FIND wifiFindTmp;
     ScanWifiInfo(&wifiFindTmp);
     
-    CreateAudioThread();  
-
+    //CreateAudioThread();  
     
     //-start voice recoder!!
     CreateVoiceRecogThread();
@@ -5299,31 +5297,29 @@ int main(int argc, char* argv[])
             //printf("Feed Dog Failed!\n");
         }
         ISP_Ctrl_Sharpness();
-
-    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-    printf("<<<<<<<<<<<<<<<<<<<<<<<<<<AUDIO_DETECT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-    getchar();
-    getchar();
     
-    /* 音频监测 */
-    #if (AUDIO_DETECT)
-        if (audio_alarm > 1 && g_AudioSetWifi >= g_AUDIO_SET_WIFI_TIME )
-        {
-            if (1 == audioSense(audio_alarm))
+        /* 音频监测 */
+        #if (AUDIO_DETECT)
+            if (audio_alarm > 1 && 
+                g_AudioSetWifi >= 
+                g_AUDIO_SET_WIFI_TIME )
             {
-                printf("------------- audio ALARM --------\n");
-                //CheckIOAlarm();  
-                sccOnAlarm(0, 2, 0);
+                if (1 == audioSense(audio_alarm))
+                {
+                    printf("------------- audio ALARM --------\n");
+                    //CheckIOAlarm();  
+                    sccOnAlarm(0, 2, 0);
+                }
             }
-        }
-        sccOnAlarm(0, 2, 0);
-        getchar();
-    #endif
+            sccOnAlarm(0, 2, 0);
+        #endif
     
-    #if DEV_INFRARED
-        sccLightOpenOnTime();
-        LightOpenOnAlarmCountTime();
-    #endif
+        #if DEV_INFRARED  //红外遥控器
+            sccLightOpenOnTime();
+            LightOpenOnAlarmCountTime();
+        #endif
+
+        
         if (b_hkSaveSd)
         {
             printf("[%s, %d] scc stop sd....\n", __func__, __LINE__);
@@ -5347,21 +5343,22 @@ int main(int argc, char* argv[])
             }
         }
 
-    #if ((0 == DEV_KELIV) && (0 == DEV_DOORBELL))
-        if (m433enable == 0)
-        {
-            CheckIOAlarm();//check AlarmIn & AlarmOut. 
+        #if ((0 == DEV_KELIV) && (0 == DEV_DOORBELL))
+            if (m433enable == 0)
+            {
+                CheckIOAlarm();//check AlarmIn & AlarmOut. 
 
-    #if WUYUAN_DEBUG
-            checkSetDevTimeout();
-    #endif
+                #if WUYUAN_DEBUG
+                    checkSetDevTimeout();
+                #endif
             
-        }
-    #endif
-    #if WUYUAN_DEBUG
-    #else
-        hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.
-    #endif
+            }
+        #endif
+        
+        #if WUYUAN_DEBUG
+        #else
+            hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.
+        #endif
         
 
     #if ((HK_PLATFORM_HI3518E | DEV_ANDSON | DEV_INFRARED) && !DEV_YANXIN)

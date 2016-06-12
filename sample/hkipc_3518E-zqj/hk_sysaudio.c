@@ -108,7 +108,7 @@ int StartPcmAdec(int nNotifyType)
 
 int HK_Audio_Notify(int nNotifyType)
 {
-    //HK_AudioOut_Enable();
+    HK_AudioOut_Enable();
 	StartPcmAdec( nNotifyType ); 
 	
 	IPCAM_DEBUG("=========>Audio Notify End<=========\n");

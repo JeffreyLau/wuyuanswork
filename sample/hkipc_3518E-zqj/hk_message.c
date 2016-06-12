@@ -106,15 +106,19 @@ int HK_MessageQueue_Send(int netmode)
 
 /*********************************************************************
  * func: receive message from queue, and parse message info.
+ * 函数功能:接收来自队列的消息，并分析队列信息
  ********************************************************************/
 void *HK_Get_NetWorkMode(void *arg)
 {
-    int msgid = 0, ret = 0; //message queue identifier
-    struct hk_msgqueue_st msg_data; 
+    int msgid = 0;//消息队列标识符
+    int ret = 0; 
+     
     int msg_recv_size = MAX_TEXT; //message buffer size.
     int msg_recv_type = 0; //receive the first message in queue.
     int msg_len = 0; //received message length.
+    
     char RcvMsgBuf[256] = {0};
+    struct hk_msgqueue_st msg_data;
 
     /*create a message queue identifier associated with the value of the key argument*/
     msgid = msgget((key_t)HK_MSG_KEY, 0666 | IPC_CREAT);
@@ -136,8 +140,7 @@ void *HK_Get_NetWorkMode(void *arg)
             return NULL;
         }
         msg_len = strlen(msg_data.msg_text);
-        //printf("......recv message: %s, mes_len: %d......\n", msg_data.msg_text, msg_len);
-
+        
         if (msg_len > 0)
         {
             memset(RcvMsgBuf, '\0', sizeof(RcvMsgBuf));

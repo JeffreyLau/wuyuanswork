@@ -763,7 +763,12 @@ static void OnGetWanPpoe( int nCmd, int iSubCmd, Dict *d)
     free( cBuf );
     DictDestroy( DictPacket );
 }
+
 extern int remote_come_flag;
+
+/**********************************************************
+** 函数功能:接受局域网内APP发来的消息                    **
+***********************************************************/
 static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
 {
 #if 0
@@ -1743,7 +1748,6 @@ int APPDeleteStr(char *dev)
     char IRReadStr[88][10] = {0};
     char IRWriteStr[88][10] = {0};    
 
-    
     int len = strlen((const char *)dev);
 
     printf("dev = %s\r\n",dev);
@@ -1751,7 +1755,8 @@ int APPDeleteStr(char *dev)
     int checkExist = 0;
     int existSum = 0;
     int i = 0;
-    
+
+    /** 判断APP的字符串是否合法 **/
     if(APP_STR_LEGAL)
     {
         if(dev[1] == '1')
@@ -1888,6 +1893,7 @@ static void OnSendData( Dict *d )
         {
             if(!memcmp(cData,"deleteall",9))
             {
+                printf("delete all..........\n");
                 deleteAllDev();               
             }                
         }
@@ -1898,17 +1904,18 @@ static void OnSendData( Dict *d )
             
             if(storeTheAPPDev(getStr))
             {
-                printf("APP Dev Store Successfully!");
+                printf("APP Dev Store Successfully!\n");
             }
             else
             {
-                printf("APP Dev Store Failed");
+                printf("APP Dev Store Failed\n");
             }
         }
         else if(len == 8)
         {
             if(!memcmp(cData,"checkall",8))
             {
+                printf("check alll Dev.......\n!");
                 checkAllDev();    
             }
         }
@@ -2108,7 +2115,7 @@ static void OnSetWanDevParam( int nCmd,  Dict *d,const char *buf)
             OnMonSetWebNetInfo( d );
             break;
         case HK_PENETRATE_DATA:
-            OnSendData( d );
+            OnSendData( d ); //获取APP发送来的消息
             break;
         case HK_MON_CONTROL_DEV:
             OnWanControlDev(nCmd, iSubCmd, d );
