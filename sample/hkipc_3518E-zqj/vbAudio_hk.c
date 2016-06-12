@@ -1037,6 +1037,7 @@ static void AudioThread(void)
 
 int CreateAudioThread(void)
 {
+#if 0
     if ( g_Audio_Thread == 0 )
     {
         g_Audio_Thread = 1;
@@ -1052,6 +1053,7 @@ int CreateAudioThread(void)
         //pthread_detach(id);
     }
     return 1;
+#endif
 }
 
 static void SetIRQEventCallback(RSObjectIRQEvent irq) 
