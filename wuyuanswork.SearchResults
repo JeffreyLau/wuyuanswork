@@ -1,4 +1,5 @@
----- OnPenetrateData Matches (3 in 1 files) ----
-Monc_hk.c (sample\hkipc_3518e-zqj):static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
-Monc_hk.c (sample\hkipc_3518e-zqj):            OnPenetrateData( nCmd, iSubCmd, d);
-Monc_hk.c (sample\hkipc_3518e-zqj):            OnPenetrateData(nCmd, iSubCmd, d);
+---- Feed Dog Failed Matches (4 in 2 files) ----
+Hkipc_hk.c (sample\hkipc_3518e-zqj):            //printf("Feed Dog Failed!\n");
+Wdt_hi3518.c (sample\hkipc_3518e-zqj):		printf("Feed Dog Failed!\n");
+Wdt_hi3518.c (sample\hkipc_3518e-zqj):		printf("Feed Dog Failed!\n");
+Wdt_hi3518.c (sample\hkipc_3518e-zqj):			printf("Feed Dog Failed!\n");

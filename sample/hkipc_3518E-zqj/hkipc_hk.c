@@ -4763,7 +4763,7 @@ void HK_Onvif_Init(void)
     //sccInitVideoData( PSTREAMTWO);	
     //sccResetVideData( PSTREAMTWO, slaveVideoDataP );
 
-    CreateAudioThread();
+    //CreateAudioThread();
     
     //2016.6.11 关闭摄像头线程 by shaoxin
     //CreateVideoThread(); 
@@ -5119,7 +5119,6 @@ int main(int argc, char* argv[])
     printf("****************audio_RSLoadObjects*************************\n");  
     /**audio callbacks for client operations**/
     audio_RSLoadObjects( &SysRegisterDev );
-    getchar();
 
     /*2016.6.11 屏蔽sd卡的加载 -by shaoxin*/
     /********************************************
