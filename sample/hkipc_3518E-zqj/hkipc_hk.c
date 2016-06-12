@@ -5040,24 +5040,6 @@ int main(int argc, char* argv[])
 
     /**信号安装并处理**/
     install_sighandler(sig_handler);
-    
-    char cSensorType[32]={0}; //传感器类型
-    conf_get( HOME_DIR"/sensor.conf", "sensortype", cSensorType, 32 );
-    if (strcmp(cSensorType, "ar0130") == 0)
-    {
-        printf("...scc...ar0130......\n");
-        g_HK_SensorType = HK_AR0130; //ar0130.
-    }
-    else if (strcmp(cSensorType, "ov9712d") == 0)
-    {
-        printf("...scc...ov9712d......\n");
-        g_HK_SensorType = HK_OV9712; //ov9712d.
-    }
-    else
-    {
-        printf("...scc...unknown sensor type, use default: ov9712d lib......\n");  
-        g_HK_SensorType = HK_OV9712; //ov9712d.
-    }
 
     g_iZone = conf_get_int(HOME_DIR"/time.conf", "zone");
     g_isWifiInit       = conf_get_int(HOME_DIR"/wifinet.cfg", "isopen");

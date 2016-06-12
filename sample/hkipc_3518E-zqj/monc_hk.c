@@ -580,15 +580,15 @@ static void OnWanPhoneSetDevParam(Dict* d, const char* buf)
         case HK_PHONE_RESTORE:
             OnPhoneRestore();
             break;
-        case HK_MON_CONTROLPT:
-            OnMonPtz(buf);
-            break;
-        case HK_MON_AUTOLPTSPEED:
-            OnAutoLptspeed( buf );
-            break;
-        case HK_MON_DEV_PRESET:
-            OnDevPreset( d );
-            break;
+        //case HK_MON_CONTROLPT:
+        //  OnMonPtz(buf);
+        //  break;
+        //case HK_MON_AUTOLPTSPEED:
+        //    OnAutoLptspeed( buf );
+        //    break;
+        //case HK_MON_DEV_PRESET:
+        //    OnDevPreset( d );
+        //    break;
         default:
             OnPhoneSetDevParam( d );
             break;
@@ -1182,12 +1182,12 @@ static void OnGetWanDevParam( int nCmd,  Dict *d )
         case HK_WEB_WIFI_SSID_INFO:
             OnGetWebSsidInfo(nCmd, iSubCmd, d);
             break;
-        case HK_WEB_SD_INFO:
-            OnWanGetDevSDParam( nCmd, d, iSubCmd );
-            break;
-        case HK_WEB_VIDEO_INFO:
-            OnWebGetVideoInfo(nCmd ,iSubCmd, d);
-            break;
+        //case HK_WEB_SD_INFO:
+        //   OnWanGetDevSDParam( nCmd, d, iSubCmd );
+        //   break;
+        //case HK_WEB_VIDEO_INFO:
+        //   OnWebGetVideoInfo(nCmd ,iSubCmd, d);
+        //   break;
         case HK_WEB_NET_INFO:
             OnWebGetNetInfo(nCmd, iSubCmd, d);
             break;
@@ -1458,6 +1458,9 @@ void OnRestorationParam( )
 
     HK_Audio_Notify( NOTIFY_SYSREST ); //system restart.
     system("sync");
+
+    printf("sys_restart()\n");
+    getchar();
     sys_restart();
 }
 
@@ -2108,9 +2111,9 @@ static void OnSetWanDevParam( int nCmd,  Dict *d,const char *buf)
         case HK_WEB_WIFI_INFO:
             OnWebSetWifiInfo(nCmd, iSubCmd, d );
             break;
-        case HK_WEB_SD_INFO:
-            OnMonDevSdSet( d );
-            break;
+        //case HK_WEB_SD_INFO:
+        //    OnMonDevSdSet( d );
+        //    break;
         case HK_WEB_NET_INFO:
             OnMonSetWebNetInfo( d );
             break;
@@ -2637,13 +2640,13 @@ static void OnGetDevParam(int nCmd, int hkid, Dict *d )
             OnGetAlarmInfo( nCmd, hkid, iSubCmd, d );
             break;
         case HK_MON_SET_FTPSERVER://ftp
-            OnGetFtpInfo(nCmd, hkid, iSubCmd, d);
+            //OnGetFtpInfo(nCmd, hkid, iSubCmd, d);
             break;
         case HK_MON_PPOE://ppoe
             OnGetPpoe( nCmd, hkid ,iSubCmd, d);
             break;
         case HK_MON_LAN_DEVVIDEOINFO:
-            OnGetDevVideoInfo(nCmd, hkid ,iSubCmd, d);
+            //OnGetDevVideoInfo(nCmd, hkid ,iSubCmd, d);
             break;
         case HK_MON_ONVIF_INFO:
             OnGetOnvifInfo(nCmd, hkid ,iSubCmd, d);
