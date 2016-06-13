@@ -5209,28 +5209,10 @@ int main(int argc, char* argv[])
     
     setupAFile(REMOTEFILEPATH);
     setupAFile(IRDEVFILEPATH);
-    #if 0
-    // 写入数据
-    int len = strlen("test string 1234 wuyuan you are great!!!");
-        
-    char readStr[100] = {0};
 
-    // 读出数据到一个数组
-    readString(REMOTEFILEPATH,READFROMHEAD,len,readStr);
-
-    if(readStr[0])
-    {
-       //
-       printf("<<<<<<<<<<<<<<%s\n>>>>>>>>>>>>",readStr);
-
-    }
-    else
-    {
-        insertString(REMOTEFILEPATH,WRITETOTAIL,"test string 1234 wuyuan you are great!!!");
-        
-    } 
-    #endif
     #endif  
+
+#if 0
 /*<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
     printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
     printf("<<<<<<<<<<<<<<<<<<<<<<<<<<main loop>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
@@ -5363,7 +5345,8 @@ int main(int argc, char* argv[])
             g_AudioSetWifi++;
         }
     }//end main loop
-
+#endif
+    while(1);
     /* SD卡停止记录 */
     //sd_record_stop();
     
