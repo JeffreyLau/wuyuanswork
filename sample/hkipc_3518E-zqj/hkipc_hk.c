@@ -909,7 +909,8 @@ void wrap_sys_restart( )
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
-
+    printf("<<<<<<<<<<<system restart>>>>>>>>>>>\n");
+    getchar();
 /**********************
 2016.6.7 
 郑少欣: 关闭系统重启
@@ -5034,6 +5035,8 @@ int main(int argc, char* argv[])
             port_ = argv[4];
         }
     }
+    printf("user:%s\n",user_);
+    printf("passwd:%s\n",passwd_);
 
     /** 开启守护进程 **/
     Daemonize();
