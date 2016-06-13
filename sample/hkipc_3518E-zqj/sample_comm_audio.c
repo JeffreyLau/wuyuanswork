@@ -1051,8 +1051,8 @@ HI_S32 SAMPLE_COMM_AUDIO_StartAenc(HI_S32 s32AencChnCnt, PAYLOAD_TYPE_E enType)
         s32Ret = HI_MPI_AENC_CreateChn(AeChn, &stAencAttr);
         if (s32Ret != HI_SUCCESS)
         {
-            printf("%s: HI_MPI_AENC_CreateChn(%d) failed with %#x!\n", __FUNCTION__,
-                   AeChn, s32Ret);
+            printf("%s: HI_MPI_AENC_CreateChn(%d) failed with %#x!\n", 
+                __FUNCTION__, AeChn, s32Ret);
             return HI_FAILURE;
         }        
     }
