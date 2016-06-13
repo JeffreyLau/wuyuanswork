@@ -4764,7 +4764,7 @@ void HK_Onvif_Init(void)
     //sccInitVideoData( PSTREAMTWO);	
     //sccResetVideData( PSTREAMTWO, slaveVideoDataP );
 
-    //CreateAudioThread();
+    CreateAudioThread();
     
     //2016.6.11 关闭摄像头线程 by shaoxin
     //CreateVideoThread(); 
@@ -5011,11 +5011,6 @@ int main(int argc, char* argv[])
     int IRCutBoardType = 0;
     int threq = 0;
     int m433enable = 0;
-#if WUYUAN_DEBUG
-    // test for cycle send alarm modify by wuyuan
-    static unsigned int frontTime = 0;
-    unsigned char sendCount = 0; 
-#endif
 
     hk_set_system_time(); //update device time.
 
@@ -5046,7 +5041,6 @@ int main(int argc, char* argv[])
 
     g_iZone = conf_get_int(HOME_DIR"/time.conf", "zone");
     g_isWifiInit       = conf_get_int(HOME_DIR"/wifinet.cfg", "isopen");
-    //g_HK_VideoResoType = conf_get_int(HOME_DIR"/hkipc.conf", "HKVIDEOTYPE");
     g_DevIndex         = conf_get_int(HOME_DIR"/hkclient.conf", "IndexID"); 
     g_isWanEnable      = conf_get_int(HOME_DIR"/hkclient.conf", "WANENABLE");
     g_lanPort          = conf_get_int(HOME_DIR"/hkclient.conf", "LANPORT");
@@ -5054,18 +5048,7 @@ int main(int argc, char* argv[])
     g_onePtz           = conf_get_int(HOME_DIR"/hkipc.conf", "oneptz");
     g_DevPTZ           = conf_get_int(HOME_DIR"/ptz.conf", "HKDEVPTZ");
     DdnsTimeInterval   = conf_get_int("/mnt/sif/web.conf", "DdnsTimeInterval");
-    IRCutBoardType     = conf_get_int("/mnt/sif/hkipc.conf", "IRCutBoardType");
-    //HK_DEBUG_PRT("g_isWifiInit:%d, g_HK_SensorType:%d, g_HK_VideoResoType:%d, g_DevIndex:%d, g_isWanEnable:%d, g_lanPort:%d, g_irOpen:%d, g_onePtz:%d, g_DevPTZ:%d, DdnsTimeInterval:%d, IRCutBoardType:%d\n", \
-            g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
-  
-    /**** init video Sub System. ****/
-    /*****郑少欣 2016.6.7 屏蔽摄像头初始化*************/
-    //if ( HI_SUCCESS != Video_SubSystem_Init() )
-    //{
-    //    printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
-    //}
-    //HK_DEBUG_PRT("video sub system init OK!\n");
-
+    IRCutBoardType     = conf_get_int("/mnt/sif/hkipc.conf", "IRCutBoardType");       
 
     /**GPIO init**/
     HI_SetGpio_Open();
@@ -5094,14 +5077,7 @@ int main(int argc, char* argv[])
     Init_Light_Conf();
 #endif
     GetAlarmEmailInfo(); //get email configuration info
-    //GetSdAlarmParam(); //get sd card configuration info.
 
-    /*郑少欣 2016.6.7 屏蔽摄像头加载工程*/
-    /**video callbacks for client operations**/
-    //video_RSLoadObjects( &SysRegisterDev );
-
-    printf("***********************************************************\n");
-    printf("****************audio_RSLoadObjects*************************\n");  
     /**audio callbacks for client operations**/
     audio_RSLoadObjects( &SysRegisterDev );
 
@@ -5133,23 +5109,6 @@ int main(int argc, char* argv[])
 
     //test_tF info
     //CreateTestThread();
-#if (HK_PLATFORM_HI3518E)
-
-    /*****neck Cruise*****/
-    /*郑少欣2016.6.7 关闭云台电机*/
-    if (0 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
-    {
-        HK_PtzMotor();
-    }
-#endif
-
-
-#if (DEV_ROBOT | DEV_ANDSON | DEV_CODWIP)
-    /**uart communication**/
-    //HK_UART_Thread();
-    test_uart(); //test.
-#endif
-
 
 #if 1   
     HK_UART_Thread();
@@ -5157,8 +5116,10 @@ int main(int argc, char* argv[])
 
     //UART_Init();
 #endif
+
     be_present( 1 );
     IPCAM_StartWebServer();
+    
 #if ENABLE_ONVIF
     HK_Onvif_Init();
 #endif
@@ -5174,7 +5135,7 @@ int main(int argc, char* argv[])
     static REMOTE_WIFI_FIND wifiFindTmp;
     ScanWifiInfo(&wifiFindTmp);
     
-    //CreateAudioThread();  
+    CreateAudioThread();  
     
     //-start voice recoder!!
     CreateVoiceRecogThread();
