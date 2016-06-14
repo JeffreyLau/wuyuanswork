@@ -38,7 +38,6 @@ void delayms(u16 ms)
 *******************************************/
 void Set_TFT_Data(u8 data)
 {
-    unsigned int val_set;
     unsigned int val_set = 0;
     unsigned int groupnum = 0;
     unsigned int bitnum = 0;

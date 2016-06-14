@@ -8,6 +8,8 @@
 #ifndef __SX_FTF_H__
 #define __SX_FTF_H__
 
+#include "Sx_TFT.h"
+
 #define     SCAN_V_EN				1	      //水平扫描，如果是垂直扫描，则屏蔽该定义    
 
 #define 	PI						3.1415	  // π
