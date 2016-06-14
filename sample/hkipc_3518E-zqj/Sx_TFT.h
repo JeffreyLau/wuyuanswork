@@ -62,12 +62,12 @@
 
 
 
-void delayms(u16 ms);
-void Set_TFT_Data(u8 data);
-void TFT_WR_CMD(u8 cmd);
-void TFT_WR_Data(u8 dat);
-void TFT_WR_CMD_DATA(u8 cmd,u16 dat);
-void initTFTGPIO();
+extern void delayms(u16 ms);
+extern void Set_TFT_Data(u8 data);
+extern void TFT_WR_CMD(u8 cmd);
+extern void TFT_WR_Data(u8 dat);
+extern void TFT_WR_CMD_DATA(u8 cmd,u16 dat);
+extern void initTFTGPIO();
 
 
 
