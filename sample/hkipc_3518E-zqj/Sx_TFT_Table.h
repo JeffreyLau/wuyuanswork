@@ -8,10 +8,15 @@
 #ifndef __SX_TFT_TABLE_H__
 #define __SX_TFT_TABLE_H__
 
-extern u8 code digital[];
-extern u8 code 
+#include "Sx_TFTConfig.h"
 
-
+extern u8  digital[];		//显示测得PM2.5的数值
+extern u8  digital1[];		//8*8数字
+extern u8  font[10][72];	//汉字12*24
+extern u8  font1[10][72];	//汉字12*24
+extern u8  str[20][48];		//字符串12*24
+extern u8  name[3][72];		//汉字12*24
+extern u8  gImage_ST[];		//显示图片
 
 
 #endif
