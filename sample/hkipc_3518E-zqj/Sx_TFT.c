@@ -142,14 +142,14 @@ void TFT_WR_CMD_DATA(u8 cmd,u16 dat)
 }
 
 
-/*******************************************
+/****************************************************
 函数名称 : initTFTGPIO
 函数功能 : 初始化TFT屏的控制端口都为写状态,状态为0
 函数参数 : 无
 作    者 : 郑少欣
 日    期 : 2016.6.14
 备    注 : 无
-*******************************************/
+****************************************************/
 void initTFTGPIO()
 {
     unsigned int val_read = 0;
@@ -220,8 +220,7 @@ void initTFTGPIO()
         TFT_WR_CMD_DATA(0x07,0x1017);
         TFT_WR_CMD(0x22);
         
-        //TFT_ShowColor(RGB565(255,255,255),X_START,Y_START,X_MAX,Y_MAX); //??°×?á
-    
+        TFT_ShowColor(RGB565(255,255,255),X_START,Y_START,X_MAX,Y_MAX); //
     
     //GPIO:10_3 (背景光 BL_A).
     Hi_SetGpio_SetDir( 10, 3, GPIO_WRITE );
@@ -280,4 +279,104 @@ void initTFTGPIO()
     Hi_SetGpio_SetBit( groupnum, bitnum, val_set );   
 }
 
+/****************************************************
+函数名称 : TFT_SetWindow
+函数功能 : 显示区域设置
+函数参数 : (HEA, HSA)为水平方向的起点坐标
+           (VEA, VSA)为垂直方向的终点坐标
+作    者 : 郑少欣
+日    期 : 2016.6.15
+备    注 : 无
+****************************************************/
+void TFT_SetWindow(u16 HEA, u16 HSA, u16 VEA, u16 VSA)
+{
+    TFT_WR_CMD_DATA(0x36, HEA); //x轴起点坐标
+    TFT_WR_CMD_DATA(0x37, HSA); //x轴终点坐标
+    TFT_WR_CMD_DATA(0x38, VEA); //y轴终点坐标
+    TFT_WR_CMD_DATA(0x39, VSA); //y轴终点坐标
+    TFT_WR_CMD(0X22);
+    TFT_WR_CMD_DATA(0X20, HSA); //RAM addr1 AD0~AD7 HSA
+    TFT_WR_CMD_DATA(0X21, VSA); //RAM addr2 AD15~AD8 VSA
+    TFT_WR_CMD(0X22);
+}
+
+/****************************************************
+函数名称 : TFT_ShowColor
+函数功能 : 显示颜色
+函数参数 : color 为显示的颜色
+           (xStart, yStart)为起点坐标
+            xLong 为x轴方向上的长度
+            yLong 为y轴方向上的长度
+作    者 : 郑少欣
+日    期 : 2016.6.15
+备    注 : 无
+****************************************************/
+void TFT_ShowColor(u16 color, u16 xStart, u16 yStart, u16 xLong, u16 yLong )
+{
+    u8 x, y, CH, CL;
+
+    CH = (u8) (color >> 8 & 0x00FF);
+    CL = (u8) (color & 0x00FF);
+
+    TFT_SetWindow(xLong + xStart - 1, xStart, 
+                  yLong + yStart - 1, yStart); //定位坐标
+
+    /** 数据首次写入 **/
+    for( x = 0; x < xLong; x++)
+    {
+        for (y = 0; y < yLong; y++)
+        {
+            TFT_WR_BYTE(CH);
+            TFT_WR_BYTE(CL);
+        }
+    }
+    
+    delayms(5);
+}
+
+/****************************************************
+函数名称 : TFT_ShowPoint
+函数功能 : 像素点的显示
+函数参数 : (x,y)为用户设置的像素点
+            color 为像素点显示的颜色
+作    者 : 郑少欣
+日    期 : 2016.6.15
+备    注 : 无
+****************************************************/
+void TFT_ShowPoint(u16 x, u16 y, u16 color)
+{
+    TFT_WR_CMD_DATA(0x36, x);   //x轴的起点坐标
+    TFT_WR_CMD_DATA(0x37, x);   //x轴的终点坐标
+    TFT_WR_CMD_DATA(0x38, y);   //y轴的起点坐标
+    TFT_WR_CMD_DATA(0x39, y);   //y轴的终点坐标
+
+    TFT_WR_CMD_DATA(0x20, x);   //设置x坐标的位置
+    TFT_WR_CMD_DATA(0x21, y);   //设置y坐标的位置
+
+    TFT_WR_CMD(0x22);
+    TFT_WR_Data(color);
+}
+
+/****************************************************
+函数名称 : TFT_ShowCirclePixel
+函数功能 : 像素单位显示
+函数参数 : (x,y)为像素单位中心
+            (a,b)为滚动像素点
+            color 为像素点显示的颜色
+作    者 : 郑少欣
+日    期 : 2016.6.15
+备    注 : 无
+****************************************************/
+void TFT_ShowCirclePixl(u16 x, u16 y, s16 a, s16 b, u16 color)
+{
+    TFT_ShowPoint(x - a, y - b, color); //0~7 --> 1
+    TFT_ShowPoint(x - b, y - a, color); //6~7 --> 2
+    TFT_ShowPoint(x - b, y + a, color); //6~5 --> 3
+    TFT_ShowPoint(x - a, y + b, color); //4~6 --> 4
+
+    TFT_ShowPoint(x + a, y + b, color); //4~3 --> 5
+    TFT_ShowPoint(x + b, y + a, color); //2~3 --> 6
+    TFT_ShowPoint(x + b, y - a, color); //2~1 --> 7
+    TFT_ShowPoint(x + a, y - b, color); //0~1 --> 8
+}
 

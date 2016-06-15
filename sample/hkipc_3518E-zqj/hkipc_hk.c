@@ -28,6 +28,9 @@
 #if ENABLE_ONVIF
     #include "IPCAM_Export.h"
 #endif
+
+#include "Sx_TFT.h"
+
 /*********************   ************************/
 #define VIDEVID     0
 #define VICHNID     0
@@ -5087,9 +5090,8 @@ int main(int argc, char* argv[])
     /**GPIO init**/
     HI_SetGpio_Open();
     initGPIO();
-    printf("***********************************************************\n");
-    printf("**********************initGPIO****************************\n");
-    getchar();
+
+    void initTFTGPIO();//TFT∆¡≥ı ºªØ
     
     setpidfile(getenv("PIDFILE"), getpid());
     if (getenv("wppid"))
