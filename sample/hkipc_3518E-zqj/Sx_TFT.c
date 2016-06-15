@@ -220,7 +220,7 @@ void initTFTGPIO()
         TFT_WR_CMD_DATA(0x07,0x1017);
         TFT_WR_CMD(0x22);
         
-        TFT_ShowColor(RGB565(255,255,255),X_START,Y_START,X_MAX,Y_MAX); //??¡ã¡Á?¨¢
+        //TFT_ShowColor(RGB565(255,255,255),X_START,Y_START,X_MAX,Y_MAX); //??¡ã¡Á?¨¢
     
     
     //GPIO:10_3 (±³¾°¹â BL_A).
