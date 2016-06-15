@@ -43,8 +43,14 @@ void TFT_GPIO_Config()
     unsigned int bitnum = 0;
 
     //GPIO:10_3 (±³¾°¹â BL_A).
-    Hi_SetGpio_SetDir( 10, 3, GPIO_WRITE );
-    Hi_SetGpio_SetBit( 10, 3, 0 );
+    //Hi_SetGpio_SetDir( 10, 3, GPIO_WRITE );
+    //Hi_SetGpio_SetBit( 10, 3, 1 );
+    groupnum = 10;
+	bitnum   = 3;  //GPIO:5_1 wifi up
+	val_set  = 1;  //pull down.
+	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
+	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+	HK_DEBUG_PRT("....Set black light GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
     
     //GPIO:11_5 (Æ¬Ñ¡¶Ë CS).
     Hi_SetGpio_SetDir( 11, 5, GPIO_WRITE );
