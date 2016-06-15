@@ -336,10 +336,7 @@ void initTFT()
     delayms(100);
     TFT_WR_CMD(0x29);
         
-    TFT_ShowColor(RGB565(255,255,255),X_START,Y_START,X_MAX,Y_MAX); //
-    
-    
-    
+    TFT_ShowColor(RGB565(255,255,255),X_START,Y_START,X_MAX,Y_MAX); //   
 }
 
 /****************************************************

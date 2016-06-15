@@ -63,11 +63,13 @@
 
 
 extern void delayms(u16 ms);
+extern void TFT_GPIO_Config();
+extern void TFT_Rst(void);
 extern void Set_TFT_Data(u8 data);
 extern void TFT_WR_CMD(u8 cmd);
 extern void TFT_WR_Data(u8 dat);
 extern void TFT_WR_CMD_DATA(u8 cmd,u16 dat);
-extern void initTFTGPIO();
+extern void initTFT();
 extern void TFT_SetWindow(u16 HEA, u16 HSA, u16 VEA, u16 VSA);
 extern void TFT_ShowColor(u16 color, u16 xStart, u16 yStart, u16 xLong, u16 yLong );
 extern void TFT_ShowPoint(u16 x, u16 y, u16 color);
