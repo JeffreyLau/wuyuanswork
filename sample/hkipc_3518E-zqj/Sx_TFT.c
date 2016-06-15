@@ -44,7 +44,7 @@ void TFT_GPIO_Config()
 
     //GPIO:10_3 (±³¾°¹â BL_A).
     Hi_SetGpio_SetDir( 10, 3, GPIO_WRITE );
-    Hi_SetGpio_SetBit( 10, 3, 1 );
+    Hi_SetGpio_SetBit( 10, 3, 0 );
     
     //GPIO:11_5 (Æ¬Ñ¡¶Ë CS).
     Hi_SetGpio_SetDir( 11, 5, GPIO_WRITE );
