@@ -50,7 +50,7 @@ void TFT_GPIO_Config()
 	val_set  = 1;  //pull down.
 	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
-	HK_DEBUG_PRT("....Set black light GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
+	printf("....Set black light GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
     
     //GPIO:11_5 (Æ¬Ñ¡¶Ë CS).
     Hi_SetGpio_SetDir( 11, 5, GPIO_WRITE );
