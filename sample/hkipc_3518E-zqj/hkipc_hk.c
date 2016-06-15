@@ -5003,6 +5003,62 @@ int WY_Remote_Delay_thread(void)
 
 int main(int argc, char* argv[])
 {  
+    unsigned long tmStartDDNS  =  0;
+    unsigned long tmSTopDDNS   =  0;
+    int DdnsTimeInterval = 0;
+    int IRCutBoardType = 0;
+    int threq = 0;
+    int m433enable = 0;
+#if WUYUAN_DEBUG
+    // test for cycle send alarm modify by wuyuan
+    static unsigned int frontTime = 0;
+    unsigned char sendCount = 0; 
+#endif
+
+    hk_set_system_time(); //update device time.
+
+    CheckDevCfg();
+    init_conf(); //create system configurate file.
+
+    int counter = 0;
+    strcpy(host_, "www.uipcam.com");
+    if (argc >= 3)
+    {
+        user_ = argv[1];
+        passwd_ = argv[2];
+        if (argc >= 5)
+        {
+            //host_ = argv[3];
+            strcpy(host_, argv[3]);
+            port_ = argv[4];
+        }
+    }
+    else
+    {
+        //return 1;
+    }
+
+    Daemonize();
+
+    
+    install_sighandler(sig_handler);
+    
+    g_iZone = conf_get_int(HOME_DIR"/time.conf", "zone");
+    g_isWifiInit       = conf_get_int(HOME_DIR"/wifinet.cfg", "isopen");
+    g_HK_VideoResoType = conf_get_int(HOME_DIR"/hkipc.conf", "HKVIDEOTYPE");
+    g_DevIndex         = conf_get_int(HOME_DIR"/hkclient.conf", "IndexID"); 
+    g_isWanEnable      = conf_get_int(HOME_DIR"/hkclient.conf", "WANENABLE");
+    g_lanPort          = conf_get_int(HOME_DIR"/hkclient.conf", "LANPORT");
+    g_irOpen           = conf_get_int(HOME_DIR"/hkipc.conf", "iropen");
+    g_onePtz           = conf_get_int(HOME_DIR"/hkipc.conf", "oneptz");
+    g_DevPTZ           = conf_get_int(HOME_DIR"/ptz.conf", "HKDEVPTZ");
+    DdnsTimeInterval   = conf_get_int("/mnt/sif/web.conf", "DdnsTimeInterval");
+    IRCutBoardType     = conf_get_int("/mnt/sif/hkipc.conf", "IRCutBoardType");
+  
+    /**GPIO init**/
+    HI_SetGpio_Open();
+    initGPIO();
+
     initTFT();//TFT∆¡≥ı ºªØ
 
     while(1);
