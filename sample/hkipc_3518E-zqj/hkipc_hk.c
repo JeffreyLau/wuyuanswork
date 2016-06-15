@@ -5091,7 +5091,7 @@ int main(int argc, char* argv[])
     HI_SetGpio_Open();
     initGPIO();
 
-    void initTFTGPIO();//TFT屏初始化
+    initTFTGPIO();//TFT屏初始化
     
     setpidfile(getenv("PIDFILE"), getpid());
     if (getenv("wppid"))
