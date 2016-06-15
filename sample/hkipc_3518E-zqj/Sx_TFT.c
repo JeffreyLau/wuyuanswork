@@ -326,8 +326,8 @@ void TFT_ShowColor(u16 color, u16 xStart, u16 yStart, u16 xLong, u16 yLong )
     {
         for (y = 0; y < yLong; y++)
         {
-            TFT_WR_BYTE(CH);
-            TFT_WR_BYTE(CL);
+            TFT_WR_Data(CH);
+            TFT_WR_Data(CL);
         }
     }
     
