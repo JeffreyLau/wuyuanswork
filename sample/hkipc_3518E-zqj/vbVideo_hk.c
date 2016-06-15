@@ -1523,22 +1523,6 @@ static const char* GetObjectInfo()
 
 
 #define ALARMTIME 6000*3
-
-#if WUYUAN_DEBUG
-
-int Getms()
-{
-    struct timeval tv;
-    int ms = 0;
-    
-    gettimeofday(&tv, NULL);
-    ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-    return ms;
-}
-
-
-#else
-
 static int Getms()
 {
     struct timeval tv;
@@ -1548,10 +1532,6 @@ static int Getms()
     ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
     return ms;
 }
-
-
-#endif
-
 
 TAlarmSet_ g_tAlarmSet[MAX_CHAN];//MAX_CHAN==3
 unsigned char g_MdMask[MAX_CHAN][MAX_MACROCELL_NUM];//
@@ -1605,44 +1585,6 @@ static void raise_alarm(const char *res, int vfmt)
     //hk_IOAlarm();
 }
 
-#if WUYUAN_DEBUG
-
-void raise_alarm_server( int iType, int nReserved,char *cFtpData)
-{
-    char buf[256] = {0};
-    int iLen = 0;
-    Dict *DictPacket = DictCreate(0, 0);
-    DictSetInt( DictPacket, HK_KEY_MAINCMD, HK_AS_NOTIFY );
-    DictSetInt( DictPacket, HK_KEY_SUBTYPE, 1 );
-    DictSetInt(DictPacket, HK_KEY_CHANNEL, nReserved );
-    DictSetInt( DictPacket, HK_KEY_ALERT_TYPE, iType );
-    DictSetStr( DictPacket, HK_KEY_EVENT, "alarm" );
-
-    if( NULL !=cFtpData)
-    {
-        printf("Wan Alarm......=%s..\n", cFtpData);
-        DictSetStr(DictPacket, HK_KEY_FTPSERVER, cFtpData );
-    }
-
-    time_t rawtime;
-    struct tm *timeinfo;
-    char buffer[80] = {0};
-    time( &rawtime );
-    timeinfo = localtime( &rawtime );
-    strftime(buffer, 80, "%Y-%m-%d %X", timeinfo);
-
-    DictSetStr( DictPacket, HK_KEY_TIME, buffer );
-    DictSetStr( DictPacket, HK_KEY_FROM, getenv("USER") );
-
-    iLen = DictEncode(buf, sizeof(buf), DictPacket);
-    buf[iLen] = '\0';
-    NetSend( HK_KEY_MONSERVER, buf, iLen );
-    DictDestroy(DictPacket);
-}
-
-
-#else
-
 static void raise_alarm_server( int iType, int nReserved,char *cFtpData)
 {
     char buf[256] = {0};
@@ -1675,11 +1617,6 @@ static void raise_alarm_server( int iType, int nReserved,char *cFtpData)
     NetSend( HK_KEY_MONSERVER, buf, iLen );
     DictDestroy(DictPacket);
 }
-
-
-#endif
-
-
 
 /****************************************************************
  * func: save snapshot picture into SD card for test.
@@ -2218,33 +2155,6 @@ static int CreatePICThread(void)
     return 0;
 }
 
-#ifdef WUYUAN_DEBUG
-int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
-{
-    char cBuf[2048]={0};
-    HKFrameHead *hfAlarm = CreateFrameB();
-
-    DictSetInt( hfAlarm, HK_KEY_CHANNEL, nReserved );
-    DictSetInt( hfAlarm, HK_KEY_ALERT_TYPE, nAlarmType );
-    DictSetStr( hfAlarm, HK_KEY_FROM, getenv("USER"));
-    DictSetStr( hfAlarm, HK_KEY_EVENT, "alarm" );
-    if ( NULL != cFtpData )
-    {
-        printf("lan alarm send : %s",cFtpData);
-        //char outBuf[1024]={0};
-        //sccEncodeBuf(outBuf, cFtpData, strlen(cFtpData));
-        //DictSetStr( hfAlarm, HK_KEY_FTPSERVER, outBuf );
-        DictSetStr( hfAlarm, HK_KEY_FTPSERVER, cFtpData );
-    }
-
-    int iLen = DictEncode(cBuf, sizeof(cBuf), hfAlarm);
-    cBuf[iLen] = '\0';
-
-    be_present2( iLen, cBuf, "LocalAlarm", 0);
-    DestroyFrame( hfAlarm );
-}
-
-#else
 static int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData)
 {
     char cBuf[2048]={0};
@@ -2266,9 +2176,6 @@ static int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtp
     be_present2( iLen, cBuf, "LocalAlarm", 0);
     DestroyFrame( hfAlarm );
 }
-
-#endif
-
 
 static int g_jswPowerFlag=0;
 static int g_jswRunTime = 0;
@@ -2389,9 +2296,8 @@ int CheckAlarm(int iChannel, int iType, int nReserved, char *cFtpData)
     }
     */
     //else if (cur - raise_time > 6000)
-    if (cur - raise_time > 2000)
+    if (cur - raise_time > 10000)
     {
-        printf("alarm type : %d \n",iType);
         raise_alarm_server(iType ,nReserved, cFtpData);
         sccLocalAlarm(iChannel, iType, nReserved, cFtpData);
 
@@ -4906,46 +4812,25 @@ void OnMonPtz( const char *ev )
                 g_PtzRotateType = 0;
                 g_PtzPresetPos = 0;
                 g_PtzStepType = 2; //right.
-                printf("iPt:%d \n",iPt);
                 break;
             case 2: //right.
                 g_PtzRotateEnable = 1;
                 g_PtzRotateType = 0;
                 g_PtzPresetPos = 0;
                 g_PtzStepType = 1; //left.
-                printf("iPt:%d \n",iPt);
                 break;
             case 3: //up.
                 g_PtzRotateEnable = 1;
                 g_PtzRotateType = 0;
                 g_PtzPresetPos = 0;
                 g_PtzStepType = 4; //down.
-                printf("iPt:%d \n",iPt);
                 break;
             case 4: //down.
                 g_PtzRotateEnable = 1;
                 g_PtzRotateType = 0;
                 g_PtzPresetPos = 0;
                 g_PtzStepType = 3; //up.
-                printf("iPt:%d \n",iPt);
                 break;
-            case 16:
-                video_properties_.vv[HKV_MotionSensitivity] = 3;
-                printf("SYSTEM ARM iPt:%d \n",iPt);
-                break;
-            case 17:
-                video_properties_.vv[HKV_MotionSensitivity] = 0;
-                printf("SYSTEM DISARM iPt:%d \n",iPt);
-                break;
-            case 18:
-                video_properties_.vv[HKV_MotionSensitivity] = 1;
-                printf("HOME ARM iPt:%d \n",iPt);
-                break;
-            case 19:
-                raise_alarm_server(6,0, NULL);
-                sccLocalAlarm(0,6,0,NULL);
-                printf("SOS ALARM iPt:%d \n",iPt);
-                break;                 
             default:
                 g_PtzRotateEnable = 0;
                 g_PtzStepType = 0;	
@@ -4953,7 +4838,7 @@ void OnMonPtz( const char *ev )
                 g_PtzPresetPos = 0;
                 break;
         }
-        //printf("[%s, %d]...iPt:%d, g_PtzRotateEnable:%d, g_PtzStepType:%d, g_PtzRotateType:%d, g_PtzPresetPos:%d...\n", __func__, __LINE__, iPt, g_PtzRotateEnable, g_PtzStepType, g_PtzRotateType, g_PtzPresetPos);
+        printf("[%s, %d]...iPt:%d, g_PtzRotateEnable:%d, g_PtzStepType:%d, g_PtzRotateType:%d, g_PtzPresetPos:%d...\n", __func__, __LINE__, iPt, g_PtzRotateEnable, g_PtzStepType, g_PtzRotateType, g_PtzPresetPos);
     }
     else
     {    
@@ -4964,46 +4849,25 @@ void OnMonPtz( const char *ev )
                 g_PtzRotateType = 0;
                 g_PtzPresetPos = 0;
                 g_PtzStepType = 1; //left.
-                printf("iPt:%d \n",iPt);
                 break;
             case 2:
                 g_PtzRotateEnable = 1;
                 g_PtzRotateType = 0;
                 g_PtzPresetPos = 0;
                 g_PtzStepType = 2; //right.
-                printf("iPt:%d \n",iPt);
                 break;
             case 3:
                 g_PtzRotateEnable = 1;
                 g_PtzRotateType = 0;
                 g_PtzPresetPos = 0;
                 g_PtzStepType = 3; //up.
-                printf("iPt:%d \n",iPt);
                 break;
             case 4:
                 g_PtzRotateEnable = 1;
                 g_PtzRotateType = 0;
                 g_PtzPresetPos = 0;
                 g_PtzStepType = 4; //down.
-                printf("iPt:%d \n",iPt);
                 break;
-            case 16:
-                video_properties_.vv[HKV_MotionSensitivity] = 3;
-                printf("SYSTEM ARM iPt:%d \n",iPt);
-                break;
-            case 17:
-                video_properties_.vv[HKV_MotionSensitivity] = 0;
-                printf("SYSTEM DISARM iPt:%d \n",iPt);
-                break;
-            case 18:
-                video_properties_.vv[HKV_MotionSensitivity] = 1;
-                printf("HOME ARM iPt:%d \n",iPt);
-                break;
-            case 19:
-                raise_alarm_server(6,0, NULL);
-                sccLocalAlarm(0,6,0,NULL);
-                printf("SOS ALARM iPt:%d \n",iPt);
-                break;  
             default:
                 g_PtzRotateEnable = 0;
                 g_PtzStepType = 0;	
@@ -5011,8 +4875,7 @@ void OnMonPtz( const char *ev )
                 g_PtzPresetPos = 0;
                 break;
         }
-        //printf("Receive data : iPt")
-        //printf("[%s, %d]...iPt:%d, g_PtzRotateEnable:%d, g_PtzStepType:%d, g_PtzRotateType:%d, g_PtzPresetPos:%d...\n", __func__, __LINE__, iPt, g_PtzRotateEnable, g_PtzStepType, g_PtzRotateType, g_PtzPresetPos);
+        printf("[%s, %d]...iPt:%d, g_PtzRotateEnable:%d, g_PtzStepType:%d, g_PtzRotateType:%d, g_PtzPresetPos:%d...\n", __func__, __LINE__, iPt, g_PtzRotateEnable, g_PtzStepType, g_PtzRotateType, g_PtzPresetPos);
     }
 #endif
     return;
@@ -5309,7 +5172,6 @@ void ResetToDefaultSettings(void)
     printf("...reset camera main stream params to default settings ok!...\n");
     return;
 }
-
 
 
 #if 0
@@ -6015,11 +5877,7 @@ static void OnMonDevNetproxy(const char *ev )
     int iFlag = GetParamUN(pFrameHead,HK_KEY_FLAG);
     if( iFlag == 1 )
     {
-    #if WUYUAN_DEBUG
-    #else
         scc_test_IrcutCtrl( 0 );
-    #endif
-        
 
         DestroyFrame( pFrameHead );
         return;

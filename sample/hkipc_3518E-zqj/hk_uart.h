@@ -9,14 +9,6 @@
 #include <errno.h> 
 #include <sys/types.h>  
 #include <sys/stat.h>  
-#include "ptz.h"
-
-
-#define  ONE_FRAME_LENGTH     12
-#define  STORE_FRAME_LENGTH   10
-#define  REMOTECOUNT          8
-#define  IRCOUNT              88
-
 
 #define PRINT_ENABLE    1
 #if PRINT_ENABLE
@@ -89,13 +81,6 @@ typedef enum uart_response_code {
 /** uart operate interfaces **/
 int UART_CtrlCmd_Send(ENUM_UART_CMD enCmd, int iParam);
 int UART_CtrlCmd_Recv(unsigned int *nRecv);
-int UART_Init(void);
-void *UART_Handler(void);
-int checkDevExist(char *devID);
-
-#define DEV_STR_LEGAL len&&(revBuf[0] == 0x01 ||revBuf[0] == 0x02 || revBuf[0] == 0x03)&&(revBuf[5] == 0x01 || revBuf[5] == 0x02 || revBuf[5] == 0x04 || revBuf[5] == 0x08)
-#define APP_STR_LEGAL (len == 10)&&(*(dev+1) == 0x31 ||*(dev+1) == 0x32 || *(dev+1) == 0x33)
-
 
 #endif  /* hk_uart.h (zqj) */
 

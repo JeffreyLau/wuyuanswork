@@ -1,11 +1,6 @@
 #include "hk_uart.h"
 #include "hkipc_hk.h"
-#include "hk_sysaudio.h"
-#include "filesystem.h"
 
-
-int storeLen = 0;
-int existIndex = 0;
 //#define DEBUG_ZIGBEE
 
 #pragma pack(1)
@@ -63,14 +58,6 @@ char g_UartSendCmd[CMD_NUM][CMD_BITNUM] = {
 #endif
 
 int g_UartFd = -1;
-
-#if WUYUAN_DEBUG
-
-unsigned int g_BeepOut_grp  = 2; //BEEP OUT :7_5
-unsigned int g_BeepOut_bit  = 2;
-extern unsigned char setDevFlag;
-
-#endif
 
 int set_opt(int fd, int nSpeed, int nBits, char nEvent, int nStop)
 {
@@ -170,7 +157,7 @@ int UART_Init()
 {
     unsigned int UartBitRate = 0;
 #if (DEV_ANDSON)
-    UartBitRate = 9600;//115200;
+    UartBitRate = 115200;
 #else
     UartBitRate = 9600;
 #endif
@@ -383,274 +370,6 @@ int HK_Check_Battery(void)
         */
 }
 
-void hexToChar(char *targetStr , char *covertStr)
-{
-    char oneSet = 0;
-    char tenSet = 0;
-    int i = 0;
-
-    for(i =0 ;i < ONE_FRAME_LENGTH/2 ; i++)
-    {
-        tenSet = ((targetStr[i])&0xf0)>>4;        
-        oneSet = targetStr[i]&0x0f;     
-        
-        if(tenSet < 0x0a)
-        {
-            covertStr[2*i] = tenSet + 0x30;
-        }
-        else
-        {
-            covertStr[2*i] = tenSet + 0x37;
-        }   
-
-        if(oneSet < 0x0a)
-        {
-            covertStr[2*i+1] = oneSet + 0x30;
-        }
-        else
-        {
-            covertStr[2*i+1] = oneSet + 0x37;
-        }  
-    }
-    printf("uart read data--------RevBuf=%s, strlen:%d\n", covertStr, strlen(covertStr));
-}
-
-int traversalTheDevList(char *targetStr)
-{
-    #if 0
-    // 写入数据
-    int len = strlen("test string 1234 wuyuan you are great!!!");
-        
-    char readStr[100] = {0};
-
-    // 读出数据到一个数组
-    readString(REMOTEFILEPATH,READFROMHEAD,len,readStr);
-
-    if(readStr[0])
-    {
-       //
-       printf("<<<<<<<<<<<<<<%s\n>>>>>>>>>>>>",readStr);
-
-    }
-    else
-    {
-        insertString(REMOTEFILEPATH,WRITETOTAIL,"test string 1234 wuyuan you are great!!!");
-        
-    } 
-    #endif    
-
-
-}
-
-int checkDevExist(char *devID)
-{
-    char readStr[8][10] = {0};
-    char IRReadStr[88][10]={0};
-
-    int i = 0;
-    switch(*(devID+1))
-    {
-        case '1':
-        {
-            memset(readStr,0,STORE_FRAME_LENGTH * REMOTECOUNT);
-            readString(REMOTEFILEPATH,READFROMHEAD,
-                    STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
-            storeLen = strlen((const char *)readStr);
-            printf("||||||||||||||||||||||||||||||||||\r\n%s\r\n||||||||||||||||||||||||||||\r\n",readStr);
-            for(i = 0;i< REMOTECOUNT ;i++)
-            {
-                if(readStr[i][0])
-                {
-                    if(!memcmp(devID,readStr[i],10))
-                    {
-                        existIndex = i;
-                        printf("check out a exist remote:%d ID:%s\r\n",existIndex,devID);
-                        break;
-                    }
-                 }
-            } 
-            
-            if(i < REMOTECOUNT)
-                return 1;
-            else
-                return 0;
-         
-        }
-        break;
-        
-        case '2':
-        case '3':
-        {
-             memset(IRReadStr,0,IRCOUNT*STORE_FRAME_LENGTH);
-             readString(IRDEVFILEPATH,READFROMHEAD,IRCOUNT*STORE_FRAME_LENGTH,IRReadStr);
-             storeLen = strlen((const char *)IRReadStr);
-             printf("<>><><><><><><><><\r\n%s\r\n<><><><><><><><><>\r\n",IRReadStr);
-             for(i = 0;i<IRCOUNT;i++)
-             {
-                 if(IRReadStr[i][0])
-                 {
-                     if(!memcmp(devID,IRReadStr[i],10))
-                     {
-                         existIndex = i;
-                         printf("check out a exist IR:%d ID:%s\r\n",existIndex,devID);
-                         break;
-                     }                        
-                  }
-             }
-
-             if(i < IRCOUNT)
-                 return 2;
-             else
-                 return 0;
-
-        }
-        break;
-
-        default:break;
-
-    }
-    storeLen = 0;
-    return 0;
-}
-
-void *UART_Handler(void)
-{
-    extern struct HKVProperty video_properties_;
-    extern int remote_come_flag;
-    extern void raise_alarm_server( int iType, int nReserved,char *cFtpData);
-    extern int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData);
-
-    char revBuf[20];
-    char tempBuf[20];
-    char storeStr[10] = {0};
-
-    int len = 0;
-    int val_write = 0;
-    int checkExist = 0;
-
-    Hi_SetGpio_SetDir( g_BeepOut_grp, g_BeepOut_bit, GPIO_WRITE );
-    Hi_SetGpio_SetBit( g_BeepOut_grp, g_BeepOut_bit, val_write ); 
-
-    while(1)
-    {
-        memset(revBuf,0,20);
-        memset(tempBuf,0,20);
-
-        len = read(g_UartFd, revBuf, 20);
-        if(DEV_STR_LEGAL)
-        {           
-            hexToChar(revBuf, tempBuf);
-
-            if(tempBuf[1] == '1')
-            {
-                checkExist = checkDevExist(tempBuf);
-                if(checkExist == 1)
-                {
-                    BEEP_RUN;
-                    switch(tempBuf[11])
-                    {
-                        case 0x31:
-                            raise_alarm_server(6,0, tempBuf);
-                            sccLocalAlarm(0,6,0,tempBuf);                         
-                            break;
-                        case 0x32:
-                            remote_come_flag = 0;
-                            video_properties_.vv[HKV_MotionSensitivity] = 0;
-                            
-                            break;
-                        case 0x34:
-                            remote_come_flag = 1;
-                            //video_properties_.vv[HKV_MotionSensitivity] = 3;
-                            
-                            break;
-                        case 0x38:
-                            remote_come_flag = 1;
-                            //video_properties_.vv[HKV_MotionSensitivity] = 1;
-                            break;
-                        default:break;   
-                     }
-
-                }
-                else if(!checkExist)
-                {
-                    if(setDevFlag)
-                    {
-                        memset(storeStr,0,10);
-                        memcpy(storeStr,tempBuf,10);
-                        if(storeLen < 80)
-                        {
-                            insertString(REMOTEFILEPATH,WRITETOTAIL,storeStr);
-                            printf("Store remote successfully!!\r\n");
-                            raise_alarm_server(6,0, tempBuf);
-                            sccLocalAlarm(0,6,0,tempBuf);
-                            HK_Audio_Notify( NOTIFY_WIFISET );
-                        }
-                        else
-                        {
-                            printf("List is full!!\r\n");
-                            setDevFlag = 0;
-                            HK_Audio_Notify( NOTIFY_POWEROFF ); 
-                        }
-                    }
-                    else
-                    {
-                        printf("This remote does not exist in th list!!\r\n");
-                    }
-                
-                }
-              
-            }
-            else if(tempBuf[1] == '2' || tempBuf[1] == '3')
-            {
-
-                checkExist = checkDevExist(tempBuf);
-                if(checkExist == 2)
-                {
-                    BEEP_RUN;
-
-                    if(video_properties_.vv[HKV_MotionSensitivity] > 0)
-                    {
-                        raise_alarm_server(6,0, tempBuf);
-                        sccLocalAlarm(0,6,0,tempBuf);
-                        //HK_Audio_Notify( NOTIFY_WIFISET );                        
-                    }                   
-                }
-                else if(!checkExist)
-                {
-                    if(setDevFlag)
-                    {
-                        memset(storeStr,0,10);
-                        memcpy(storeStr,tempBuf,10);
-                        if(storeLen < 880)
-                        {
-                            insertString(IRDEVFILEPATH,WRITETOTAIL,storeStr);
-                            printf("Store IR successfully!!\r\n");
-                            raise_alarm_server(6,0, tempBuf);
-                            sccLocalAlarm(0,6,0,tempBuf);
-                            HK_Audio_Notify( NOTIFY_WIFISET );
-                        }
-                        else
-                        {
-                            printf("List is full!!\r\n");
-                            setDevFlag = 0;
-                            HK_Audio_Notify( NOTIFY_POWEROFF ); 
-                        }
-                    }
-                    else
-                    {
-                        printf("This IR does not exist in th list!!\r\n");
-                    }
-
-                }
-            }
-            
-           
-        }
-        usleep(1000);
-    }
-
-}
-
 
 /*****************************************************
  * func: init and create uart recv data.
@@ -670,8 +389,7 @@ int HK_UART_Thread(unsigned int *nRecv)
     }
    
     /** receive response info from slave machine **/
-    //ret = pthread_create(&Uart_Event, NULL, (void *)Handle_Uart_Recv, NULL);
-    ret = pthread_create(&Uart_Event, NULL, (void *)UART_Handler, NULL);
+    ret = pthread_create(&Uart_Event, NULL, (void *)Handle_Uart_Recv, NULL);
     if (0 != ret)
     {
         printf("pthread_create failed with:%d, %s\n", errno, strerror(errno));
@@ -742,40 +460,21 @@ int test_uart( )
     UART_Init(); //init uart options.
 #endif
 
-    int printLen = 0;
     int len = 0;
     char RevBuf[20] = {0};
-    char printArray[40] = {0};
     while (1)
     {
-        memset(RevBuf,0,20);
-        memset(printArray,0,40);
         len = read(g_UartFd, RevBuf, 20);
-
         printf("uart read data--------RevBuf=%s, strlen:%d\n", RevBuf, strlen(RevBuf));
 
-        printLen = strlen(RevBuf)-2;
-
-        printf("printLen %d \n",printLen);
-
-        int i = 0;
-        for(i =0;i<2*printLen;i+=2 )
-        {
-           printArray[i] = (RevBuf[i/2] & 0xf0)>>4;
-           printArray[i+1] = RevBuf[i/2] & 0x0f;
-
-           printf("%d%d",printArray[i],printArray[i+1]);
-        }
-        printf("\n");
         sleep(1);
-        /*len = write(g_UartFd, "*ANDSON.", 8);
+        len = write(g_UartFd, "*ANDSON.", 8);
         printf("uart write data, len:%d\n", len);
-        sleep(1);*/
+        sleep(1);
     }
     //printf("....len=%d...\n", len);
     close(g_UartFd);
 
     return 0;
 }
-
 

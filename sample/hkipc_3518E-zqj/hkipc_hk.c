@@ -23,15 +23,10 @@
 #include "hk_message.h"
 #include "hk_sysaudio.h"
 
-#include "filesystem.h"
-
 #if ENABLE_ONVIF
     #include "IPCAM_Export.h"
 #endif
-
-#include "Sx_TFT.h"
-
-/*********************   ************************/
+/********************* Video ************************/
 #define VIDEVID     0
 #define VICHNID     0
 #define VOCHNID     0
@@ -56,15 +51,6 @@ int g_HK_SensorType = 0; //sensor type: 1(ar0130); 2(ov9712d).
  */
 int g_HK_VideoResoType = 0;
 
-/************ remote device set flag Wuyuan******/
-
-unsigned char setDevFlag = 0;
-
-unsigned int wuyuanCurrentTime = 0; 
-unsigned int wuyuanFrontTime   = 0;
-extern int Getms();
-
-
 /***************** GPIO params ******************/
 
 //#define DEBUG
@@ -80,8 +66,6 @@ extern int Getms();
     unsigned int g_AlarmOut_bit = 7; //alarm out:7_7.
     unsigned int g_RUN_grp      = 5;
     unsigned int g_RUN_bit      = 3; //RUN light:5_3.
-
-
 #endif
 
 
@@ -905,19 +889,11 @@ static int UpdateSystemTimestamp(void)
 	return 0;
 }
 
-
 void wrap_sys_restart( )
 {
-
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
-
-/**********************
-2016.6.7 
-郑少欣: 关闭系统重启
-**********************/
-#if 0
     g_sdIsOnline=0;
     be_present(0);
     sd_record_stop();
@@ -929,7 +905,6 @@ void wrap_sys_restart( )
     system("sync");
     system("umount /mnt/mmc/");
     system("reboot");
-#endif
 }
 
 #if 0
@@ -1690,7 +1665,7 @@ static void* thd_nonblock_login(void* a)
         {
             char cBuf[64] = {0};
             HKFrameHead *framePacket = CreateFrameB();
-            printf( "login in\n" );
+            //printf( "login in\n" );
             gSysTime     = time(0);
             gbStartTime  = 1;
 
@@ -1711,7 +1686,7 @@ static void* thd_nonblock_login(void* a)
             SetParamUN( framePacket,HK_KEY_VERTYPE, HK_DEV_TYPE );//502
             GetFramePacketBuf( framePacket, cBuf, sizeof(cBuf) );
             DestroyFrame( framePacket );
-            printf("wuyuan test  point scc..Host=%s.........\n", host_);
+            printf("scc..Host=%s.........\n", host_);
             SysLogin_ex(user_, passwd_, cBuf, host_, atoi(port_), 0);
             gbStartTime = 0;
         }
@@ -3418,14 +3393,13 @@ static void initGPIO()
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
 
-#if 1
+#if 0
     /**MI8029 PIR**/
     groupnum = 7;
     bitnum   = 5; //GPIO:7_5.
-    val_set  = 0;
-    Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
-    Hi_SetGpio_SetBit( groupnum, bitnum, val_set ); //PIR: GPIO7_5.
-    HK_DEBUG_PRT(".......................Get GPIO %d_%d  read Value: %d....\n", groupnum, bitnum, val_set);
+    Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_READ );
+    Hi_SetGpio_GetBit( groupnum, bitnum, &val_read ); //PIR: GPIO7_5.
+    HK_DEBUG_PRT(".......................Get GPIO %d_%d  read Value: %d....\n", groupnum, bitnum, val_read);
 #endif
 
 	/**init IO alarm**/
@@ -3449,7 +3423,6 @@ static void initGPIO()
 	Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
 	Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
 	HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
-
 #endif
 
 #if 0
@@ -4018,9 +3991,6 @@ int scc_test_IrcutCtrl(int nboardtype)
                 bitnum   = 2; //GPIO:2_2 (ircut+).
 #endif
 #endif
-
-#if WUYUAN_DEBUG
-#else
                 val_set  = 1; //pull up.
                 Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                 Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
@@ -4030,10 +4000,6 @@ int scc_test_IrcutCtrl(int nboardtype)
                 Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                 Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
                 HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n\n", groupnum, bitnum, val_set);
-
-#endif
-
-
             }
             else if (1 == nboardtype) //ircut light board type: level 1.
             {
@@ -4067,9 +4033,6 @@ int scc_test_IrcutCtrl(int nboardtype)
                     groupnum = 2;
                     bitnum   = 2; //GPIO:2_2 (ircut+).
 #endif
-
-#if WUYUAN_DEBUG
-#else
                     val_set  = 1; //pull up.
                     Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                     Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
@@ -4079,9 +4042,6 @@ int scc_test_IrcutCtrl(int nboardtype)
                     Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
                     Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
                     //HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n\n", groupnum, bitnum, val_set);
-
-#endif
-
                 }       
             }
         }
@@ -4113,10 +4073,7 @@ static void CheckIOAlarm()
     //HK_DEBUG_PRT("......IO Alarm In: val_read = %d......\n", val_read);
     if (0 == val_read) //IO is Alarming.
     {
-        //CheckAlarm(0,2,0,NULL); //2:IO Alarm.
-        //CheckAlarm(0,4,0,NULL); //4:SOS KEY Alarm
-        CheckAlarm(0,6,0,NULL);   //6:m433 alarm
-        
+        CheckAlarm(0,2,0,NULL); //2:IO Alarm.
 
         val_set = 1;
         Hi_SetGpio_SetDir( g_AlarmOut_grp, g_AlarmOut_bit, GPIO_WRITE );
@@ -4191,24 +4148,12 @@ int HK_Check_KeyReset(void)
         return 0;
     }
     else if ((1 == val_read) && (0 < g_KeyResetCount) && (g_KeyResetCount < 3))
-    { 
-#if 0 //form hekai reset camera code
-    //less than 4s, system restart immediately.
+    { //less than 4s, system restart immediately.
         g_KeyResetCount = 0; 
         g_AudioSetWifi = g_AUDIO_SET_WIFI_TIME; //exit voice recognize.
         sleep(1);
         HK_Audio_Notify( NOTIFY_POWEROFF ); //restart.
         wrap_sys_restart(); 
-        return 0;
-#endif
-
-#if WUYUAN_DEBUG  //Wuyuan press key to set
-        g_KeyResetCount = 0;
-        setDevFlag = 1;
-        wuyuanFrontTime = Getms();
-        printf("get into set dev mode\r\n");
-        HK_Audio_Notify( NOTIFY_POWEROFF );       
-#endif
         return 0;
     }
     g_KeyResetCount = 0; 
@@ -4476,7 +4421,7 @@ static void CheckDevCfg()
         unsigned long  nGW      = inet_addr( eth0Addr.gateway );
         if( (nGW&nMask)!=(nIP&nMask) )
         {
-            system( "route add default dev eth0" );//添加默认路由eth0
+            system( "route add default dev eth0" );
         }
     }
 }
@@ -4611,21 +4556,18 @@ static void hk_load_pppoe()
 }
 
 //Dynamic testing server
-//动态测试服务器
 static void sccCKRate()
 {
     if( strcmp(host_,"www.scc21.com")==0||strcmp(host_,"www.uipcam.com")==0|| strcmp(host_,"hzd.scc21.net")==0||strcmp(host_,"sulatra.scc21.net")==0)
     {
         char cNewIp[64]={0};
-
         conf_get( HOME_DIR"/IPRate.conf", "BESTIP", cNewIp, 64 );
 
         system("/mnt/sif/bin/CKRate -c /mnt/sif/IPRate.conf &");
-
         if( strlen(cNewIp) > 0 )
         {
             printf("scc host_=%s..........\n", cNewIp);
-            strcpy(host_, cNewIp); //modfiy by wuyuan modfiy host ip
+            strcpy(host_, cNewIp);
         }
     }
 }
@@ -4762,10 +4704,8 @@ void HK_Onvif_Init(void)
     sccInitVideoData( PSTREAMTWO);	
     sccResetVideData( PSTREAMTWO, slaveVideoDataP );
     CreateAudioThread();
-    
-    //2016.6.11 关闭摄像头线程 by shaoxin
-    //CreateVideoThread(); 
-    //CreateSubVideoThread(); 
+    CreateVideoThread(); 
+    CreateSubVideoThread(); 
 
     EnableOnvif = conf_get_int("/mnt/sif/web.conf", "bOnvifEnable");
     if(EnableOnvif)
@@ -4926,80 +4866,12 @@ static void setLedOrSleep()
 
 }
 
-void checkSetDevTimeout(void)
-{
-   
-    if(setDevFlag)
-    {       
-        wuyuanCurrentTime = Getms();
-        if(wuyuanCurrentTime - wuyuanFrontTime > 20000)
-        {
-
-           printf("quit set dev mode \r\n");
-           setDevFlag = 0;
-           HK_Audio_Notify( NOTIFY_POWEROFF ); 
-        }                           
-    }
-}
-
 void OnLanConChange( int nConCnt )
 {
     printf("...%s...nConCnt: %d...\n", __func__, nConCnt);
 
     return;
 }
-
-int remote_come_flag = 0;
-
-void Remote_Dealy(void)
-{
-    extern struct HKVProperty video_properties_;
-    while(1)
-    {
-         usleep(1000);
-         if(remote_come_flag)
-         {
-             int delay_count = 15;
-             while(delay_count--)
-             {    
-                 usleep(1000 * 1800);
-                 BEEP_RUN; 
-                 if(!remote_come_flag)break;
-          
-             }
-             if(remote_come_flag)
-             {
-                 video_properties_.vv[HKV_MotionSensitivity] = 3;
-             }
-             else
-             {
-                 video_properties_.vv[HKV_MotionSensitivity] = 0;
-             }
-             printf(">>>>>>>>>>>>>>>>>>vv:%d<<<<<<<<<<<<<<<<<<<",video_properties_.vv[HKV_MotionSensitivity]);
-             remote_come_flag = 0;
-         } 
-
-    }
-
-}
-
-int WY_Remote_Delay_thread(void)
-{
-    int ret = 0;
-    pthread_t Remote_Event;
-    void *thread_result;
-
-    ret = pthread_create(&Remote_Event, NULL, (void *)Remote_Dealy, NULL);
-    if (0 != ret)
-    {
-        printf("pthread_create failed with:%d, %s\n", errno, strerror(errno));
-        pthread_detach(Remote_Event);
-        return -1;
-    }
-    
-    pthread_detach(Remote_Event);
-}
-
 
 int main(int argc, char* argv[])
 {  
@@ -5009,11 +4881,6 @@ int main(int argc, char* argv[])
     int IRCutBoardType = 0;
     int threq = 0;
     int m433enable = 0;
-#if WUYUAN_DEBUG
-    // test for cycle send alarm modify by wuyuan
-    static unsigned int frontTime = 0;
-    unsigned char sendCount = 0; 
-#endif
 
     hk_set_system_time(); //update device time.
 
@@ -5037,12 +4904,26 @@ int main(int argc, char* argv[])
     {
         //return 1;
     }
-
     Daemonize();
-
-    
     install_sighandler(sig_handler);
-    
+    char cSensorType[32]={0};
+    conf_get( HOME_DIR"/sensor.conf", "sensortype", cSensorType, 32 );
+    if (strcmp(cSensorType, "ar0130") == 0)
+    {
+        printf("...scc...ar0130......\n");
+        g_HK_SensorType = HK_AR0130; //ar0130.
+    }
+    else if (strcmp(cSensorType, "ov9712d") == 0)
+    {
+        printf("...scc...ov9712d......\n");
+        g_HK_SensorType = HK_OV9712; //ov9712d.
+    }
+    else
+    {
+        printf("...scc...unknown sensor type, use default: ov9712d lib......\n");  
+        g_HK_SensorType = HK_OV9712; //ov9712d.
+    }
+
     g_iZone = conf_get_int(HOME_DIR"/time.conf", "zone");
     g_isWifiInit       = conf_get_int(HOME_DIR"/wifinet.cfg", "isopen");
     g_HK_VideoResoType = conf_get_int(HOME_DIR"/hkipc.conf", "HKVIDEOTYPE");
@@ -5054,14 +4935,288 @@ int main(int argc, char* argv[])
     g_DevPTZ           = conf_get_int(HOME_DIR"/ptz.conf", "HKDEVPTZ");
     DdnsTimeInterval   = conf_get_int("/mnt/sif/web.conf", "DdnsTimeInterval");
     IRCutBoardType     = conf_get_int("/mnt/sif/hkipc.conf", "IRCutBoardType");
+    //HK_DEBUG_PRT("g_isWifiInit:%d, g_HK_SensorType:%d, g_HK_VideoResoType:%d, g_DevIndex:%d, g_isWanEnable:%d, g_lanPort:%d, g_irOpen:%d, g_onePtz:%d, g_DevPTZ:%d, DdnsTimeInterval:%d, IRCutBoardType:%d\n", \
+            g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
   
+    /**** init video Sub System. ****/
+    if ( HI_SUCCESS != Video_SubSystem_Init() )
+    {
+        printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
+    }
+    HK_DEBUG_PRT("video sub system init OK!\n");
+
     /**GPIO init**/
     HI_SetGpio_Open();
     initGPIO();
 
-    initTFT();//TFT屏初始化
+    setpidfile(getenv("PIDFILE"), getpid());
+    if (getenv("wppid"))
+    {
+        watcher_pid_ = atoi(getenv("wppid"));
+    }
 
-    while(1);
+    atoi(getEnv("LogBackground", "1")) ? LOG_Background() : LOG_Foreground();
+    LOG_SetLevel(atoi(getEnv("LogLevel", "0")));
+    sccUpdateServerAdd();
+
+    tq_ = tq_create();
+
+    SysInit(&cb_init);
+    SysRegistASLan_0(LOCAL_ASC, 0, &cb_lan);
+    first_run_check(tq_, &counter);
+    //sleep(1);
+
+#if (DEV_INFRARED)
+    HK_Infrared_Decode();
+    Init_Light_Conf();
+#endif
+    GetAlarmEmailInfo(); //get email configuration info
+    GetSdAlarmParam(); //get sd card configuration info.
+    
+    /**video callbacks for client operations**/
+    video_RSLoadObjects( &SysRegisterDev );
+    /**audio callbacks for client operations**/
+    audio_RSLoadObjects( &SysRegisterDev );
+
+    hk_load_sd(); //mount sd card.
+    if(g_sdIsOnline == 1 ) //create tf Thread
+    {
+        CreateTFThread();
+    }
+
+    HK_MessageQueue_Recv();
+    mpeg_.tq = tq_;
+    LanNetworking(1);
+    monc_start(NULL, HK_PASSWD_FAIL); 
+    if (g_isWanEnable != 1)
+    {
+        start_nonblock_login();
+    }
+
+    //test_tF info
+    //CreateTestThread();
+#if (HK_PLATFORM_HI3518E)
+    /*****neck Cruise*****/
+    if (1 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
+    {
+        HK_PtzMotor();
+    }
+#endif
+
+#if (DEV_ROBOT | DEV_ANDSON | DEV_CODWIP)
+    /**uart communication**/
+    HK_UART_Thread();
+    //test_uart(); //test.
+#endif
+
+    be_present( 1 );
+    IPCAM_StartWebServer();
+#if ENABLE_ONVIF
+    HK_Onvif_Init();
+#endif
+
+#if (DEV_SHANGHAI |DEV_CHEANGDU )
+    HK_SAR_ADC();
+#endif
+    
+    audio_alarm = conf_get_int("/mnt/sif/hkipc.conf", "audioalarmlv");    
+#if AUDIO_SET_WIFI
+    static REMOTE_WIFI_FIND wifiFindTmp;
+    ScanWifiInfo(&wifiFindTmp);
+    CreateAudioThread();  
+    //-start voice recoder!!
+    CreateVoiceRecogThread();
+#endif 
+
+#if (DEV_KELIV == 0)
+    //init m433  by yy
+#if (DEV_ZIGBEE)
+    HK_Zigbee_Thread_Init();
+#endif
+    m433enable = conf_get_int("/mnt/sif/hkipc.conf", "m433enable");
+    printf("...m433enable: %d...\n", m433enable);
+    if (1 == m433enable)
+    {
+        system("insmod /mnt/sif/bin/hi_m433.ko");
+        sleep(2);
+        if (0 == init_m433(getpid()))
+        {
+            printf("insmod 433 driver success !\n");
+        }
+        else
+        {
+        #if (HK_PLATFORM_HI3518E)
+            /**init IO alarm**/
+            unsigned int val_read = 0;
+            int groupnum = 7;
+            int bitnum   = 6; //GPIO:7_6 ==> IO alarm In.
+            int nRet = Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_READ );
+            nRet = Hi_SetGpio_GetBit( groupnum, bitnum, &val_read );
+            HK_DEBUG_PRT("...Get GPIO %d_%d  read Value: %d...\n", groupnum, bitnum, val_read);
+
+            groupnum = 7;
+            bitnum   = 7;  //GPIO:7_7 ==> IO alarm Out.
+            int val_set  = 0;  //pull down.
+            Hi_SetGpio_SetDir( groupnum, bitnum, GPIO_WRITE );
+            Hi_SetGpio_SetBit( groupnum, bitnum, val_set );
+            HK_DEBUG_PRT("....Set GPIO %d_%d  set Value: %d....\n", groupnum, bitnum, val_set);
+        #endif
+            m433enable = 0;
+            printf("insmod 433 driver failed, m433enable: %d\n", m433enable);
+        }
+    }
+    else 
+    {   
+    #if ( DEV_INFRARED)
+        // check 433 plug in ,add by ali 20150430
+        system("insmod /mnt/sif/bin/hi_m433.ko");
+        if( 0 == init_m433( getpid() ) )
+        {
+            printf( "fxb-------------found  111 \n" );
+            m433enable = 1;
+        }
+        uninit_m433();
+        //sleep(1);
+        system("rmmod /mnt/sif/bin/hi_m433.ko");
+        system("rmmod hi_m433");
+        system("rmmod m433");
+        system("rmmod hi_m433.ko");
+    #endif
+    }
+    printf("============> m433enable: %d <=============\n", m433enable);
+#endif //end by yy
+
+    HK_WtdInit(60*2); //watchdog.
+    g_KeyResetCount = 0;
+    
+    for ( ; !quit_; counter++)
+    {
+        if (1 != HI3518_WDTFeed())
+        {
+            printf("Feed Dog Failed!\n");
+        }
+        ISP_Ctrl_Sharpness();
+
+    #if (AUDIO_DETECT)
+        if (audio_alarm > 1 && g_AudioSetWifi >= g_AUDIO_SET_WIFI_TIME )
+        {
+            if (1 == audioSense(audio_alarm))
+            {
+                //printf("------------- audio ALARM --------\n");
+                //CheckIOAlarm();  
+                sccOnAlarm(0, 2, 0);
+            }
+        }
+    #endif
+
+    #if DEV_INFRARED
+        sccLightOpenOnTime();
+        LightOpenOnAlarmCountTime();
+    #endif
+        if (b_hkSaveSd)
+        {
+            printf("[%s, %d] scc stop sd....\n", __func__, __LINE__);
+            b_OpenSd = true;
+            sd_record_stop();
+            GetSdAlarmParam();
+            b_hkSaveSd = false;
+        }
+
+        if ((1 == hkSdParam.autoRec) && (b_OpenSd) && (1 == g_sdIsOnline))
+        {
+            g_OpenSd++;
+            if (g_OpenSd > 20 && g_GetAllTfFile==0)
+            {
+                g_OpenSd = 0;
+                b_OpenSd = false;
+                if (sd_record_start() < 0)  
+                {
+                    printf("start sd record failed !\n");
+                }
+            }
+        }
+
+    #if ((0 == DEV_KELIV) && (0 == DEV_DOORBELL))
+        if (m433enable == 0)
+        {
+            CheckIOAlarm();//check AlarmIn & AlarmOut.
+        }
+    #endif
+        hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.
+
+    #if ((HK_PLATFORM_HI3518E | DEV_ANDSON | DEV_INFRARED) && !DEV_YANXIN)
+        HK_Check_KeyReset(); //system restart or reset to factory settings.
+    #endif
+
+    #if (DEV_ROBOT)
+        HK_Check_Battery();
+    #endif
+
+    #if (DEV_DOORBELL)
+        HK_Check_SOSKey(); 
+        //HK_Check_PIR_State();
+    #endif
+
+    #if (DEV_BAFU)
+        HK_Check_Record_Split_Key();
+    #endif
+
+    #if 0
+        HK_Check_PIR_State_8029();
+    #endif
+
+    #if (DEV_SHANGHAI)
+        HK_Check_Key_PowerDown(); //press key to power down system. 
+    #endif
+
+        sccSendTestEmailAlaram();//send test email.
+        if (gbStartTime)
+        {
+            time_t nowt = time(0);
+            if ((nowt - gSysTime) > HK_SYS_TIMEOUT)
+            {
+                fprintf(stderr, "timeout quit !!!\n");
+                wrap_sys_restart();
+            }
+        }
+        setLedOrSleep();//Led Or Sleep(2)
+    
+        //DDNS update
+        time(&tmSTopDDNS);
+        if (DdnsTimeInterval*60*60 < (tmSTopDDNS - tmStartDDNS))
+        {
+            tmStartDDNS = tmSTopDDNS;
+            IPCAM_StartDdns();
+        }
+
+    #if (HK_PLATFORM_HI3518E)
+        if (1 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
+        {
+            HK_PTZ_AutoRotate_Stop( 9 );
+        }
+    #endif
+
+        if(g_AudioSetWifi < g_AUDIO_SET_WIFI_TIME)//audio wifi set
+        {
+            g_AudioSetWifi++;
+        }
+    }
+
+    sd_record_stop();
+    g_AudioSetWifi = g_AUDIO_SET_WIFI_TIME;
+    gSysTime = time(0);
+    gbStartTime = 1;
+    LanNetworking(0);
+    SysRegistASLan_0(LOCAL_ASC, &cb_lan, 0);
+    SysLogout();
+    SysExit();
+    tq_destroy(tq_);
+
+    if (quit_ != Excode_Stop)
+        exiting_progress();
+
+    printf("\n [%s]: %d ", __FUNCTION__, __LINE__);
+    exit (0);
 }
 
 /*
@@ -5285,5 +5440,4 @@ static void on_resp_reqinit1(Dict* d)
         }
     }       
 }
-
 

@@ -253,7 +253,6 @@ void Hi_IR_FUNC_TEST()
 
 /*******************************************************
  * func: do event to check remote key value.
-           检查遥控键值
  ******************************************************/
 static int IR_DoEvent(irkey_info_s IRKeyInfo)
 {
@@ -264,20 +263,17 @@ static int IR_DoEvent(irkey_info_s IRKeyInfo)
     for (i = 0; i < g_irkey_adapt_count; i++)
     {
         //printf("...coun: %d, i: %d...\n", g_irkey_adapt_count, i);
-        if ( (IRKeyInfo.irkey_datah == 0) && 
-              (IRKeyInfo.irkey_datal == g_irkey_adapt_array[i].irkey_value) )
+        if ( (IRKeyInfo.irkey_datah == 0) && (IRKeyInfo.irkey_datal == g_irkey_adapt_array[i].irkey_value) )
         {
             printf("key_name:%s, key_value: H/L 0x%x/0x%x...\n", g_irkey_adapt_array[i].irkey_name, IRKeyInfo.irkey_datah, IRKeyInfo.irkey_datal);
             if ((IRKeyInfo.irkey_datah == 0) && 
-               ((IRKeyInfo.irkey_datal == g_irkey_adapt_array[0].irkey_value) || 
-               (IRKeyInfo.irkey_datal == g_irkey_adapt_array[1].irkey_value)))//POWER.
+               ((IRKeyInfo.irkey_datal == g_irkey_adapt_array[0].irkey_value) || (IRKeyInfo.irkey_datal == g_irkey_adapt_array[1].irkey_value)))//POWER.
             {
                 //printf("[%s] power key down !!!\n", __func__);
                 nRet = 1;
             }
             else if ((IRKeyInfo.irkey_datah == 0) && 
-                    ((IRKeyInfo.irkey_datal == g_irkey_adapt_array[2].irkey_value) ||
-                    (IRKeyInfo.irkey_datal == g_irkey_adapt_array[3].irkey_value))) //DEFAULT.
+                    ((IRKeyInfo.irkey_datal == g_irkey_adapt_array[2].irkey_value) || (IRKeyInfo.irkey_datal == g_irkey_adapt_array[3].irkey_value))) //DEFAULT.
             {
                 //printf("[%s] reset to default params !!!\n", __func__);
                 nRet = 2;
@@ -395,7 +391,7 @@ void *Handle_IR_Key_Event(void* arg)
                 KeyStateCode = IR_DoEvent(rcv_irkey_info);
                 printf(".......KeyStateCode: %d, g_PowerKeyState: %d.\n", KeyStateCode, g_PowerKeyState);
 
-                if (1 == KeyStateCode) //1号键被按下
+                if (1 == KeyStateCode)
                 {
                     g_PowerKeyState ^= 1;
                 #if DEV_INFRARED
@@ -414,7 +410,7 @@ void *Handle_IR_Key_Event(void* arg)
                     }
                 #endif
                 }
-                else if (2 == KeyStateCode) //2号键被按下
+                else if (2 == KeyStateCode)
                 {
                 #if 1
                     //ResetToDefaultSettings( ); 

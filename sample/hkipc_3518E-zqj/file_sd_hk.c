@@ -1144,7 +1144,7 @@ static int sd_video_start()
     g_hkHeader.version = 2;
 
     //start video thread
-    //sccStartVideoThread();
+    sccStartVideoThread();
 }
 
 void sd_record_stop()

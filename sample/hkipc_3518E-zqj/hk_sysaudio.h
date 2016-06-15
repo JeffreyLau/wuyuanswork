@@ -58,7 +58,5 @@ inline static int Get_RingFilePath(int nType, char *pPath)
     return 0;
 }
 
-int HK_Audio_Notify(int nNotifyType);
-
 #endif  /**hk_sysaudio.h**/
 

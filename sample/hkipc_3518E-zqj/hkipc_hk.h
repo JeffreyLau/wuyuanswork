@@ -32,7 +32,7 @@
  *   1: enable
  */
 //#define HK_PLATFORM_HI3518C 0
-#define HK_PLATFORM_HI3518E 1 //microstar.
+#define HK_PLATFORM_HI3518E 0 //microstar.
 #define DEV_KELIV           0 //klv 3518e (steven).
 #define DEV_ROBOT           0 //ji si wei robot.
 #define DEV_INFRARED        1 //xhd infrared remoter.
@@ -48,19 +48,6 @@
 #define DEV_YANXIN          0 //yan xin.
 #define DEV_SHANGHAI        0 //Shanghai (Chen ZhiMing)
 #define DEV_CHEANGDU        0 //jia bao - adc
-
-#define WUYUAN_DEBUG        1 //wuyuan debug model
-
-#define BEEP_RUN Hi_SetGpio_SetDir( 2, 2, 1 );\
-                 Hi_SetGpio_SetBit( 2, 2, 0 ); \
-                 Hi_SetGpio_SetDir( 2, 4, 1 );\
-                 Hi_SetGpio_SetBit( 2, 4, 1 );\
-                 usleep(1000*200);\ 
-                 Hi_SetGpio_SetDir( 2, 2, 1 );\
-                 Hi_SetGpio_SetBit( 2, 2, 0 ); \
-                 Hi_SetGpio_SetDir( 2, 4, 1 );\
-                 Hi_SetGpio_SetBit( 2, 4, 0 )
-
 
 #define AUDIO_SET_WIFI      1 //audio set wifi
 

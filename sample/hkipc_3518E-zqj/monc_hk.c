@@ -8,17 +8,10 @@
 #include "ov7725.h"
 #include "hk_email.h"
 #include "hk_sysaudio.h"
-#include "hk_uart.h"
-#include "filesystem.h"
 
 #if ENABLE_ONVIF
     #include "IPCAM_Export.h"
 #endif
-
-extern int sccLocalAlarm(int iChannel, int nAlarmType, int nReserved, char *cFtpData);
-
-extern int existIndex;
-extern int storeLen;
 
 extern int g_sccDevCode;
 extern char authMode[4][8];
@@ -42,13 +35,6 @@ static bool b_testEmail = false;
 
 extern short g_sdIsOnline;
 static void OnMonDeletePhoto(const char *cFileName, int iDel );
-char getStr[10] = {0};
-
-int storeTheAPPDev(char *dev);
-int APPDeleteStr(char *dev);
-void deleteAllDev(void);
-void checkAllDev(void);
-
 
 unsigned long get_file_size(const char *filename)
 {
@@ -580,15 +566,15 @@ static void OnWanPhoneSetDevParam(Dict* d, const char* buf)
         case HK_PHONE_RESTORE:
             OnPhoneRestore();
             break;
-        //case HK_MON_CONTROLPT:
-        //  OnMonPtz(buf);
-        //  break;
-        //case HK_MON_AUTOLPTSPEED:
-        //    OnAutoLptspeed( buf );
-        //    break;
-        //case HK_MON_DEV_PRESET:
-        //    OnDevPreset( d );
-        //    break;
+        case HK_MON_CONTROLPT:
+            OnMonPtz(buf);
+            break;
+        case HK_MON_AUTOLPTSPEED:
+            OnAutoLptspeed( buf );
+            break;
+        case HK_MON_DEV_PRESET:
+            OnDevPreset( d );
+            break;
         default:
             OnPhoneSetDevParam( d );
             break;
@@ -764,25 +750,14 @@ static void OnGetWanPpoe( int nCmd, int iSubCmd, Dict *d)
     DictDestroy( DictPacket );
 }
 
-extern int remote_come_flag;
-
-/**********************************************************
-** 函数功能:接受局域网内APP发来的消息                    **
-***********************************************************/
 static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
 {
 #if 0
     char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
     printf("scc...Penetrate...%s...\n",cData );
-    printf("____####____####___%s___####____####____\r\n",cData);
 
     char *cDevid = DictGetStr( d, HK_KEY_FROM );
-    printf("____####___%s___####____\r\n",cDevid);
-
-    
     char *cUserid = DictGetStr( d, HK_KEY_TO );
-    printf("____%s____\r\n",cUserid); 
-    
     //unsigned int ulParam = DictGetInt( d, HK_KEY_UIPARAM );
     Dict *DictPacket = DictCreate( 0, 0 );
 
@@ -802,86 +777,6 @@ static void OnPenetrateData( int nCmd, int iSubCmd, Dict *d)
     NetSend( HK_KEY_MONSERVER, cBuf, iPacketLen );
     DictDestroy( DictPacket );
 #endif
-
-    char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
-    int len = 0;
-    if(*cData)
-    {
-        len = strlen(cData);
-        printf("APP LAN Send Data=%s----Len = %d\n", cData,len);
-        memset(getStr,0,10);
-        
-        if(len == 16)
-        {
-            if(!memcmp(cData,"delete",6))
-            {
-                memcpy(getStr,cData+6,10);
-                if(APPDeleteStr(getStr))
-                {
-                    sccLocalAlarm(0,6,0, cData);
-                    HK_Audio_Notify( NOTIFY_WIFISET );                
-                    printf("Delete Dev:%s successfully",getStr);
-                }
-                else
-                {
-                    printf("Delete Dev failed");
-                }
-            }
-        }
-        else if(len == 9)
-        {
-            if(!memcmp(cData,"deleteall",9))
-            {
-                lanDeleteAllDev();               
-            }                
-        }
-        else if(len == 10)
-        {
-            
-            memcpy(getStr,cData,10);
-            
-            if(lanStoreTheAPPDev(getStr))
-            {
-                printf("APP Dev Store Successfully!");
-            }
-            else
-            {
-                printf("APP Dev Store Failed");
-            }
-        }
-        else if(len == 8)
-        {
-            if(!memcmp(cData,"checkall",8))
-            {
-                lanCheckAllDev();    
-            }
-        }
-        else
-        {
-            if(!memcmp(cData,"arm",3))
-            {
-                remote_come_flag = 1;
-                //video_properties_.vv[HKV_MotionSensitivity] = 3;
-            }
-            else if(!memcmp(cData,"disarm",6))
-            {
-                remote_come_flag = 0;
-                video_properties_.vv[HKV_MotionSensitivity] = 0;
-            }
-            else if(!memcmp(cData,"home",4))
-            {
-                remote_come_flag = 1;
-                //video_properties_.vv[HKV_MotionSensitivity] = 1;
-            }
-            else if(!memcmp(cData,"sos",3))
-            {
-                raise_alarm_server(6,0, NULL);
-                sccLocalAlarm(0,6,0,NULL);
-            }
-        }
-    }
-
-
 }
 
 static void OnGetWebWifiInfo(int nCmd, int iSubCmd, Dict *d)
@@ -1173,7 +1068,6 @@ static void OnGetWanDevParam( int nCmd,  Dict *d )
             OnGetWanPpoe( nCmd, iSubCmd, d);
             break;
         case HK_PENETRATE_DATA:
-            printf("OnGetWanDevParam----");
             OnPenetrateData( nCmd, iSubCmd, d);
             break;
         case HK_WEB_WIFI_INFO:
@@ -1182,12 +1076,12 @@ static void OnGetWanDevParam( int nCmd,  Dict *d )
         case HK_WEB_WIFI_SSID_INFO:
             OnGetWebSsidInfo(nCmd, iSubCmd, d);
             break;
-        //case HK_WEB_SD_INFO:
-        //   OnWanGetDevSDParam( nCmd, d, iSubCmd );
-        //   break;
-        //case HK_WEB_VIDEO_INFO:
-        //   OnWebGetVideoInfo(nCmd ,iSubCmd, d);
-        //   break;
+        case HK_WEB_SD_INFO:
+            OnWanGetDevSDParam( nCmd, d, iSubCmd );
+            break;
+        case HK_WEB_VIDEO_INFO:
+            OnWebGetVideoInfo(nCmd ,iSubCmd, d);
+            break;
         case HK_WEB_NET_INFO:
             OnWebGetNetInfo(nCmd, iSubCmd, d);
             break;
@@ -1359,8 +1253,6 @@ void OnRestorationParam( )
     system("rm -rf /mnt/sif/light.conf");
     system("rm -rf /mnt/sif/m433.conf");
     system("rm -rf /mnt/sif/m433Code.conf");
-    system("rm /mnt/sif/remoteID.txt");
-    system("rm /mnt/sif/IRID.txt");    
     /**reset hkclient.conf**/
     conf_set_int(HOME_DIR"/hkclient.conf", "LAN_PASSWD", 123456);
     conf_set_int(HOME_DIR"/hkipc.conf", "audioalarmlv", 1);
@@ -1458,9 +1350,6 @@ void OnRestorationParam( )
 
     HK_Audio_Notify( NOTIFY_SYSREST ); //system restart.
     system("sync");
-
-    printf("sys_restart()\n");
-    getchar();
     sys_restart();
 }
 
@@ -1624,328 +1513,13 @@ static void OnMonSetWebNetInfo( Dict *d )
     sys_restart( );
 }
 
-int storeTheAPPDev(char *dev)
-{
-    extern unsigned char setDevFlag;
-
-    int len = strlen((const char *)dev);
-
-    printf("dev = %s\r\n",dev);
-    
-    int checkExist = 0;
-
-    
-    if(APP_STR_LEGAL)
-    {
-        if(dev[1] == '1')
-        { 
-            checkExist = checkDevExist(dev);
-            if(!checkExist)
-            {
-               if(storeLen < 80)
-               {
-                   insertString(REMOTEFILEPATH,WRITETOTAIL,dev);
-                   printf("Store remote successfully!!\r\n");
-                   raise_alarm_server(6,0, dev);
-                   HK_Audio_Notify( NOTIFY_WIFISET );
-                   return 1;
-               }
-               else
-               {
-                   printf("List is full!!\r\n");
-                   setDevFlag = 0;
-                   HK_Audio_Notify( NOTIFY_POWEROFF ); 
-               }
-            }
-        }
-        else if(dev[1] == '2' || dev[1] == '3')
-        {
-            checkExist = checkDevExist(dev);
-            if(!checkExist)
-            {
-               if(storeLen < 880)
-               {
-                  insertString(IRDEVFILEPATH,WRITETOTAIL,dev);                        
-                  printf("Store IR successfully!!\r\n");
-                  raise_alarm_server(6,0, dev);
-                  HK_Audio_Notify( NOTIFY_WIFISET );
-                  return 1;
-               }
-               else
-               {
-                  printf("List is full!!\r\n");
-                  setDevFlag = 0;
-                  HK_Audio_Notify( NOTIFY_POWEROFF ); 
-               }
-            }            
-        }   
-    }
-    return 0;
-}
-
-int lanStoreTheAPPDev(char *dev)
-{
-    extern unsigned char setDevFlag;
-
-    int len = strlen((const char *)dev);
-
-    printf("dev = %s\r\n",dev);
-    
-    int checkExist = 0;
-
-    
-    if(APP_STR_LEGAL)
-    {
-        if(dev[1] == '1')
-        { 
-            checkExist = checkDevExist(dev);
-            if(!checkExist)
-            {
-               if(storeLen < 80)
-               {
-                   insertString(REMOTEFILEPATH,WRITETOTAIL,dev);
-                   printf("Store remote successfully!!\r\n");
-                   sccLocalAlarm(0,6,0, dev);
-                   HK_Audio_Notify( NOTIFY_WIFISET );
-                   return 1;
-               }
-               else
-               {
-                   printf("List is full!!\r\n");
-                   setDevFlag = 0;
-                   HK_Audio_Notify( NOTIFY_POWEROFF ); 
-               }
-            }
-        }
-        else if(dev[1] == '2' || dev[1] == '3')
-        {
-            checkExist = checkDevExist(dev);
-            if(!checkExist)
-            {
-               if(storeLen < 880)
-               {
-                  insertString(IRDEVFILEPATH,WRITETOTAIL,dev);                        
-                  printf("Store IR successfully!!\r\n");
-                  sccLocalAlarm(0,6,0, dev);
-                  HK_Audio_Notify( NOTIFY_WIFISET );
-                  return 1;
-               }
-               else
-               {
-                  printf("List is full!!\r\n");
-                  setDevFlag = 0;
-                  HK_Audio_Notify( NOTIFY_POWEROFF ); 
-               }
-            }            
-        }   
-    }
-    return 0;
-}
-
-
-int APPDeleteStr(char *dev)
-{
-    char readStr[8][10] = {0};
-    char writeStr[8][10] = {0};
-
-    char IRReadStr[88][10] = {0};
-    char IRWriteStr[88][10] = {0};    
-
-    int len = strlen((const char *)dev);
-
-    printf("dev = %s\r\n",dev);
-    
-    int checkExist = 0;
-    int existSum = 0;
-    int i = 0;
-
-    /** 判断APP的字符串是否合法 **/
-    if(APP_STR_LEGAL)
-    {
-        if(dev[1] == '1')
-        { 
-            checkExist = checkDevExist(dev);
-            
-            if(checkExist)
-            {
-                memset(readStr,0,80);
-                memset(writeStr,0,80);
-                readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,readStr);
-                printf("readStr : %s \r\n",readStr);
-
-                memcpy(writeStr,(const char *)readStr,existIndex * STORE_FRAME_LENGTH);
-                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , firstReadLength = %d \r\n",existIndex,STORE_FRAME_LENGTH,existIndex * STORE_FRAME_LENGTH);
-
-                memcpy(writeStr[existIndex], (const char *)readStr[existIndex+1],(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
-
-                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d\r\n",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
-                printf("IRWriteStr: %s\r\n",writeStr);
-                    
-     
-                insertString(REMOTEFILEPATH,EMPTYWRITE,writeStr); 
-
-
-
-                return 1;
-            }
-        }
-        else if(dev[1] == '2' || dev[1] == '3')
-        {
-            checkExist = checkDevExist(dev);
-            if(checkExist)
-            {
-                memset(IRReadStr,0,880);
-                memset(IRWriteStr,0,880);
-                readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,IRReadStr);
-                printf("IRReadStr : %s \r\n",IRReadStr);            
-
-
-                memcpy(IRWriteStr,(const char *)IRReadStr,existIndex * STORE_FRAME_LENGTH);
-                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , firstReadLength = %d \r\n",existIndex,STORE_FRAME_LENGTH,existIndex * STORE_FRAME_LENGTH);
-
-                memcpy(IRWriteStr[existIndex] , (const char *)IRReadStr[existIndex + 1],(storeLen - (existIndex+1) * STORE_FRAME_LENGTH));
-
-                printf("existIndex = %d , STORE_FRAME_LENGTH = %d , secondReadLength = %d storeLen = %d",existIndex,STORE_FRAME_LENGTH,(storeLen - (existIndex+1) * STORE_FRAME_LENGTH),storeLen);
-                printf("IRWriteStr: %s\r\n",IRWriteStr);
-
-                insertString(IRDEVFILEPATH,EMPTYWRITE,IRWriteStr); 
-                    
-                return 1;
-            }           
-        }   
-    }
-    return 0;    
-
-
-}
-
-void deleteAllDev(void)
-{
-    raise_alarm_server(6,0, "deleteall");
-    insertString(REMOTEFILEPATH,EMPTYWRITE,"");
-    insertString(IRDEVFILEPATH,EMPTYWRITE,"");
-    HK_Audio_Notify( NOTIFY_WIFISET );
-}
-
-void lanDeleteAllDev(void)
-{
-    sccLocalAlarm(0,6,0, "deleteall");
-    insertString(REMOTEFILEPATH,EMPTYWRITE,"");
-    insertString(IRDEVFILEPATH,EMPTYWRITE,"");
-    HK_Audio_Notify( NOTIFY_WIFISET );
-}
-
-
-void checkAllDev(void)
-{
-    char checkDev[968] = {0};
-    memcpy(checkDev,(const char *)"checkall",8);
-    readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,checkDev + 8);
-    readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,checkDev + strlen(checkDev));
-
-    raise_alarm_server(6,0, checkDev);
-
-    printf("check all dev : %s ",checkDev);
-
-    HK_Audio_Notify( NOTIFY_WIFISET );
-}
-
-void lanCheckAllDev(void)
-{
-    char checkDev[968] = {0};
-    memcpy(checkDev,(const char *)"checkall",8);
-    readString(REMOTEFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * REMOTECOUNT,checkDev + 8);
-    readString(IRDEVFILEPATH,READFROMHEAD,STORE_FRAME_LENGTH * IRCOUNT,checkDev + strlen(checkDev));
-
-    sccLocalAlarm(0,6,0, checkDev);
-
-    printf("LAN check all dev : %s ",checkDev);
-
-    HK_Audio_Notify( NOTIFY_WIFISET );
-}
-
-
 static void OnSendData( Dict *d )
-{   
+{
     char *cData = DictGetStr(d, HK_KEY_DEVPARAM );
-    int len = 0;
-    if(*cData)
-    {
-        len = strlen(cData);
-        printf("APP WAN Send Data=%s----Len = %d\n", cData,len);
-        memset(getStr,0,10);
-        
-        if(len == 16)
-        {
-            if(!memcmp(cData,"delete",6))
-            {
-                memcpy(getStr,cData+6,10);
-                if(APPDeleteStr(getStr))
-                {
-                    raise_alarm_server(6,0, cData);
-                    HK_Audio_Notify( NOTIFY_WIFISET );                
-                    printf("Delete Dev:%s successfully",getStr);
-                }
-                else
-                {
-                    printf("Delete Dev failed");
-                }
-            }
-        }
-        else if(len == 9)
-        {
-            if(!memcmp(cData,"deleteall",9))
-            {
-                printf("delete all..........\n");
-                deleteAllDev();               
-            }                
-        }
-        else if(len == 10)
-        {
-            
-            memcpy(getStr,cData,10);
-            
-            if(storeTheAPPDev(getStr))
-            {
-                printf("APP Dev Store Successfully!\n");
-            }
-            else
-            {
-                printf("APP Dev Store Failed\n");
-            }
-        }
-        else if(len == 8)
-        {
-            if(!memcmp(cData,"checkall",8))
-            {
-                printf("check alll Dev.......\n!");
-                checkAllDev();    
-            }
-        }
-        else
-        {
-            if(!memcmp(cData,"arm",3))
-            {
-                remote_come_flag = 1;
-                //video_properties_.vv[HKV_MotionSensitivity] = 3;
-            }
-            else if(!memcmp(cData,"disarm",6))
-            {
-                remote_come_flag = 0;
-                video_properties_.vv[HKV_MotionSensitivity] = 0;
-            }
-            else if(!memcmp(cData,"home",4))
-            {
-                remote_come_flag = 1;
-                //video_properties_.vv[HKV_MotionSensitivity] = 1;
-            }
-            else if(!memcmp(cData,"sos",3))
-            {
-                raise_alarm_server(6,0, NULL);
-                sccLocalAlarm(0,6,0,NULL);
-            }
-        }
-    }
+    unsigned int ulParam = DictGetInt(d, HK_KEY_UIPARAM );
+    //sleep(20);
+    //sccRecvAPPData( cData, ulParam );
+    //printf("scc..sccRecvAPPData=%s..111111111....\n", cData);
 }
 
 //204 open,205 alarm, 206 alarm close, 207 test, 208 Get Dev.
@@ -2111,14 +1685,14 @@ static void OnSetWanDevParam( int nCmd,  Dict *d,const char *buf)
         case HK_WEB_WIFI_INFO:
             OnWebSetWifiInfo(nCmd, iSubCmd, d );
             break;
-        //case HK_WEB_SD_INFO:
-        //    OnMonDevSdSet( d );
-        //    break;
+        case HK_WEB_SD_INFO:
+            OnMonDevSdSet( d );
+            break;
         case HK_WEB_NET_INFO:
             OnMonSetWebNetInfo( d );
             break;
         case HK_PENETRATE_DATA:
-            OnSendData( d ); //获取APP发送来的消息
+            OnSendData( d );
             break;
         case HK_MON_CONTROL_DEV:
             OnWanControlDev(nCmd, iSubCmd, d );
@@ -2640,13 +2214,13 @@ static void OnGetDevParam(int nCmd, int hkid, Dict *d )
             OnGetAlarmInfo( nCmd, hkid, iSubCmd, d );
             break;
         case HK_MON_SET_FTPSERVER://ftp
-            //OnGetFtpInfo(nCmd, hkid, iSubCmd, d);
+            OnGetFtpInfo(nCmd, hkid, iSubCmd, d);
             break;
         case HK_MON_PPOE://ppoe
             OnGetPpoe( nCmd, hkid ,iSubCmd, d);
             break;
         case HK_MON_LAN_DEVVIDEOINFO:
-            //OnGetDevVideoInfo(nCmd, hkid ,iSubCmd, d);
+            OnGetDevVideoInfo(nCmd, hkid ,iSubCmd, d);
             break;
         case HK_MON_ONVIF_INFO:
             OnGetOnvifInfo(nCmd, hkid ,iSubCmd, d);
@@ -2962,7 +2536,6 @@ static void OnSetOnvifInfo(int nCmd,int iSubCmd, int hkid, Dict *d)
 static void OnSetMon433(int nCmd, int iSubCmd, int hkid, Dict *d)
 {
     char *cCode = DictGetStr( d, "code");
-    printf("cCode is :%s",cCode);
     //int iCode = DictGetInt( d, "code");
     int iHome = DictGetInt( d, "home");
     int iHomeFlag = DictGetInt( d, "homeflag");
@@ -3045,10 +2618,6 @@ static void OnSetDevParam( int nCmd, int hkid, Dict *d,const char *buf)
             break;
         case HK_MON_433_SET:
             OnSetMon433(nCmd, iSubCmd, hkid, d);
-            break;
-        case HK_PENETRATE_DATA:
-            printf("OnSetDevParam------");
-            OnPenetrateData(nCmd, iSubCmd, d);
             break;
         default:
             break;
