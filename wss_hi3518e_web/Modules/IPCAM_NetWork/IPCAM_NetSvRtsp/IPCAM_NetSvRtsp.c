@@ -366,8 +366,9 @@ LPIPCAM_VIDEOBUFFER g_sH264VideoBuf   = NULL;
 LPIPCAM_AUDIOBUFFER g_AudioBuf              = NULL;
 
 BOOL IPCAM_RtspInit(INT nRtspPort , INT bRtspPasswdAuth)
-{	
-#if 1
+{
+//Ö£ÉÙÐÀ ¸ÄÎª0 
+#if 0
 	g_mH264VideoBuf = (LPIPCAM_VIDEOBUFFER)malloc(sizeof(IPCAM_VIDEOBUFFER));
 	if(NULL == g_mH264VideoBuf)
 	{
@@ -377,13 +378,14 @@ BOOL IPCAM_RtspInit(INT nRtspPort , INT bRtspPasswdAuth)
 	if(NULL == g_sH264VideoBuf)
 	{
 		return NULL;
-	}	
+	}
+#endif
 	g_AudioBuf = (LPIPCAM_AUDIOBUFFER)malloc(sizeof(IPCAM_AUDIOBUFFER));
 	if(NULL == g_AudioBuf)
 	{
 		return NULL;
 	}
-#endif	
+//#endif	
 	if(nRtspPort<1000 || nRtspPort<0 || nRtspPort > 65535)
 	{
 		nRtspPort = DEV_NET_RTSP_PORT;

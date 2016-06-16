@@ -894,6 +894,10 @@ void wrap_sys_restart( )
     printf("please input enter to reboot the system\n");
     getchar();
     getchar();
+    getchar();
+    getchar();
+    getchar();
+    
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
@@ -4703,12 +4707,12 @@ void HK_Onvif_Init(void)
     int EnableOnvif = 0;
     Context_InitSysteBuffer();
 
-    sccInitVideoData( PSTREAUDIO );
+    //sccInitVideoData( PSTREAUDIO );
     sccResetVideData( PSTREAUDIO, slaveAudioDataP );	
-    sccInitVideoData( PSTREAMONE);	
-    sccResetVideData( PSTREAMONE, hostVideoDataP );
-    sccInitVideoData( PSTREAMTWO);	
-    sccResetVideData( PSTREAMTWO, slaveVideoDataP );
+    //sccInitVideoData( PSTREAMONE);	
+    //sccResetVideData( PSTREAMONE, hostVideoDataP );
+    //sccInitVideoData( PSTREAMTWO);	
+    //sccResetVideData( PSTREAMTWO, slaveVideoDataP );
     CreateAudioThread();
     //CreateVideoThread(); 
     //CreateSubVideoThread(); 
@@ -4975,15 +4979,16 @@ int main(int argc, char* argv[])
     GetSdAlarmParam(); //get sd card configuration info.
     
     /**video callbacks for client operations**/
-    video_RSLoadObjects( &SysRegisterDev );
+    //video_RSLoadObjects( &SysRegisterDev );
+    
     /**audio callbacks for client operations**/
     audio_RSLoadObjects( &SysRegisterDev );
 
-    hk_load_sd(); //mount sd card.
-    if(g_sdIsOnline == 1 ) //create tf Thread
-    {
-        CreateTFThread();
-    }
+    //hk_load_sd(); //mount sd card.
+    //if(g_sdIsOnline == 1 ) //create tf Thread
+    //{
+    //    CreateTFThread();
+    //}
 
     HK_MessageQueue_Recv();
     mpeg_.tq = tq_;

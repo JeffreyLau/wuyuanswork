@@ -845,7 +845,7 @@ static void AudioGetWifiConf( )
 	sleep(1);
 	while( 1 )
 	{	
-        if( g_AudioSetWifi== g_AUDIO_SET_WIFI_TIME )
+        if( g_AudioSetWifi == g_AUDIO_SET_WIFI_TIME )
         {
             printf("[%s, %d] Exit Audio Set Wifi g_AudioSetWifi=%d\n", __FUNCTION__, __LINE__,g_AudioSetWifi);
             return;

@@ -218,6 +218,7 @@ HANDSYSBUFFER   Context_InitSysteBuffer()
 		return NULL;
 	}
 
+    /* 郑少欣 屏蔽 2016.6.16
 	for(chn=0;chn<IPCAM_LOCAL_CHN;chn++)
 	{	
 		////创建视频队列
@@ -231,7 +232,7 @@ HANDSYSBUFFER   Context_InitSysteBuffer()
 	{
 		pthread_mutex_init(&g_SysBuffer->MjpegBuffer[i].jpg_mutex, NULL);		
 	}
-
+    */
 	for(i=0;i<AUDIO_MAX_NUM;i++)
 	{
 		pthread_mutex_init(&g_SysBuffer->AudioBuffer[i].audio_mutex, NULL);
