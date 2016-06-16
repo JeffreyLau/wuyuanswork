@@ -4708,7 +4708,7 @@ void HK_Onvif_Init(void)
     Context_InitSysteBuffer();
 
     //sccInitVideoData( PSTREAUDIO );
-    sccResetVideData( PSTREAUDIO, slaveAudioDataP );	
+    //sccResetVideData( PSTREAUDIO, slaveAudioDataP );	
     //sccInitVideoData( PSTREAMONE);	
     //sccResetVideData( PSTREAMONE, hostVideoDataP );
     //sccInitVideoData( PSTREAMTWO);	

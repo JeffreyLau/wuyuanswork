@@ -1,60 +1,13 @@
----- Board Matches (68 in 16 files) ----
-Evp.h (lib_openssl\include\openssl): * signing/verification on-board.  To handle this case, the specific
-Evp.h (sample\lib_openssl\include\openssl): * signing/verification on-board.  To handle this case, the specific
-Hkipc_hk.c (sample\hkipc_3518e-zqj):    //KLV 3518E board.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):static int hk_IrcutCtrl(int nboardtype)
-Hkipc_hk.c (sample\hkipc_3518e-zqj):	//HK_DEBUG_PRT("...nboardtype:%d, Get GPIO %d_%d  read Value: %d...\n", nboardtype, gpio_grp_ircutIN, gpio_bit_ircutIN, val_read);
-Hkipc_hk.c (sample\hkipc_3518e-zqj):        if (0 == nboardtype) //ircut light board type: level 0.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):        else if (1 == nboardtype) //ircut light board type: level 1.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):int scc_test_IrcutCtrl(int nboardtype)
-Hkipc_hk.c (sample\hkipc_3518e-zqj):        if (0 == nboardtype) //ircut light board type: level 0.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):            else if (1 == nboardtype) //ircut light board type: level 1.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):    int IRCutBoardType = 0;
-Hkipc_hk.c (sample\hkipc_3518e-zqj):    IRCutBoardType     = conf_get_int("/mnt/sif/hkipc.conf", "IRCutBoardType");
-Hkipc_hk.c (sample\hkipc_3518e-zqj):    //HK_DEBUG_PRT("g_isWifiInit:%d, g_HK_SensorType:%d, g_HK_VideoResoType:%d, g_DevIndex:%d, g_isWanEnable:%d, g_lanPort:%d, g_irOpen:%d, g_onePtz:%d, g_DevPTZ:%d, DdnsTimeInterval:%d, IRCutBoardType:%d\n", \
-Hkipc_hk.c (sample\hkipc_3518e-zqj):            g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
-Hkipc_hk.c (sample\hkipc_3518e-zqj):        hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):            int ircut_board_type = DictGetInt( d, HK_KEY_IRCUTBOARD ); //0: level 0;  1: level 1.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):            printf("...%s...dev_PTZ:%d, dev_NetType:%d, ircut_board_type:%d...\n", __func__, dev_PTZ, dev_NetType, ircut_board_type);
-Hkipc_hk.c (sample\hkipc_3518e-zqj):            if (1 == ircut_board_type) //ircut light board type: level 0 / level 1.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):                conf_set_int(HOME_DIR"/hkipc.conf", "IRCutBoardType", 1); //level 1.
-Hkipc_hk.c (sample\hkipc_3518e-zqj):                conf_set_int(HOME_DIR"/hkipc.conf", "IRCutBoardType", 0); //level 0.
-Hkipc_hk.h (sample\hkipc_3518e-zqj):int scc_test_IrcutCtrl(int nboardtype);
-HKMonCmdDefine.h (include\include\utils):#define HK_KEY_IRCUTBOARD   "ircutboard"	//µÆ°å¿ØÖÆ
-HKMonCmdDefine.h (sample\include\utils):#define HK_KEY_IRCUTBOARD   "ircutboard"	//µÆ°å¿ØÖÆ
-M034_sensor_config.h (component\isp\sensor\aptina_9m034)://LOAD = Enable Parallel Mode //detect HSSAB board
-M034_sensor_config.h (component\isp\sensor\aptina_9m034)://LOAD = Enable Parallel Mode //detect HSSAB board
-Mpi_pciv.h (include): Description     : Get the board ID of this board
-Mpi_pciv.h (include): Return Value    : The board ID if success
-Mpi_sys.h (include):** 1. Bester to call HI_MPI_SYS_GetCurPts on the host board to get the u64Base.
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):/// @brief Indicates support for onboard key generation.
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):/// Attribute OnboardKeyGeneration of type xs:boolean.
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):   @enum xsd__boolean_*                  OnboardKeyGeneration           0;	///< Optional attribute.
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):/// @brief Indicates whether or not onboard key generation is supported.
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):/// Element OnboardKeyGeneration of type xs:boolean.
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):    enum xsd__boolean_                   OnboardKeyGeneration           1;	///< Required element.
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				onboard key pair generation mechanism.<br/>
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				If a device supports onboard key pair generation,
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):a device supports onboard key pair generation,
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				A device that support onboard key pair generation
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				A device that supports onboard key pair generation
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				A device that does not support onboard key pair
-Onvif.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):command. A device that support onboard key
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):/// @brief Indicates support for onboard key generation.
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):/// Attribute OnboardKeyGeneration of type xs:boolean.
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):   @enum xsd__boolean_*                  OnboardKeyGeneration           0;	///< Optional attribute.
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):/// @brief Indicates whether or not onboard key generation is supported.
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):/// Element OnboardKeyGeneration of type xs:boolean.
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):    enum xsd__boolean_                   OnboardKeyGeneration           1;	///< Required element.
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				onboard key pair generation mechanism.<br/>
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				If a device supports onboard key pair generation,
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):a device supports onboard key pair generation,
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				A device that support onboard key pair generation
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				A device that supports onboard key pair generation
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):				A device that does not support onboard key pair
-Onvif.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):command. A device that support onboard key
-OVF_DeviceManager_OvfInfo.h (sample\wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):	BOOL SupOnboardKeyGeneration ;	          //:FALSE 
-OVF_DeviceManager_OvfInfo.h (wss_hi3518e_web\include\ipcam_extmodules\ipcam_onvif):	BOOL SupOnboardKeyGeneration ;	          //:FALSE 
-Readme.txt (sample\ive):1.  the sample in IVE_test_memory is check whether memory is modified by other modules exclude cpu or whether there is error when loading and saving data.It is useful for demo board test. It has several step.  
-Tw2865.c (extdrv\tw2865):    /* For Hi3515 Demo board 2D1 mode */
-Watchdog.h (drv\wtdg):    __u8  identity[32];    /* Identity of the board */
+---- sccResetVideData Matches (12 in 5 files) ----
+File_sd_hk.c (sample\hkipc_3518e-zqj):static void sccResetVideDataTF(int pStreamType, VideoDataRecord_TF  *mVideoDataBuffer);
+File_sd_hk.c (sample\hkipc_3518e-zqj):    sccResetVideDataTF(0, hostVideoDataPTF);
+File_sd_hk.c (sample\hkipc_3518e-zqj):    sccResetVideDataTF(0, hostVideoDataPTF);
+File_sd_hk.c (sample\hkipc_3518e-zqj):        sccResetVideDataTF(0, hostVideoDataPTF);
+File_sd_hk.c (sample\hkipc_3518e-zqj):static void sccResetVideDataTF(int pStreamType, VideoDataRecord_TF *mVideoDataBuffer)
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    sccResetVideData( PSTREAUDIO, slaveAudioDataP );	
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    //sccResetVideData( PSTREAMONE, hostVideoDataP );
+Hkipc_hk.c (sample\hkipc_3518e-zqj):    //sccResetVideData( PSTREAMTWO, slaveVideoDataP );
+Scc_video.c (sample\hkipc_3518e-zqj):void sccResetVideData(int pStreamType, VideoDataRecord *mVideoDataBuffer)
+vbAudio_hk.c (sample\hkipc_3518e-zqj):            sccResetVideData( PSTREAUDIO, slaveAudioDataP );
+vbVideo_hk.c (sample\hkipc_3518e-zqj):            sccResetVideData( PSTREAMONE, hostVideoDataP );
+vbVideo_hk.c (sample\hkipc_3518e-zqj):            sccResetVideData( PSTREAMTWO, slaveVideoDataP );
