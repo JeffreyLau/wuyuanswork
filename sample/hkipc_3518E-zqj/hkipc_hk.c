@@ -897,7 +897,7 @@ void wrap_sys_restart( )
     getchar();
     getchar();
     getchar();
-    
+/*    
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
@@ -913,6 +913,7 @@ void wrap_sys_restart( )
     system("umount /mnt/mmc/");
  
     system("reboot");
+*/
 }
 
 #if 0
