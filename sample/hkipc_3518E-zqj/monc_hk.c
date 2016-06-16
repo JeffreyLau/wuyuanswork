@@ -1674,6 +1674,7 @@ static void OnSetWanDevParam( int nCmd,  Dict *d,const char *buf)
             OnSetWanPpoe(nCmd, iSubCmd, d );
             break;
         case HK_MON_RESTORATION_PARAM:
+            printf("<< << << << << <<WanDev>> >> >> >> >> >>\n ");
             OnRestorationParam(  );
             break;
         case HK_MON_UPDATE_DEV:

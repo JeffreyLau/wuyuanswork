@@ -368,15 +368,15 @@ int init_m433(pid_t pid)
 {
     int ret = 0;
     printf("433 pid: %d\n", pid);
-    g_M433_Fd = open("/dev/m433dev", O_RDWR); //æ‰“å¼€æ–‡ä»¶èŠ‚ç‚¹
+    g_M433_Fd = open("/dev/m433dev", O_RDWR); //´ò¿ªÎÄ¼þ½Úµã
     if (g_M433_Fd < 0)
     {
         printf("can't open!\n");
         return -1;
     }
 
-    ioctl(g_M433_Fd, M433SIG, &pid);//ä¼ å…¥è¿›ç¨‹pid
-    ioctl(g_M433_Fd, PROBE, &ret); //æŽ¢æµ‹è®¾å¤‡
+    ioctl(g_M433_Fd, M433SIG, &pid);//´«Èë½ø³Ìpid
+    ioctl(g_M433_Fd, PROBE, &ret); //Ì½²âÉè±¸
     printf("--- probe ret = %d ---\n", ret);
     if (ret != 1)
     {
@@ -388,7 +388,7 @@ int init_m433(pid_t pid)
 
     m433_get_param();
     m433_set_code();
-    ioctl(g_M433_Fd, START, &ret);//å¼€å¯è®¾å¤‡
+    ioctl(g_M433_Fd, START, &ret);//¿ªÆôÉè±¸
     printf("--- start ret = %d ---\n", ret);
     if (ret != 1)
     {

@@ -835,7 +835,7 @@ void be_present(int x)
 
         if (1 == g_isWifiInit) //ra0.
         {
-            InitIPAddres( 1, &wifiAddr );
+            InitIPAddres( 1, &wifiAddr );  // 1  ra0
             SetParamUN( framePacket, HK_WIFI_OPENORCLOSE, wifiAddr.bStatus );
             SetParamStr( framePacket, HK_NET_BOOTPROTO, wifiAddr.ipMode );
             gTWifiStatus = 1;// GetWifiStatus();
@@ -904,6 +904,10 @@ void wrap_sys_restart( )
     UpdateSystemTimestamp();
     system("sync");
     system("umount /mnt/mmc/");
+    
+    printf("please input enter to reboot the system\n");
+    getchar();
+    getchar();
     system("reboot");
 }
 
@@ -1924,6 +1928,8 @@ static void server_time_sync(int x, void* a, int ac, char* av[])
 static void cb_init(int x, const char* ev, unsigned int size)
 {
     printf("cb_init....x=%d........\n", x);
+    printf("please press enter to continue\n");
+    getchar();
 
     if (x == HK_CONNECT_SUCCESS)
     {
@@ -4132,7 +4138,7 @@ int HK_Check_KeyReset(void)
         g_KeyResetCount = 0; 
         return -1; 
     }
-    //HK_DEBUG_PRT("...Get GPIO %d_%d  read Value: %d...\n", g_KeyReset_grp, g_KeyReset_bit, val_read);
+    HK_DEBUG_PRT("...Get GPIO %d_%d  read Value: %d...\n", g_KeyReset_grp, g_KeyReset_bit, val_read);
 
     if (0 == val_read)
     { //reset key pressed.
@@ -4704,8 +4710,8 @@ void HK_Onvif_Init(void)
     sccInitVideoData( PSTREAMTWO);	
     sccResetVideData( PSTREAMTWO, slaveVideoDataP );
     CreateAudioThread();
-    CreateVideoThread(); 
-    CreateSubVideoThread(); 
+    //CreateVideoThread(); 
+    //CreateSubVideoThread(); 
 
     EnableOnvif = conf_get_int("/mnt/sif/web.conf", "bOnvifEnable");
     if(EnableOnvif)
@@ -4714,7 +4720,6 @@ void HK_Onvif_Init(void)
         //onvif_start(); 
 	    IPCAM_OnvifServerStart();
     }
-
     return;
 }
 #endif
@@ -4900,10 +4905,6 @@ int main(int argc, char* argv[])
             port_ = argv[4];
         }
     }
-    else
-    {
-        //return 1;
-    }
     Daemonize();
     install_sighandler(sig_handler);
     char cSensorType[32]={0};
@@ -4939,11 +4940,11 @@ int main(int argc, char* argv[])
             g_isWifiInit, g_HK_SensorType, g_HK_VideoResoType, g_DevIndex, g_isWanEnable, g_lanPort, g_irOpen, g_onePtz, g_DevPTZ, DdnsTimeInterval, IRCutBoardType);
   
     /**** init video Sub System. ****/
-    if ( HI_SUCCESS != Video_SubSystem_Init() )
-    {
-        printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
-    }
-    HK_DEBUG_PRT("video sub system init OK!\n");
+    //if ( HI_SUCCESS != Video_SubSystem_Init() )
+    //{
+    //    printf("[%s, %d] video sub system init failed !\n", __func__, __LINE__); 
+    //}
+    //HK_DEBUG_PRT("video sub system init OK!\n");
 
     /**GPIO init**/
     HI_SetGpio_Open();
@@ -4966,7 +4967,7 @@ int main(int argc, char* argv[])
     first_run_check(tq_, &counter);
     //sleep(1);
 
-#if (DEV_INFRARED)
+#if (DEV_INFRARED)  //ºìÍâÒ£¿ØÆ÷
     HK_Infrared_Decode();
     Init_Light_Conf();
 #endif
@@ -4997,7 +4998,7 @@ int main(int argc, char* argv[])
     //CreateTestThread();
 #if (HK_PLATFORM_HI3518E)
     /*****neck Cruise*****/
-    if (1 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
+    if (0 == g_DevPTZ) //0:device without PTZ motor; 1:PTZ device.
     {
         HK_PtzMotor();
     }
@@ -5139,7 +5140,7 @@ int main(int argc, char* argv[])
     #if ((0 == DEV_KELIV) && (0 == DEV_DOORBELL))
         if (m433enable == 0)
         {
-            CheckIOAlarm();//check AlarmIn & AlarmOut.
+            CheckIOAlarm();//check AlarmIn & AlarmOut.*
         }
     #endif
         hk_IrcutCtrl( IRCutBoardType );//check & control Ircut mode.

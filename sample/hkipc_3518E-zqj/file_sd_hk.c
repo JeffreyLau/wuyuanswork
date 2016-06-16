@@ -1068,7 +1068,7 @@ int TFTIME(HI_VOID)
 
         if ( (iCount > 3000) && (g_sdIsOnline != 0) )  
         {
-            iCount=0;
+            iCount = 0;
             GetStorageInfo();
             if (hkSdParam.leftSize <= HK_SD_SPLITE+400)//MB
             {

@@ -414,6 +414,7 @@ void *Handle_IR_Key_Event(void* arg)
                 {
                 #if 1
                     //ResetToDefaultSettings( ); 
+                    printf("<< << << << Handle IR Key Event >> >> >> >> >> \n");
                     OnRestorationParam( ); //reset to factory settings.
                 #endif
                 }
