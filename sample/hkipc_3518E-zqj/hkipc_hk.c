@@ -891,6 +891,9 @@ static int UpdateSystemTimestamp(void)
 
 void wrap_sys_restart( )
 {
+    printf("please input enter to reboot the system\n");
+    getchar();
+    getchar();
 #if DEV_ROBOT
     UART_CtrlCmd_Send(CMD_STOP, 0);
 #endif
@@ -904,10 +907,7 @@ void wrap_sys_restart( )
     UpdateSystemTimestamp();
     system("sync");
     system("umount /mnt/mmc/");
-    
-    printf("please input enter to reboot the system\n");
-    getchar();
-    getchar();
+ 
     system("reboot");
 }
 

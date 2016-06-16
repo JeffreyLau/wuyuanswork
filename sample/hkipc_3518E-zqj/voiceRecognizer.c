@@ -210,7 +210,7 @@ int run_recorderVoiceRecog()
     } 
 	while (1);
 
-	vr_stopRecognize( g_recognizer );
+	vr_stopRecognize( g_recognizer ); 
 	do 
 	{		
     #ifdef WIN32
