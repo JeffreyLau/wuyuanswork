@@ -1175,7 +1175,7 @@ int sd_record_start()
         return 1;
     }
 
-    sd_video_start();
+    //sd_video_start();
     g_TF_start = 1;
 
     return 0;
