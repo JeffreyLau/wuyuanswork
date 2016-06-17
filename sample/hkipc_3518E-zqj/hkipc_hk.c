@@ -5031,7 +5031,8 @@ int main(int argc, char* argv[])
 #if AUDIO_SET_WIFI
     static REMOTE_WIFI_FIND wifiFindTmp;
     ScanWifiInfo(&wifiFindTmp);
-    CreateAudioThread();  
+    //CreateAudioThread(); 
+    
     //-start voice recoder!!
     CreateVoiceRecogThread();
 #endif 
