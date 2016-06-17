@@ -4456,7 +4456,7 @@ static void GetWifiSdi()
 
 static void init_conf()
 {
-    system("touch /mnt/sif/sdvideo.conf");
+    //system("touch /mnt/sif/sdvideo.conf");
     system("touch /mnt/sif/subipc.conf");
     system("touch /mnt/sif/time.conf");
     system("touch /mnt/sif/RngMD.conf");
@@ -4912,6 +4912,7 @@ int main(int argc, char* argv[])
     }
     Daemonize();
     install_sighandler(sig_handler);
+    /*
     char cSensorType[32]={0};
     conf_get( HOME_DIR"/sensor.conf", "sensortype", cSensorType, 32 );
     if (strcmp(cSensorType, "ar0130") == 0)
@@ -4929,16 +4930,16 @@ int main(int argc, char* argv[])
         printf("...scc...unknown sensor type, use default: ov9712d lib......\n");  
         g_HK_SensorType = HK_OV9712; //ov9712d.
     }
-
+    */
     g_iZone = conf_get_int(HOME_DIR"/time.conf", "zone");
     g_isWifiInit       = conf_get_int(HOME_DIR"/wifinet.cfg", "isopen");
-    g_HK_VideoResoType = conf_get_int(HOME_DIR"/hkipc.conf", "HKVIDEOTYPE");
+    //g_HK_VideoResoType = conf_get_int(HOME_DIR"/hkipc.conf", "HKVIDEOTYPE");
     g_DevIndex         = conf_get_int(HOME_DIR"/hkclient.conf", "IndexID"); 
     g_isWanEnable      = conf_get_int(HOME_DIR"/hkclient.conf", "WANENABLE");
     g_lanPort          = conf_get_int(HOME_DIR"/hkclient.conf", "LANPORT");
     g_irOpen           = conf_get_int(HOME_DIR"/hkipc.conf", "iropen");
     g_onePtz           = conf_get_int(HOME_DIR"/hkipc.conf", "oneptz");
-    g_DevPTZ           = conf_get_int(HOME_DIR"/ptz.conf", "HKDEVPTZ");
+    //g_DevPTZ           = conf_get_int(HOME_DIR"/ptz.conf", "HKDEVPTZ");
     DdnsTimeInterval   = conf_get_int("/mnt/sif/web.conf", "DdnsTimeInterval");
     IRCutBoardType     = conf_get_int("/mnt/sif/hkipc.conf", "IRCutBoardType");
     //HK_DEBUG_PRT("g_isWifiInit:%d, g_HK_SensorType:%d, g_HK_VideoResoType:%d, g_DevIndex:%d, g_isWanEnable:%d, g_lanPort:%d, g_irOpen:%d, g_onePtz:%d, g_DevPTZ:%d, DdnsTimeInterval:%d, IRCutBoardType:%d\n", \
@@ -4973,11 +4974,11 @@ int main(int argc, char* argv[])
     //sleep(1);
 
 #if (DEV_INFRARED)  //红外遥控器
-    HK_Infrared_Decode();
-    Init_Light_Conf();
+    //HK_Infrared_Decode();
+    //Init_Light_Conf();
 #endif
     GetAlarmEmailInfo(); //get email configuration info
-    GetSdAlarmParam(); //get sd card configuration info.
+    //GetSdAlarmParam(); //get sd card configuration info.
     
     /**video callbacks for client operations**/
     //video_RSLoadObjects( &SysRegisterDev );
@@ -4997,7 +4998,7 @@ int main(int argc, char* argv[])
     monc_start(NULL, HK_PASSWD_FAIL); 
     if (g_isWanEnable != 1)
     {
-        start_nonblock_login();
+        start_nonblock_login(); //线程一直检测网络连接状态 局域网/服务器
     }
 
     //test_tF info
